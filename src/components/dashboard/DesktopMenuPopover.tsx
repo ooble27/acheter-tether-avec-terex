@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { LogOut, Settings } from 'lucide-react';
 import { useUserRole } from '@/hooks/useUserRole';
+import { useAcademyAccess } from '@/hooks/useAcademyAccess';
 import { useNavigate } from 'react-router-dom';
 import { PROFILE_MENU } from './profileMenuItems';
 
@@ -23,6 +24,7 @@ export function DesktopMenuPopover({
   trigger
 }: DesktopMenuPopoverProps) {
   const { isKYCReviewer, isAdmin } = useUserRole();
+  const { hasAccess: showAcademy } = useAcademyAccess();
   const navigate = useNavigate();
 
   const handleItemClick = (section: string) => {
@@ -36,7 +38,7 @@ export function DesktopMenuPopover({
   };
 
   // Pages issues de la source de vérité partagée (identiques au menu mobile/PWA)
-  const profileItems = PROFILE_MENU.profile;
+  const profileItems = showAcademy ? PROFILE_MENU.profile : PROFILE_MENU.profile.filter(i => i.id !== 'academy');
   const supportItems = PROFILE_MENU.support;
   const moreItems = PROFILE_MENU.more;
   const adminItems = PROFILE_MENU.admin;

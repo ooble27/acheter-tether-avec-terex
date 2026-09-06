@@ -24,6 +24,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserRole } from '@/hooks/useUserRole';
+import { useAcademyAccess } from '@/hooks/useAcademyAccess';
 import { Button } from '@/components/ui/button';
 import { LogOut, User } from 'lucide-react';
 import { HighVolumeRequest } from '@/components/features/HighVolumeRequest';
@@ -48,6 +49,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   const isTablet = useIsTablet();
   const { signOut } = useAuth();
   const { isKYCReviewer, isAdmin } = useUserRole();
+  const { hasAccess: academyAccess } = useAcademyAccess();
 
   // Vérifier si on est en mode PWA (standalone)
   const isPWA = window.matchMedia('(display-mode: standalone)').matches ||
@@ -160,7 +162,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       case 'b2b':
         return <B2BPage onBack={() => setActiveSection('home')} />;
       case 'academy':
-        return <Academy onBack={() => setActiveSection('home')} />;
+        return academyAccess ? <Academy onBack={() => setActiveSection('home')} /> : <div className="text-white">Accès non autorisé</div>;
       case 'faq':
         return <FAQ onNavigate={setActiveSection} />;
       case 'user-guide':

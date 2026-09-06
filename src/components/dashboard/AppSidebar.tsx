@@ -5,6 +5,7 @@ import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
 import { useUserRole } from '@/hooks/useUserRole';
+import { useAcademyAccess } from '@/hooks/useAcademyAccess';
 import { useState } from 'react';
 import { PROFILE_MENU } from './profileMenuItems';
 
@@ -299,14 +300,15 @@ export function MobileMenu({
 }: AppSidebarProps) {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
   const { isKYCReviewer, isAdmin } = useUserRole();
+  const { hasAccess: showAcademy } = useAcademyAccess();
   const isMobile = useIsMobile();
-  
+
   // Utiliser l'état externe si fourni, sinon utiliser l'état interne
   const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
   const setIsOpen = externalOnClose ? (open: boolean) => {
     if (!open) externalOnClose();
   } : setInternalIsOpen;
-  
+
   const handleItemClick = (section: string) => {
     setActiveSection(section);
     setIsOpen(false);
@@ -318,7 +320,7 @@ export function MobileMenu({
   };
 
   // Pages issues de la source de vérité partagée (identiques au menu bureau)
-  const profileItems = PROFILE_MENU.profile;
+  const profileItems = showAcademy ? PROFILE_MENU.profile : PROFILE_MENU.profile.filter(i => i.id !== 'academy');
   const supportItems = PROFILE_MENU.support;
   const moreItems = PROFILE_MENU.more;
   const adminItems = PROFILE_MENU.admin;
