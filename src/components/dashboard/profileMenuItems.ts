@@ -1,4 +1,4 @@
-import { User, History, HelpCircle, Phone, Gift, Share2, FileText, Shield, UserCheck, Briefcase, type LucideIcon } from 'lucide-react';
+import { User, History, HelpCircle, Phone, Gift, Share2, FileText, Shield, UserCheck, Briefcase, GraduationCap, type LucideIcon } from 'lucide-react';
 
 export interface ProfileMenuItem {
   id: string;
@@ -22,6 +22,7 @@ export const PROFILE_MENU: {
   profile: [
     { id: 'profile', label: 'Mon Profil', icon: User, description: 'Informations personnelles' },
     { id: 'history', label: 'Historique', icon: History, description: 'Mes transactions' },
+    { id: 'academy', label: 'Academy', icon: GraduationCap, description: 'Formations crypto' },
   ],
   support: [
     { id: 'faq', label: 'FAQ', icon: HelpCircle, description: 'Questions fréquentes' },
