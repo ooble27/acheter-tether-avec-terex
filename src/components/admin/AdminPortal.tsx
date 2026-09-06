@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  ShoppingCart, FileCheck, UserCheck, ArrowLeft, Calculator, Mail, Sparkles, Shield, Inbox, Trophy, Users, Clock, BookOpen, PenTool, MessageSquare, FlaskConical, Brain, Palette,
+  ShoppingCart, FileCheck, UserCheck, ArrowLeft, Calculator, Mail, Sparkles, Shield, Inbox, Trophy, Users, Clock, BookOpen, PenTool, MessageSquare, FlaskConical, Brain, Palette, GraduationCap,
 } from 'lucide-react';
 import { OrdersDashboardNew } from '@/components/admin/orders/OrdersDashboardNew';
 import { OpsQueue } from '@/components/admin/orders/OpsQueue';
@@ -22,6 +22,7 @@ import { NeobankVision } from '@/components/admin/neobank/NeobankVision';
 import { LaboAdmin } from '@/components/admin/labo/LaboAdmin';
 import { AIKnowledgeEditor } from '@/components/admin/AIKnowledgeEditor';
 import { MailStudioAdmin } from '@/components/admin/MailStudioAdmin';
+import { AcademyAdmin } from '@/components/admin/AcademyAdmin';
 import { useUserRole } from '@/hooks/useUserRole';
 
 const BG = '#1a1a1a';
@@ -47,6 +48,7 @@ const NAV: NavItem[] = [
   { id: 'mail-studio',  label: 'Mail Studio',    desc: 'Templates email par blocs',             icon: Palette,      roles: ['admin', 'marketing'] },
   { id: 'applications', label: 'Candidatures',   desc: 'Recrutement',                           icon: UserCheck,    roles: ['admin', 'hr'] },
   { id: 'team',         label: 'Équipe',         desc: "Membres et rôles du back-office",       icon: Users,        roles: ['admin'] },
+  { id: 'academy',      label: 'Academy',        desc: 'Formations crypto et blockchain',        icon: GraduationCap, roles: ['admin'] },
   { id: 'neobank',      label: 'Vision',         desc: 'Néobanque Terex',                       icon: Sparkles,     roles: ['admin'] },
   { id: 'labo',         label: 'Labo',           desc: 'Prototypes isolés — sans impact sur la production', icon: FlaskConical, roles: ['admin'] },
   { id: 'ai-knowledge', label: 'IA',             desc: "Connaissance plateforme de l'IA",       icon: Brain,        roles: ['admin'] },
@@ -161,6 +163,7 @@ export function AdminPortal() {
           {currentTab === 'mail-studio' && <MailStudioAdmin />}
           {currentTab === 'applications' && <JobApplicationsAdmin />}
           {currentTab === 'team' && <TeamAdmin />}
+          {currentTab === 'academy' && <AcademyAdmin />}
           {currentTab === 'neobank' && <NeobankVision />}
           {currentTab === 'labo' && <LaboAdmin />}
           {currentTab === 'ai-knowledge' && <AIKnowledgeEditor />}

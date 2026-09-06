@@ -179,6 +179,20 @@ export function SectionHero({ tab }: { tab: string }) {
         />
       );
 
+    case 'academy':
+      return (
+        <AdminHero
+          eyebrow="Terex Academy"
+          value="Formations"
+          unit="crypto & blockchain"
+          stats={[
+            { label: 'Cours', value: '—' },
+            { label: 'Inscrits', value: '—' },
+            { label: 'Statut', value: 'Phase 1' },
+          ]}
+        />
+      );
+
     case 'neobank':
       return (
         <AdminHero
