@@ -460,8 +460,9 @@ function EnrollmentManager({ onBack }: { onBack: () => void }) {
     const { data } = await supabase.from('enrollments' as any).select('*').eq('course_id', courseId).order('enrolled_at', { ascending: false });
     const enrs = (data as any[]) ?? [];
     const withProfiles = await Promise.all(enrs.map(async (e: any) => {
-      const { data: p } = await supabase.from('profiles' as any).select('email, full_name').eq('id', e.user_id).single();
-      return { ...e, email: (p as any)?.email, full_name: (p as any)?.full_name };
+      const { data: p } = await supabase.rpc('admin_get_user_info', { user_uuid: e.user_id });
+      const info = (p as any[])?.[0];
+      return { ...e, email: info?.email, full_name: info?.full_name };
     }));
     setEnrollments(withProfiles);
   }, []);
@@ -471,9 +472,7 @@ function EnrollmentManager({ onBack }: { onBack: () => void }) {
   const searchUsers = async () => {
     if (!searchEmail.trim()) return;
     setSearching(true);
-    const { data } = await supabase.from('profiles' as any).select('id, email, full_name, terex_id')
-      .or(`email.ilike.%${searchEmail}%,full_name.ilike.%${searchEmail}%,terex_id.ilike.%${searchEmail}%`)
-      .limit(10);
+    const { data } = await supabase.rpc('admin_search_users', { search_term: searchEmail.trim() });
     setSearchResults((data as any[]) ?? []);
     setSearching(false);
   };

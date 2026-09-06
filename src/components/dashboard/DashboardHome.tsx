@@ -1,4 +1,4 @@
-import { Coins, HandCoins } from 'lucide-react';
+import { Coins, HandCoins, GraduationCap, ChevronRight } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { RecentTransactions } from '@/components/dashboard/RecentTransactions';
 import { useTerexRates } from '@/hooks/useTerexRates';
@@ -125,6 +125,21 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </div>
         </div>
 
+        {/* Academy card */}
+        <div style={{ padding: '24px 20px 0' }}>
+          <button onClick={() => onNavigate?.('academy')}
+            style={{ width: '100%', background: CARD, borderRadius: '16px', border: `1px solid ${BORDER}`, padding: '16px 18px', display: 'flex', alignItems: 'center', gap: '14px', cursor: 'pointer', textAlign: 'left', outline: 'none', WebkitTapHighlightColor: 'transparent' }}>
+            <span style={{ width: '42px', height: '42px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <GraduationCap size={20} color={ICON_COLOR} strokeWidth={1.6} />
+            </span>
+            <span style={{ flex: 1 }}>
+              <span style={{ display: 'block', color: '#fff', fontSize: '14px', fontWeight: 500 }}>Terex Academy</span>
+              <span style={{ display: 'block', color: '#6b7280', fontSize: '12px', marginTop: '2px' }}>Formations crypto & blockchain</span>
+            </span>
+            <ChevronRight size={16} color="#555" />
+          </button>
+        </div>
+
         {/* Recent transactions */}
         <div style={{ padding: '24px 20px 0' }}>
           <RecentTransactions onNavigate={onNavigate} />
@@ -199,8 +214,22 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
         </div>
       </div>
 
-      {/* Row 2 : Activité récente à gauche, même largeur qu'une carte */}
+      {/* Row 2 : Academy + Activité récente */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+        {/* Academy card */}
+        <button onClick={() => onNavigate?.('academy')}
+          style={{ background: CARD, borderRadius: '18px', border: `1px solid ${BORDER}`, padding: '22px 24px', display: 'flex', alignItems: 'center', gap: '16px', cursor: 'pointer', textAlign: 'left', outline: 'none', transition: 'background 0.15s' }}
+          onMouseEnter={e => { e.currentTarget.style.background = '#2a2a2a'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = CARD; }}>
+          <span style={{ width: '46px', height: '46px', borderRadius: '14px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <GraduationCap size={22} color={ICON_COLOR} strokeWidth={1.6} />
+          </span>
+          <span style={{ flex: 1 }}>
+            <span style={{ display: 'block', color: '#fff', fontSize: '15px', fontWeight: 500 }}>Terex Academy</span>
+            <span style={{ display: 'block', color: '#6b7280', fontSize: '12px', marginTop: '3px' }}>Formations crypto & blockchain</span>
+          </span>
+          <ChevronRight size={16} color="#555" />
+        </button>
         <RecentTransactions onNavigate={onNavigate} />
       </div>
     </div>
