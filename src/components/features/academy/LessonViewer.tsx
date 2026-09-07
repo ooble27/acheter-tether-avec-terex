@@ -324,10 +324,11 @@ export function LessonViewer({
                 </button>
               )}
 
-              {/* Prev/Next lesson */}
+              {/* Prev/Next lesson — stacked on mobile (each full width, readable),
+                  side by side only on desktop where there's room. */}
               <div style={{
                 display: 'grid',
-                gridTemplateColumns: prev && next ? '1fr 1fr' : '1fr',
+                gridTemplateColumns: (!isMobile && prev && next) ? 'minmax(0,1fr) minmax(0,1fr)' : 'minmax(0,1fr)',
                 gap: 10, marginTop: 14,
               }}>
                 {prev && <NavCard direction="prev" label={prev.title} onClick={() => onOpenLesson(prev.id)} />}
@@ -492,6 +493,7 @@ function NavCard({ direction, label, onClick }: { direction: 'prev' | 'next'; la
     <button onClick={onClick}
       style={{
         display: 'flex', alignItems: 'center', gap: 10,
+        width: '100%', minWidth: 0,
         padding: '14px 16px', borderRadius: 12,
         background: C.l1, border: `1px solid ${C.bds}`,
         cursor: 'pointer', textAlign: isNext ? 'right' : 'left',
