@@ -31,6 +31,7 @@ import { HighVolumeRequest } from '@/components/features/HighVolumeRequest';
 import { B2BPage } from '@/components/features/B2BPage';
 import { SavedDataPrefetch } from '@/components/dashboard/SavedDataPrefetch';
 import { Academy } from '@/components/features/Academy';
+import { ThemeToggle } from '@/components/dashboard/ThemeToggle';
 
 interface DashboardProps {
   user: { email: string; name: string } | null;
@@ -142,11 +143,11 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             <div className="w-20 h-20 bg-terex-accent/20 rounded-full flex items-center justify-center mx-auto mb-6">
               <span className="text-4xl">🚀</span>
             </div>
-            <h2 className="text-white text-2xl font-light mb-3">Virements Internationaux</h2>
-            <p className="text-gray-400 text-base mb-6">
+            <h2 className="text-foreground text-2xl font-light mb-3">Virements Internationaux</h2>
+            <p className="text-muted-foreground text-base mb-6">
               Cette fonctionnalité sera bientôt disponible sur Terex.
             </p>
-            <p className="text-gray-500 text-sm">
+            <p className="text-muted-foreground text-sm">
               Nous travaillons activement pour vous offrir le meilleur service de virements internationaux.
             </p>
           </div>
@@ -162,7 +163,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       case 'b2b':
         return <B2BPage onBack={() => setActiveSection('home')} />;
       case 'academy':
-        return academyAccess ? <Academy onBack={() => setActiveSection('home')} /> : <div className="text-white">Accès non autorisé</div>;
+        return academyAccess ? <Academy onBack={() => setActiveSection('home')} /> : <div className="text-foreground">Accès non autorisé</div>;
       case 'faq':
         return <FAQ onNavigate={setActiveSection} />;
       case 'user-guide':
@@ -174,11 +175,11 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       case 'about-terex':
         return <AboutTerex onBack={() => setActiveSection('faq')} />;
       case 'kyc-admin':
-        return isKYCReviewer() ? <KYCAdmin /> : <div className="text-white">Accès non autorisé</div>;
+        return isKYCReviewer() ? <KYCAdmin /> : <div className="text-foreground">Accès non autorisé</div>;
       case 'orders-admin':
-        return isKYCReviewer() ? <OrdersDashboardNew /> : <div className="text-white">Accès non autorisé</div>;
+        return isKYCReviewer() ? <OrdersDashboardNew /> : <div className="text-foreground">Accès non autorisé</div>;
       case 'job-applications':
-        return (isAdmin() || isKYCReviewer()) ? <JobApplicationsAdmin /> : <div className="text-white">Accès non autorisé</div>;
+        return (isAdmin() || isKYCReviewer()) ? <JobApplicationsAdmin /> : <div className="text-foreground">Accès non autorisé</div>;
       default:
         return <DashboardHome user={user} onNavigate={setActiveSection} />;
     }
@@ -196,13 +197,16 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
               va DIRECTEMENT à la page Profil (qui contient tout le menu). Pas de
               menu déroulant ni de hamburger. Masqué lorsqu'on est déjà sur le profil,
               ou en mode immersif (Academy — plein écran d'apprentissage). */}
+          {/* Bascule clair/sombre globale — masquée dans l'Academy, qui a la sienne. */}
+          {activeSection !== 'academy' && <ThemeToggle />}
+
           {activeSection !== 'profile' && activeSection !== 'academy' && (
             <Button
               variant="ghost"
               size="icon"
               onClick={() => handleNavigate('profile')}
               aria-label="Mon profil"
-              className="fixed z-50 bg-terex-darker/95 backdrop-blur-sm border border-terex-gray/50 text-white hover:bg-terex-gray/80 rounded-xl w-12 h-12"
+              className="fixed z-50 bg-terex-darker/95 backdrop-blur-sm border border-terex-gray/50 text-foreground hover:bg-terex-gray/80 rounded-xl w-12 h-12"
               style={{
                 top: 'calc(env(safe-area-inset-top, 0px) + 16px)',
                 // Sur desktop, on colle le bouton juste à droite du bloc de contenu
