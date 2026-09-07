@@ -3,14 +3,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import {
-  ArrowLeft, CheckCircle2, Circle, ChevronLeft, ChevronRight, Loader2,
+  ArrowLeft, CheckCircle2, Circle, ChevronRight, Loader2,
   FileText, Video, Radio, Type, Clock, Play, BookOpen,
   Lightbulb, AlertTriangle, Info,
 } from 'lucide-react';
 import {
   C, FONT, card, cardHeaderRow, cardTitle, sH, numeric,
   btnPrimary, btnGhost,
-  primaryHoverIn, primaryHoverOut, ghostHoverIn, ghostHoverOut,
+  primaryHoverIn, primaryHoverOut,
 } from '@/components/admin/adminTheme';
 
 const OK = '#4ade80';
@@ -40,10 +40,13 @@ export function LessonViewer({
   const [progressMap, setProgressMap] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(true);
   const [marking, setMarking] = useState(false);
-  const [activeSection, setActiveSection] = useState(0);
-  const scrollAnchorRef = useRef<HTMLDivElement | null>(null);
+  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const { user } = useAuth();
   const isMobile = useIsMobile();
+
+  const scrollToSection = (i: number) => {
+    sectionRefs.current[i]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   useEffect(() => {
     (async () => {
@@ -74,7 +77,6 @@ export function LessonViewer({
         setCompleted(!!map[lessonId]);
       }
       setLoading(false);
-      setActiveSection(0);
       window.scrollTo(0, 0);
     })();
   }, [lessonId, courseId, user]);
@@ -111,13 +113,6 @@ export function LessonViewer({
 
   const totalSections = sections.length;
   const hasSections = totalSections > 0;
-  const currentSection = hasSections ? sections[Math.min(activeSection, totalSections - 1)] : null;
-  const isLastSection = activeSection >= totalSections - 1;
-
-  const goToSection = (i: number) => {
-    setActiveSection(Math.max(0, Math.min(totalSections - 1, i)));
-    setTimeout(() => scrollAnchorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
-  };
 
   const toggleComplete = async () => {
     if (!user) return;
@@ -147,7 +142,7 @@ export function LessonViewer({
   const label = TYPE_LABEL[lesson.content_type] ?? 'Leçon';
 
   return (
-    <div style={{ background: C.bg, minHeight: '100vh', fontFamily: FONT, color: C.t1, fontWeight: 300 }}>
+    <div style={{ background: C.bg, minHeight: '100vh', fontFamily: FONT, color: C.t1, fontWeight: 300, overflowX: 'hidden' }}>
       <div style={{
         maxWidth: 1100, margin: '0 auto',
         padding: isMobile ? '0 0 100px' : '0 24px 120px',
@@ -193,22 +188,13 @@ export function LessonViewer({
                 borderRadius: 8, padding: '4px 10px',
                 color: C.t2, fontSize: 11, ...numeric,
               }}>
-                Section {activeSection + 1}/{totalSections}
+                {totalSections} section{totalSections > 1 ? 's' : ''}
               </div>
             )}
           </div>
-          {hasSections && (
-            <div style={{ height: 2, background: 'rgba(255,255,255,0.04)', marginTop: 12, borderRadius: 1 }}>
-              <div style={{
-                height: '100%', borderRadius: 1, background: C.accent,
-                width: `${((activeSection + 1) / totalSections) * 100}%`,
-                transition: 'width 0.3s ease',
-              }} />
-            </div>
-          )}
         </div>
 
-        <div style={{ padding: isMobile ? '20px 16px 0' : '28px 0 0' }} ref={scrollAnchorRef}>
+        <div style={{ padding: isMobile ? '20px 16px 0' : '28px 0 0' }}>
           {/* Lesson meta head */}
           <p style={{ ...sH, marginBottom: 8 }}>{label}</p>
           <h1 style={{
@@ -251,141 +237,80 @@ export function LessonViewer({
             </figure>
           )}
 
-          {/* Two-column layout on desktop, stacked on mobile */}
+          {/* Two-column layout on desktop (sticky TOC + article), single column
+              on mobile. The whole lesson is shown in one scroll — no section
+              pagination — so it reads long and rich like a real course page. */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: !isMobile && hasSections ? '220px 1fr' : '1fr',
-            gap: isMobile ? 0 : 28,
+            gridTemplateColumns: !isMobile && hasSections ? '220px minmax(0, 1fr)' : 'minmax(0, 1fr)',
+            gap: isMobile ? 0 : 32,
             alignItems: 'flex-start',
           }}>
-            {/* TOC sidebar (desktop only, when sections exist) */}
+            {/* TOC sidebar (desktop only) — anchors jump to each section */}
             {!isMobile && hasSections && (
               <aside style={{
                 position: 'sticky', top: 110,
                 background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12,
-                padding: 8, overflow: 'hidden',
+                padding: 8, overflow: 'hidden', minWidth: 0,
               }}>
-                <p style={{ ...sH, fontSize: 10, padding: '10px 12px 8px', margin: 0 }}>Sections</p>
-                {sections.map((s, si) => {
-                  const active = si === activeSection;
-                  return (
-                    <button key={si} onClick={() => goToSection(si)}
-                      style={{
-                        display: 'flex', alignItems: 'center', gap: 10,
-                        width: '100%', textAlign: 'left', padding: '9px 12px',
-                        borderRadius: 8, background: active ? 'rgba(255,255,255,0.05)' : 'transparent',
-                        border: 'none', cursor: 'pointer', color: active ? C.t1 : C.t2,
-                        fontFamily: FONT, fontWeight: active ? 400 : 300, fontSize: 12.5,
-                        marginBottom: 2, transition: 'background 0.12s',
-                      }}
-                      onMouseEnter={e => { if (!active) e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; }}
-                      onMouseLeave={e => { if (!active) e.currentTarget.style.background = 'transparent'; }}>
-                      <span style={{
-                        width: 20, height: 20, borderRadius: '50%', flexShrink: 0,
-                        background: active ? C.accent : C.l2,
-                        border: `1px solid ${active ? C.accent : C.bds}`,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        ...numeric, fontSize: 10, fontWeight: 500,
-                        color: active ? '#111' : C.t3,
-                      }}>
-                        {si + 1}
-                      </span>
-                      <span style={{
-                        flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                      }}>
-                        {s.heading || `Section ${si + 1}`}
-                      </span>
-                    </button>
-                  );
-                })}
+                <p style={{ ...sH, fontSize: 10, padding: '10px 12px 8px', margin: 0 }}>Sommaire</p>
+                {sections.map((s, si) => (
+                  <button key={si} onClick={() => scrollToSection(si)}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: 10,
+                      width: '100%', textAlign: 'left', padding: '9px 12px',
+                      borderRadius: 8, background: 'transparent',
+                      border: 'none', cursor: 'pointer', color: C.t2,
+                      fontFamily: FONT, fontWeight: 300, fontSize: 12.5,
+                      marginBottom: 2, transition: 'background 0.12s',
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.color = C.t1; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.t2; }}>
+                    <span style={{
+                      width: 20, height: 20, borderRadius: '50%', flexShrink: 0,
+                      background: C.l2, border: `1px solid ${C.bds}`,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      ...numeric, fontSize: 10, fontWeight: 500, color: C.t3,
+                    }}>
+                      {si + 1}
+                    </span>
+                    <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {s.heading || `Section ${si + 1}`}
+                    </span>
+                  </button>
+                ))}
               </aside>
             )}
 
-            {/* Main content column */}
-            <div>
-              {/* Mobile section pills */}
-              {isMobile && hasSections && totalSections > 1 && (
-                <div style={{
-                  display: 'flex', gap: 6, overflowX: 'auto', paddingBottom: 6,
-                  margin: '0 -16px 20px', padding: '0 16px 6px',
-                  scrollbarWidth: 'none',
-                }}>
-                  {sections.map((s, si) => {
-                    const active = si === activeSection;
-                    return (
-                      <button key={si} onClick={() => goToSection(si)}
-                        style={{
-                          flexShrink: 0, display: 'flex', alignItems: 'center', gap: 6,
-                          padding: '7px 12px', borderRadius: 8, cursor: 'pointer',
-                          background: active ? 'rgba(255,255,255,0.05)' : C.l1,
-                          border: `1px solid ${active ? C.accentBd : C.bds}`,
-                          color: active ? C.t1 : C.t3, fontSize: 11, fontFamily: FONT,
-                          fontWeight: 300, whiteSpace: 'nowrap',
-                        }}>
-                        <span style={{ ...numeric, fontSize: 10 }}>{si + 1}</span>
-                        <span style={{ maxWidth: 140, overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                          {s.heading || `Section ${si + 1}`}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-
+            {/* Main content column — minWidth:0 lets wide children (tables,
+                long code) scroll inside themselves instead of widening the page */}
+            <div style={{ minWidth: 0 }}>
               {/* Media (video / pdf link / zoom info) */}
               <LessonMedia lesson={lesson} />
 
-              {/* Text — section-by-section OR whole content if no sections parsed */}
-              {hasSections && currentSection ? (
-                <SectionCard section={currentSection} sectionIndex={activeSection} total={totalSections} isMobile={isMobile} />
+              {/* Full lesson — all sections stacked */}
+              {hasSections ? (
+                sections.map((s, si) => (
+                  <div key={si} ref={el => { sectionRefs.current[si] = el; }}
+                    style={{ scrollMarginTop: 90, marginTop: si === 0 ? 0 : 36 }}>
+                    <SectionCard section={s} sectionIndex={si} total={totalSections} isMobile={isMobile} />
+                  </div>
+                ))
               ) : lesson.content_text ? (
                 <div style={{
-                  background: C.l1, borderRadius: 14, border: `1px solid ${C.bds}`,
-                  padding: isMobile ? '18px 18px' : '24px 28px',
-                  color: C.t2, fontSize: 14, lineHeight: 1.75, fontWeight: 300,
-                  whiteSpace: 'pre-wrap',
+                  color: C.t2, fontSize: isMobile ? 15.5 : 16.5, lineHeight: 1.85, fontWeight: 300,
+                  whiteSpace: 'pre-wrap', wordBreak: 'break-word',
                 }}>
                   {lesson.content_text}
                 </div>
               ) : null}
 
-              {/* Section-level nav (only when we have sections) */}
-              {hasSections && totalSections > 1 && (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 20 }}>
-                  <button
-                    onClick={() => goToSection(activeSection - 1)}
-                    disabled={activeSection === 0}
-                    style={{
-                      ...btnGhost, height: 46, justifyContent: 'flex-start', paddingLeft: 14, paddingRight: 14,
-                      fontSize: 12.5, opacity: activeSection === 0 ? 0.4 : 1,
-                      cursor: activeSection === 0 ? 'default' : 'pointer',
-                    }}
-                    onMouseEnter={e => { if (activeSection !== 0) ghostHoverIn(e.currentTarget); }}
-                    onMouseLeave={e => { if (activeSection !== 0) ghostHoverOut(e.currentTarget); }}>
-                    <ChevronLeft size={13} /> Section précédente
-                  </button>
-                  <button
-                    onClick={() => goToSection(activeSection + 1)}
-                    disabled={isLastSection}
-                    style={{
-                      ...btnGhost, height: 46, justifyContent: 'flex-end', paddingLeft: 14, paddingRight: 14,
-                      fontSize: 12.5, opacity: isLastSection ? 0.4 : 1,
-                      cursor: isLastSection ? 'default' : 'pointer',
-                    }}
-                    onMouseEnter={e => { if (!isLastSection) ghostHoverIn(e.currentTarget); }}
-                    onMouseLeave={e => { if (!isLastSection) ghostHoverOut(e.currentTarget); }}>
-                    Section suivante <ChevronRight size={13} />
-                  </button>
-                </div>
-              )}
-
-              {/* Mark as done — show only on last section (or always if no sections) */}
-              {user && (!hasSections || isLastSection) && (
+              {/* Mark as done */}
+              {user && (
                 <button onClick={toggleComplete} disabled={marking}
                   style={{
                     ...(completed ? btnGhost : btnPrimary),
-                    width: '100%', height: 48, marginTop: 20,
+                    width: '100%', height: 48, marginTop: 40,
                     justifyContent: 'center', fontSize: 13, fontWeight: 400,
                     ...(completed ? { color: OK, borderColor: 'rgba(74,222,128,0.30)', background: 'rgba(74,222,128,0.06)' } : {}),
                   }}
@@ -782,7 +707,7 @@ function renderContentBlock(b: ContentBlock, k: number): JSX.Element {
       // themselves on mobile instead of blowing out the page width.
       return (
         <div key={k} style={{ margin: '20px 0 24px', overflowX: 'auto', WebkitOverflowScrolling: 'touch', borderRadius: 10, border: `1px solid ${C.bds}` }}>
-          <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: b.head.length > 2 ? 460 : 300, fontSize: 14 }}>
+          <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: b.head.length > 2 ? 380 : 0, fontSize: 14 }}>
             <thead>
               <tr>
                 {b.head.map((cell, ci) => (
@@ -790,7 +715,6 @@ function renderContentBlock(b: ContentBlock, k: number): JSX.Element {
                     textAlign: 'left', padding: '11px 14px',
                     background: C.l2, color: C.t1, fontWeight: 500, fontSize: 12.5,
                     borderBottom: `1px solid ${C.bd}`,
-                    whiteSpace: 'nowrap',
                   }}>
                     {inlineRender(cell)}
                   </th>
