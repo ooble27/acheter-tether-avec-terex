@@ -12,6 +12,7 @@ import {
   btnPrimary, btnGhost,
   primaryHoverIn, primaryHoverOut,
 } from './academyTheme';
+import { CoinIcon, CoinBadge, CoinRow } from './CoinIcon';
 
 const OK = C.ok;
 
@@ -529,6 +530,8 @@ type ContentBlock =
   | { type: 'ol'; items: string[] }
   | { type: 'img'; url: string; alt: string; caption?: string }
   | { type: 'table'; head: string[]; rows: string[][] }
+  | { type: 'coin'; sym: string; label?: string }
+  | { type: 'coinrow'; syms: string[] }
   | { type: 'hr' };
 
 type Section = { heading: string | null; blocks: ContentBlock[] };
@@ -557,6 +560,17 @@ function parseIntoSections(src: string): Section[] {
       while (i < lines.length && /^\s*\|.*\|\s*$/.test(lines[i])) { rows.push(splitRow(lines[i])); i++; }
       current.blocks.push({ type: 'table', head, rows });
       continue;
+    }
+    // Coin directives:  :::coin btc Label optionnel:::   /   :::coins btc eth usdt:::
+    const coinRowMatch = line.match(/^\s*:::coins\s+([a-z0-9 ]+):::\s*$/i);
+    if (coinRowMatch) {
+      current.blocks.push({ type: 'coinrow', syms: coinRowMatch[1].trim().toLowerCase().split(/\s+/) });
+      i++; continue;
+    }
+    const coinMatch = line.match(/^\s*:::coin\s+([a-z0-9]+)\s*([^:]*?):::\s*$/i);
+    if (coinMatch) {
+      current.blocks.push({ type: 'coin', sym: coinMatch[1].toLowerCase(), label: coinMatch[2].trim() || undefined });
+      i++; continue;
     }
     // Markdown image: ![alt](url), optionally followed on the same line by a caption in _italics_
     const imgMatch = line.match(/^\s*!\[([^\]]*)\]\(([^)]+)\)\s*(?:_([^_]+)_)?\s*$/);
@@ -618,7 +632,8 @@ function isBlockStart(l: string): boolean {
   return /^---+$/.test(l.trim()) || l.startsWith('## ') || l.startsWith('### ') || l.startsWith('> ')
     || /^\s*[•\-\*]\s+/.test(l) || /^\s*\d+\.\s+/.test(l)
     || /^\s*!\[[^\]]*\]\([^)]+\)/.test(l)
-    || /^\s*\|.*\|\s*$/.test(l);
+    || /^\s*\|.*\|\s*$/.test(l)
+    || /^\s*:::coins?\s/i.test(l);
 }
 
 function renderContentBlock(b: ContentBlock, k: number): JSX.Element {
@@ -742,6 +757,18 @@ function renderContentBlock(b: ContentBlock, k: number): JSX.Element {
           </table>
         </div>
       );
+    case 'coin':
+      return (
+        <div key={k} style={{ margin: '18px 0 22px' }}>
+          <CoinBadge sym={b.sym} label={b.label} C={C as any} FONT={FONT} />
+        </div>
+      );
+    case 'coinrow':
+      return (
+        <div key={k} style={{ margin: '16px 0 22px' }}>
+          <CoinRow syms={b.syms} />
+        </div>
+      );
     case 'hr':
       return <hr key={k} style={{ border: 'none', borderTop: `1px solid ${C.bds}`, margin: '20px 0' }} />;
     case 'p':
@@ -752,15 +779,17 @@ function renderContentBlock(b: ContentBlock, k: number): JSX.Element {
 
 function inlineRender(text: string): (string | JSX.Element)[] {
   const parts: (string | JSX.Element)[] = [];
-  // Order matters: match links [text](url) first, then bold, then inline code.
-  const regex = /(\[[^\]]+\]\([^)]+\))|(\*\*[^*]+\*\*)|(`[^`]+`)/g;
+  // Order matters: links [text](url) → bold → inline code → coin tokens :btc:
+  const regex = /(\[[^\]]+\]\([^)]+\))|(\*\*[^*]+\*\*)|(`[^`]+`)|(:(?:btc|eth|usdt|usdc|bnb|sol|trx|pol|ton|xrp):)/gi;
   let lastIdx = 0;
   let m: RegExpExecArray | null;
   let key = 0;
   while ((m = regex.exec(text)) !== null) {
     if (m.index > lastIdx) parts.push(text.slice(lastIdx, m.index));
     const token = m[0];
-    if (token.startsWith('[')) {
+    if (token.startsWith(':') && token.endsWith(':')) {
+      parts.push(<CoinIcon key={key++} sym={token.slice(1, -1).toLowerCase()} size={18} />);
+    } else if (token.startsWith('[')) {
       const linkMatch = token.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
       if (linkMatch) {
         let href = linkMatch[2].trim();
