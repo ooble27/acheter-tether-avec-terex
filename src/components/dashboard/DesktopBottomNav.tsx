@@ -28,11 +28,11 @@ export function DesktopBottomNav({ activeSection, setActiveSection }: DesktopBot
           display: 'flex',
           alignItems: 'center',
           gap: '4px',
-          background: 'rgba(30, 30, 30, 0.97)',
+          background: 'hsl(var(--terex-darker) / 0.97)',
           backdropFilter: 'blur(24px)',
           WebkitBackdropFilter: 'blur(24px)',
           borderRadius: '20px',
-          border: '1px solid rgba(255,255,255,0.07)',
+          border: '1px solid hsl(var(--terex-accent) / 0.07)',
           boxShadow: 'none',
           padding: '6px',
         }}
@@ -50,7 +50,7 @@ export function DesktopBottomNav({ activeSection, setActiveSection }: DesktopBot
                 justifyContent: 'center',
                 gap: isActive ? '9px' : '0px',
                 padding: isActive ? '12px 22px' : '12px 18px',
-                background: isActive ? '#2d2d2d' : 'transparent',
+                background: isActive ? 'hsl(var(--terex-gray))' : 'transparent',
                 borderRadius: '14px',
                 border: 'none',
                 cursor: 'pointer',
@@ -59,7 +59,7 @@ export function DesktopBottomNav({ activeSection, setActiveSection }: DesktopBot
                 minWidth: '60px',
               }}
               onMouseEnter={(e) => {
-                if (!isActive) (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.05)';
+                if (!isActive) (e.currentTarget as HTMLButtonElement).style.background = 'hsl(var(--terex-accent) / 0.05)';
               }}
               onMouseLeave={(e) => {
                 if (!isActive) (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
@@ -67,13 +67,13 @@ export function DesktopBottomNav({ activeSection, setActiveSection }: DesktopBot
             >
               <Icon
                 size={19}
-                color={isActive ? '#ffffff' : '#71717a'}
+                color={isActive ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))'}
                 strokeWidth={isActive ? 2.1 : 1.7}
                 style={{ flexShrink: 0, transition: 'color 0.2s ease' }}
               />
               <span
                 style={{
-                  color: '#ffffff',
+                  color: 'hsl(var(--foreground))',
                   fontSize: '13.5px',
                   fontWeight: 600,
                   whiteSpace: 'nowrap',

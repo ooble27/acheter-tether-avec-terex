@@ -31,12 +31,12 @@ export function MobileBottomNav({ activeSection, setActiveSection }: MobileBotto
           display: 'flex',
           alignItems: 'center',
           gap: '6px',
-          background: 'rgba(30,30,30,0.95)',
+          background: 'hsl(var(--terex-darker) / 0.95)',
           borderRadius: '22px',
           padding: '8px',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255,255,255,0.07)',
+          border: '1px solid hsl(var(--terex-accent) / 0.07)',
           width: '100%',
           maxWidth: '320px',
           justifyContent: 'space-around',
@@ -55,7 +55,7 @@ export function MobileBottomNav({ activeSection, setActiveSection }: MobileBotto
                 justifyContent: 'center',
                 gap: isActive ? '8px' : '0px',
                 padding: isActive ? '12px 18px' : '12px 15px',
-                background: isActive ? '#2d2d2d' : 'transparent',
+                background: isActive ? 'hsl(var(--terex-gray))' : 'transparent',
                 borderRadius: '16px',
                 border: 'none',
                 cursor: 'pointer',
@@ -67,13 +67,13 @@ export function MobileBottomNav({ activeSection, setActiveSection }: MobileBotto
             >
               <Icon
                 size={20}
-                color={isActive ? '#ffffff' : '#71717a'}
+                color={isActive ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))'}
                 strokeWidth={isActive ? 2.1 : 1.7}
                 style={{ flexShrink: 0, transition: 'color 0.2s ease' }}
               />
               <span
                 style={{
-                  color: '#ffffff',
+                  color: 'hsl(var(--foreground))',
                   fontSize: '13px',
                   fontWeight: 600,
                   whiteSpace: 'nowrap',

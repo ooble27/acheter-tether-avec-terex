@@ -8,10 +8,10 @@ interface RecentTransactionsProps {
 }
 
 // Card « pleine » — meme traitement que DashboardHome pour la coherence.
-const CARD = '#222222';
-const BORDER = 'rgba(255,255,255,0.09)';
-const ACCENT = 'rgba(255,255,255,0.55)';
-const ICON_SQUARE = '#2c2c2c';
+const CARD = 'hsl(var(--terex-darker))';
+const BORDER = 'hsl(var(--terex-accent) / 0.09)';
+const ACCENT = 'hsl(var(--foreground) / 0.55)';
+const ICON_SQUARE = 'hsl(var(--terex-gray))';
 
 const TetherLogo = () => (
   <img src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" alt="USDT" style={{ width: '12px', height: '12px' }} />
@@ -30,7 +30,7 @@ export function RecentTransactions({ onNavigate }: RecentTransactionsProps) {
 
   const typeConfig = (type: string) => {
     const iconBg = ICON_SQUARE;
-    const iconColor = 'rgba(255,255,255,0.90)';
+    const iconColor = 'hsl(var(--terex-accent) / 0.90)';
     switch (type) {
       case 'buy':      return { label: 'Achat USDT',  Icon: Coins,     iconColor, iconBg };
       case 'sell':     return { label: 'Vente USDT',  Icon: HandCoins, iconColor, iconBg };
@@ -55,7 +55,7 @@ export function RecentTransactions({ onNavigate }: RecentTransactionsProps) {
     <div style={{ background: CARD, borderRadius: '20px', border: `1px solid ${BORDER}`, overflow: 'hidden' }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px 12px' }}>
-        <p style={{ color: '#fff', fontSize: '15px', fontWeight: 600, margin: 0 }}>Activité récente</p>
+        <p style={{ color: 'hsl(var(--foreground))', fontSize: '15px', fontWeight: 600, margin: 0 }}>Activité récente</p>
         {transactions.length > 0 && (
           <button
             onClick={() => onNavigate?.('history')}
@@ -69,7 +69,7 @@ export function RecentTransactions({ onNavigate }: RecentTransactionsProps) {
       {/* Loading */}
       {loading && transactions.length === 0 && (
         <div style={{ padding: '32px 20px', textAlign: 'center' }}>
-          <p style={{ color: '#4b5563', fontSize: '13px', margin: 0 }}>Chargement...</p>
+          <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px', margin: 0 }}>Chargement...</p>
         </div>
       )}
 
@@ -77,10 +77,10 @@ export function RecentTransactions({ onNavigate }: RecentTransactionsProps) {
       {!loading && recentTransactions.length === 0 && (
         <div style={{ padding: '40px 20px', textAlign: 'center' }}>
           <div style={{ width: '48px', height: '48px', borderRadius: '16px', background: ICON_SQUARE, margin: '0 auto 12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Coins size={20} color="#4b5563" />
+            <Coins size={20} color="hsl(var(--muted-foreground))" />
           </div>
-          <p style={{ color: '#6b7280', fontSize: '13px', margin: '0 0 4px', fontWeight: 500 }}>Aucune transaction</p>
-          <p style={{ color: '#374151', fontSize: '12px', margin: 0 }}>Vos opérations apparaîtront ici</p>
+          <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px', margin: '0 0 4px', fontWeight: 500 }}>Aucune transaction</p>
+          <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px', margin: 0 }}>Vos opérations apparaîtront ici</p>
         </div>
       )}
 
@@ -101,12 +101,12 @@ export function RecentTransactions({ onNavigate }: RecentTransactionsProps) {
             {/* Info */}
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '3px' }}>
-                <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>{label}</span>
+                <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 500 }}>{label}</span>
                 {(() => {
                   const done = tx.status === 'completed' || tx.status === 'confirmed';
                   const ko = tx.status === 'cancelled' || tx.status === 'failed';
-                  const bg = done ? 'rgba(255,255,255,0.06)' : ko ? 'rgba(248,113,113,0.08)' : 'rgba(251,191,36,0.1)';
-                  const color = done ? 'rgba(255,255,255,0.55)' : ko ? '#f87171' : '#fbbf24';
+                  const bg = done ? 'hsl(var(--terex-accent) / 0.06)' : ko ? 'rgba(248,113,113,0.08)' : 'rgba(251,191,36,0.1)';
+                  const color = done ? 'hsl(var(--foreground) / 0.55)' : ko ? '#f87171' : '#fbbf24';
                   const text = done ? 'Terminé' : tx.status === 'cancelled' ? 'Annulé' : tx.status === 'failed' ? 'Échoué' : 'En cours';
                   return (
                     <span style={{ fontSize: '10px', fontWeight: 600, padding: '2px 7px', borderRadius: '999px', background: bg, color }}>
@@ -115,16 +115,16 @@ export function RecentTransactions({ onNavigate }: RecentTransactionsProps) {
                   );
                 })()}
               </div>
-              <p style={{ color: '#4b5563', fontSize: '11px', margin: 0 }}>{formatDate(tx.date)}</p>
+              <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', margin: 0 }}>{formatDate(tx.date)}</p>
             </div>
 
             {/* Amount */}
             <div style={{ textAlign: 'right', flexShrink: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '4px', justifyContent: 'flex-end', marginBottom: '2px' }}>
                 <TetherLogo />
-                <span style={{ color: '#fff', fontSize: '13px', fontWeight: 600 }}>{tx.usdtAmount || '—'}</span>
+                <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 600 }}>{tx.usdtAmount || '—'}</span>
               </div>
-              <p style={{ color: '#4b5563', fontSize: '11px', margin: 0 }}>{tx.amount?.toLocaleString()} {tx.currency}</p>
+              <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', margin: 0 }}>{tx.amount?.toLocaleString()} {tx.currency}</p>
             </div>
 
             {/* Repeat */}
@@ -133,7 +133,7 @@ export function RecentTransactions({ onNavigate }: RecentTransactionsProps) {
               title="Refaire"
               style={{ width: '32px', height: '32px', borderRadius: '10px', background: ICON_SQUARE, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
             >
-              <RotateCcw size={13} color="#6b7280" />
+              <RotateCcw size={13} color="hsl(var(--muted-foreground))" />
             </button>
           </div>
         );

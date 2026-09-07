@@ -78,12 +78,12 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				terex: {
-					dark: '#1a1a1a',
-					darker: '#1e1e1e',
-					accent: '#ffffff',
-					'accent-light': '#e5e5e5',
-					gray: '#2A2A2A',
-					'gray-light': '#3A3A3A',
+					dark: 'hsl(var(--terex-dark) / <alpha-value>)',
+					darker: 'hsl(var(--terex-darker) / <alpha-value>)',
+					accent: 'hsl(var(--terex-accent) / <alpha-value>)',
+					'accent-light': 'hsl(var(--terex-accent-light) / <alpha-value>)',
+					gray: 'hsl(var(--terex-gray) / <alpha-value>)',
+					'gray-light': 'hsl(var(--terex-gray-light) / <alpha-value>)',
 				}
 			},
 			borderRadius: {

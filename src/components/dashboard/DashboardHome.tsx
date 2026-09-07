@@ -22,13 +22,14 @@ interface DashboardHomeProps {
   onNavigate?: (section: string) => void;
 }
 
-const ACCENT_LIGHT = '#e5e5e5';
-// Cards plus « pleines » — plus de contraste avec le fond (#1a1a1a).
-// Avant : #1e1e1e (trop transparent), maintenant : #242424 + bordure marquee.
-const CARD = '#222222';
-const BORDER = 'rgba(255,255,255,0.09)';
-const ICON_BG = '#2c2c2c';
-const ICON_COLOR = 'rgba(255,255,255,0.90)';
+// Toutes les couleurs passent par les variables de thème (clair/sombre).
+// Les surfaces translucides utilisent l'« accent » (blanc en sombre,
+// quasi-noir en clair) pour garder le même effet dans les deux thèmes.
+const ACCENT_LIGHT = 'hsl(var(--terex-accent-light))';
+const CARD = 'hsl(var(--terex-darker))';
+const BORDER = 'hsl(var(--terex-accent) / 0.09)';
+const ICON_BG = 'hsl(var(--terex-gray))';
+const ICON_COLOR = 'hsl(var(--terex-accent) / 0.90)';
 
 // Style Ooble Dashboard : uniquement Acheter et Vendre (pas de virement,
 // pas d'OTC). L'OTC reste accessible via le profil / menu latéral.
@@ -68,29 +69,29 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
   // ── Mobile ──────────────────────────────────────────────────────────────
   if (isMobile) {
     return (
-      <div style={{ minHeight: '100vh', background: '#1a1a1a', overflowY: 'auto', paddingBottom: '110px' }}>
+      <div style={{ minHeight: '100vh', background: 'hsl(var(--terex-dark))', overflowY: 'auto', paddingBottom: '110px' }}>
 
         {/* Greeting */}
         <div style={{ padding: '4px 20px 8px' }}>
-          <p style={{ color: '#6b7280', fontSize: '13px', margin: '0 0 2px' }}>{getGreeting()},</p>
-          <h1 style={{ color: '#fff', fontSize: '26px', fontWeight: 700, margin: 0, letterSpacing: '-0.5px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px', margin: '0 0 2px' }}>{getGreeting()},</p>
+          <h1 style={{ color: 'hsl(var(--foreground))', fontSize: '26px', fontWeight: 700, margin: 0, letterSpacing: '-0.5px', display: 'flex', alignItems: 'center', gap: '10px' }}>
             {firstName}
           </h1>
         </div>
 
         {/* Rate card — neutre, pas de couleur */}
         <div style={{ margin: '16px 20px', background: CARD, borderRadius: '20px', padding: '20px', border: `1px solid ${BORDER}` }}>
-          <p style={{ color: '#6b7280', fontSize: '11px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 8px' }}>Taux USDT / CFA</p>
+          <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 8px' }}>Taux USDT / CFA</p>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-              <span style={{ color: '#fff', fontSize: '34px', fontWeight: 700, letterSpacing: '-1px', lineHeight: 1 }}>
+              <span style={{ color: 'hsl(var(--foreground))', fontSize: '34px', fontWeight: 700, letterSpacing: '-1px', lineHeight: 1 }}>
                 {rateDisplay}
               </span>
-              <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '14px', fontWeight: 600 }}>CFA</span>
+              <span style={{ color: 'hsl(var(--foreground) / 0.45)', fontSize: '14px', fontWeight: 600 }}>CFA</span>
             </div>
             <img src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" alt="USDT" style={{ width: '40px', height: '40px', opacity: 0.85 }} />
           </div>
-          <p style={{ color: '#374151', fontSize: '11px', margin: '8px 0 0' }}>pour 1 USDT · Terex</p>
+          <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', margin: '8px 0 0' }}>pour 1 USDT · Terex</p>
         </div>
 
         {/* Quick actions — style Ooble Dashboard : grid 2 cols, chip
@@ -106,7 +107,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                 <span style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <Icon size={20} color={ICON_COLOR} strokeWidth={1.6} />
                 </span>
-                <span style={{ color: '#fff', fontSize: '15px', fontWeight: 500 }}>{label}</span>
+                <span style={{ color: 'hsl(var(--foreground))', fontSize: '15px', fontWeight: 500 }}>{label}</span>
               </button>
             ))}
           </div>
@@ -114,14 +115,14 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
 
         {/* Recevez sur X réseaux — style Ooble Dashboard */}
         <div style={{ padding: '24px 20px 0' }}>
-          <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '11px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.16em', margin: '0 0 10px' }}>
+          <p style={{ color: 'hsl(var(--foreground) / 0.55)', fontSize: '11px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.16em', margin: '0 0 10px' }}>
             Recevez sur {HOME_NETWORKS.length} réseaux
           </p>
           <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px', margin: '0 -20px', padding: '0 20px 4px', scrollbarWidth: 'none' }}>
             {HOME_NETWORKS.map(n => (
-              <div key={n.id} style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', padding: '8px 14px 8px 8px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.10)', background: CARD, flexShrink: 0 }}>
+              <div key={n.id} style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', padding: '8px 14px 8px 8px', borderRadius: '10px', border: '1px solid hsl(var(--terex-accent) / 0.10)', background: CARD, flexShrink: 0 }}>
                 <img src={NETWORK_LOGOS[n.id]} alt="" style={{ width: '28px', height: '28px', borderRadius: '50%' }} />
-                <span style={{ color: '#fff', fontSize: '14px', fontWeight: 400, whiteSpace: 'nowrap' }}>{n.name}</span>
+                <span style={{ color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 400, whiteSpace: 'nowrap' }}>{n.name}</span>
               </div>
             ))}
           </div>
@@ -136,10 +137,10 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                 <GraduationCap size={20} color={ICON_COLOR} strokeWidth={1.6} />
               </span>
               <span style={{ flex: 1 }}>
-                <span style={{ display: 'block', color: '#fff', fontSize: '14px', fontWeight: 500 }}>Terex Academy</span>
-                <span style={{ display: 'block', color: '#6b7280', fontSize: '12px', marginTop: '2px' }}>Reprendre ma formation</span>
+                <span style={{ display: 'block', color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 500 }}>Terex Academy</span>
+                <span style={{ display: 'block', color: 'hsl(var(--muted-foreground))', fontSize: '12px', marginTop: '2px' }}>Reprendre ma formation</span>
               </span>
-              <ChevronRight size={16} color="#555" />
+              <ChevronRight size={16} color="hsl(var(--muted-foreground))" />
             </button>
           </div>
         )}
@@ -160,8 +161,8 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
     <div style={{ minHeight: 'calc(100vh - 8rem)', padding: '40px 40px 120px', maxWidth: '1000px', margin: '0 auto' }}>
       {/* Header greeting */}
       <div style={{ marginBottom: '26px' }}>
-        <p style={{ color: '#6b7280', fontSize: '13px', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 500 }}>{getGreeting()}</p>
-        <h1 style={{ color: '#fff', fontSize: '30px', fontWeight: 600, margin: 0, letterSpacing: '-0.4px' }}>
+        <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 500 }}>{getGreeting()}</p>
+        <h1 style={{ color: 'hsl(var(--foreground))', fontSize: '30px', fontWeight: 600, margin: 0, letterSpacing: '-0.4px' }}>
           {firstName}
         </h1>
       </div>
@@ -172,12 +173,12 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
         <section style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '18px', padding: '24px' }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px' }}>
             <div style={{ minWidth: 0 }}>
-              <span style={{ display: 'block', color: '#6b7280', fontSize: '12px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.16em' }}>Taux du jour</span>
+              <span style={{ display: 'block', color: 'hsl(var(--muted-foreground))', fontSize: '12px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.16em' }}>Taux du jour</span>
               <div style={{ marginTop: '16px', display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                <span style={{ color: '#fff', fontSize: '38px', fontWeight: 300, lineHeight: 1, letterSpacing: '-1px' }}>{rateDisplay}</span>
-                <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: '16px', fontWeight: 500 }}>CFA</span>
+                <span style={{ color: 'hsl(var(--foreground))', fontSize: '38px', fontWeight: 300, lineHeight: 1, letterSpacing: '-1px' }}>{rateDisplay}</span>
+                <span style={{ color: 'hsl(var(--foreground) / 0.55)', fontSize: '16px', fontWeight: 500 }}>CFA</span>
               </div>
-              <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px', margin: '8px 0 0' }}>pour 1 USDT · Terex</p>
+              <p style={{ color: 'hsl(var(--foreground) / 0.4)', fontSize: '12px', margin: '8px 0 0' }}>pour 1 USDT · Terex</p>
             </div>
             <img src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" alt="USDT" style={{ width: '44px', height: '44px', opacity: 0.9, flexShrink: 0 }} />
           </div>
@@ -191,26 +192,26 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                 key={id}
                 onClick={() => onNavigate?.(id)}
                 style={{ background: CARD, borderRadius: '16px', border: `1px solid ${BORDER}`, padding: '17px 20px', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', transition: 'background 0.15s', outline: 'none', textAlign: 'left' }}
-                onMouseEnter={e => { e.currentTarget.style.background = '#2a2a2a'; }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'hsl(var(--terex-gray))'; }}
                 onMouseLeave={e => { e.currentTarget.style.background = CARD; }}
               >
                 <span style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <Icon size={20} color={ICON_COLOR} strokeWidth={1.6} />
                 </span>
-                <span style={{ color: '#fff', fontSize: '15px', fontWeight: 500 }}>{label}</span>
+                <span style={{ color: 'hsl(var(--foreground))', fontSize: '15px', fontWeight: 500 }}>{label}</span>
               </button>
             ))}
           </div>
 
           <div>
-            <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '11px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.14em', margin: '0 0 10px' }}>
+            <p style={{ color: 'hsl(var(--foreground) / 0.55)', fontSize: '11px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.14em', margin: '0 0 10px' }}>
               Recevez sur {HOME_NETWORKS.length} réseaux
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
               {HOME_NETWORKS.map(n => (
-                <div key={n.id} style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', padding: '8px 14px 8px 8px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.10)', background: CARD }}>
+                <div key={n.id} style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', padding: '8px 14px 8px 8px', borderRadius: '10px', border: '1px solid hsl(var(--terex-accent) / 0.10)', background: CARD }}>
                   <img src={NETWORK_LOGOS[n.id]} alt="" style={{ width: '28px', height: '28px', borderRadius: '50%' }} />
-                  <span style={{ color: '#fff', fontSize: '14px', fontWeight: 400, whiteSpace: 'nowrap' }}>{n.name}</span>
+                  <span style={{ color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 400, whiteSpace: 'nowrap' }}>{n.name}</span>
                 </div>
               ))}
             </div>
@@ -224,16 +225,16 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
         {showAcademy && (
           <button onClick={() => onNavigate?.('academy')}
             style={{ background: CARD, borderRadius: '18px', border: `1px solid ${BORDER}`, padding: '22px 24px', display: 'flex', alignItems: 'center', gap: '16px', cursor: 'pointer', textAlign: 'left', outline: 'none', transition: 'background 0.15s' }}
-            onMouseEnter={e => { e.currentTarget.style.background = '#2a2a2a'; }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'hsl(var(--terex-gray))'; }}
             onMouseLeave={e => { e.currentTarget.style.background = CARD; }}>
             <span style={{ width: '46px', height: '46px', borderRadius: '14px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <GraduationCap size={22} color={ICON_COLOR} strokeWidth={1.6} />
             </span>
             <span style={{ flex: 1 }}>
-              <span style={{ display: 'block', color: '#fff', fontSize: '15px', fontWeight: 500 }}>Terex Academy</span>
-              <span style={{ display: 'block', color: '#6b7280', fontSize: '12px', marginTop: '3px' }}>Reprendre ma formation</span>
+              <span style={{ display: 'block', color: 'hsl(var(--foreground))', fontSize: '15px', fontWeight: 500 }}>Terex Academy</span>
+              <span style={{ display: 'block', color: 'hsl(var(--muted-foreground))', fontSize: '12px', marginTop: '3px' }}>Reprendre ma formation</span>
             </span>
-            <ChevronRight size={16} color="#555" />
+            <ChevronRight size={16} color="hsl(var(--muted-foreground))" />
           </button>
         )}
       </div>
