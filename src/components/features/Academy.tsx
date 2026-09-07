@@ -967,10 +967,21 @@ function EmptyState({ label }: { label: string }) {
   );
 }
 
+/**
+ * A loader that appears only after 220 ms — under that threshold a Supabase
+ * round-trip normally already returned, so a screen-blanking spinner would
+ * flash for nothing. When it does render, it takes up the same padding the
+ * content will use, so the layout doesn't jump when it swaps in.
+ */
 function FullLoader() {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setVisible(true), 220);
+    return () => clearTimeout(t);
+  }, []);
   return (
-    <div style={{ textAlign: 'center', padding: 80 }}>
-      <Loader2 size={18} color={C.t3} style={{ animation: 'spin 1s linear infinite' }} />
+    <div style={{ textAlign: 'center', padding: 80, minHeight: 240 }}>
+      {visible && <Loader2 size={18} color={C.t3} style={{ animation: 'spin 1s linear infinite' }} />}
       <SpinKeyframe />
     </div>
   );

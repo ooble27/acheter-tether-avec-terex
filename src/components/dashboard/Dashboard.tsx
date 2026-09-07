@@ -194,8 +194,9 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
 
           {/* Bouton profil flottant — IDENTIQUE partout (site bureau, mobile, PWA) :
               va DIRECTEMENT à la page Profil (qui contient tout le menu). Pas de
-              menu déroulant ni de hamburger. Masqué lorsqu'on est déjà sur le profil. */}
-          {activeSection !== 'profile' && (
+              menu déroulant ni de hamburger. Masqué lorsqu'on est déjà sur le profil,
+              ou en mode immersif (Academy — plein écran d'apprentissage). */}
+          {activeSection !== 'profile' && activeSection !== 'academy' && (
             <Button
               variant="ghost"
               size="icon"
@@ -215,17 +216,24 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
           )}
 
           <main
-            className={`flex-1 ${isMobile ? 'px-4 pb-20' : 'p-6 pt-6 pb-24'} relative`}
-            style={isMobile ? { paddingTop: 'calc(env(safe-area-inset-top, 0px) + 16px)' } : undefined}
+            className={`flex-1 ${isMobile
+              ? (activeSection === 'academy' ? 'px-0 pb-0' : 'px-4 pb-20')
+              : (activeSection === 'academy' ? 'p-0'      : 'p-6 pt-6 pb-24')} relative`}
+            style={
+              activeSection === 'academy'
+                ? undefined
+                : (isMobile ? { paddingTop: 'calc(env(safe-area-inset-top, 0px) + 16px)' } : undefined)
+            }
           >
             {/* key = fondu doux à chaque changement de section (transitions fluides) */}
-            <div key={activeSection} className="section-fade">
+            <div key={activeSection} className={activeSection === 'academy' ? '' : 'section-fade'}>
               {renderContent()}
             </div>
           </main>
-          
-          {/* Navigation en bas */}
-          {isMobile ? (
+
+          {/* Navigation en bas — masquée dans l'Academy pour un mode d'apprentissage
+              immersif (le bouton retour de l'Academy ramène à l'accueil). */}
+          {activeSection !== 'academy' && (isMobile ? (
             <MobileBottomNav
               activeSection={activeSection}
               setActiveSection={setActiveSection}
@@ -235,7 +243,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
               activeSection={activeSection}
               setActiveSection={setActiveSection}
             />
-          )}
+          ))}
           
           {/* Notifications push désactivées pour l'instant (pas d'app native) —
               à réactiver quand l'application sera créée. */}

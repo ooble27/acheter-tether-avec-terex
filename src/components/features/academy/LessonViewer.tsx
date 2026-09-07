@@ -124,16 +124,7 @@ export function LessonViewer({
     if (newState && next) setTimeout(() => onOpenLesson(next.id), 400);
   };
 
-  if (loading) {
-    return (
-      <div style={{ background: C.bg, minHeight: '100vh', fontFamily: FONT }}>
-        <div style={{ textAlign: 'center', padding: 80 }}>
-          <Loader2 size={18} color={C.t3} style={{ animation: 'spin 1s linear infinite' }} />
-        </div>
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-      </div>
-    );
-  }
+  if (loading) return <DeferredSpinner background />;
   if (!lesson) return null;
 
   const label = TYPE_LABEL[lesson.content_type] ?? 'Leçon';
@@ -454,15 +445,15 @@ function SectionCard({ section, sectionIndex, total, isMobile }: {
       </div>
       {section.heading && (
         <h2 style={{
-          fontFamily: FONT, fontWeight: 300, letterSpacing: '-0.015em',
-          fontSize: isMobile ? 20 : 24, lineHeight: 1.25,
-          color: C.t1, margin: '0 0 18px',
-          paddingBottom: 14, borderBottom: `1px solid ${C.bds}`,
+          fontFamily: FONT, fontWeight: 300, letterSpacing: '-0.02em',
+          fontSize: isMobile ? 22 : 26, lineHeight: 1.25,
+          color: C.t1, margin: '0 0 20px',
+          paddingBottom: 16, borderBottom: `1px solid ${C.bds}`,
         }}>
           {inlineRender(section.heading)}
         </h2>
       )}
-      <div style={{ color: C.t2, fontSize: 14.5, lineHeight: 1.8, fontWeight: 300 }}>
+      <div style={{ color: C.t2, fontSize: 15.5, lineHeight: 1.85, fontWeight: 300 }}>
         {section.blocks.map((b, bi) => renderContentBlock(b, bi))}
       </div>
     </div>
@@ -570,6 +561,7 @@ type ContentBlock =
   | { type: 'callout'; text: string; variant: 'tip' | 'warning' | 'info' }
   | { type: 'ul'; items: string[] }
   | { type: 'ol'; items: string[] }
+  | { type: 'img'; url: string; alt: string; caption?: string }
   | { type: 'hr' };
 
 type Section = { heading: string | null; blocks: ContentBlock[] };
@@ -589,6 +581,12 @@ function parseIntoSections(src: string): Section[] {
     }
     if (line.startsWith('### ')) { current.blocks.push({ type: 'h3', text: line.slice(4).trim() }); i++; continue; }
     if (/^---+$/.test(line.trim())) { current.blocks.push({ type: 'hr' }); i++; continue; }
+    // Markdown image: ![alt](url), optionally followed on the same line by a caption in _italics_
+    const imgMatch = line.match(/^\s*!\[([^\]]*)\]\(([^)]+)\)\s*(?:_([^_]+)_)?\s*$/);
+    if (imgMatch) {
+      current.blocks.push({ type: 'img', alt: imgMatch[1], url: imgMatch[2], caption: imgMatch[3] });
+      i++; continue;
+    }
     if (line.startsWith('> ')) {
       let acc = line.slice(2); i++;
       while (i < lines.length && lines[i].startsWith('> ')) { acc += ' ' + lines[i].slice(2); i++; }
@@ -641,7 +639,8 @@ function detectCalloutVariant(text: string): 'tip' | 'warning' | 'info' {
 }
 function isBlockStart(l: string): boolean {
   return /^---+$/.test(l.trim()) || l.startsWith('## ') || l.startsWith('### ') || l.startsWith('> ')
-    || /^\s*[•\-\*]\s+/.test(l) || /^\s*\d+\.\s+/.test(l);
+    || /^\s*[•\-\*]\s+/.test(l) || /^\s*\d+\.\s+/.test(l)
+    || /^\s*!\[[^\]]*\]\([^)]+\)/.test(l);
 }
 
 function renderContentBlock(b: ContentBlock, k: number): JSX.Element {
@@ -649,8 +648,8 @@ function renderContentBlock(b: ContentBlock, k: number): JSX.Element {
     case 'h3':
       return (
         <h3 key={k} style={{
-          fontSize: 15, fontWeight: 400, color: C.t1, fontFamily: FONT,
-          margin: k === 0 ? '0 0 10px' : '22px 0 10px', letterSpacing: '-0.005em',
+          fontSize: 17, fontWeight: 400, color: C.t1, fontFamily: FONT,
+          margin: k === 0 ? '0 0 12px' : '26px 0 12px', letterSpacing: '-0.01em',
         }}>
           {inlineRender(b.text)}
         </h3>
@@ -664,12 +663,12 @@ function renderContentBlock(b: ContentBlock, k: number): JSX.Element {
       const CalloutIcon = cfg.Icon;
       return (
         <div key={k} style={{
-          margin: '16px 0', padding: '14px 16px',
-          borderRadius: 10, background: cfg.bg, border: `1px solid ${cfg.border}`,
-          display: 'flex', gap: 10, alignItems: 'flex-start',
+          margin: '18px 0', padding: '16px 18px',
+          borderRadius: 12, background: cfg.bg, border: `1px solid ${cfg.border}`,
+          display: 'flex', gap: 12, alignItems: 'flex-start',
         }}>
-          <CalloutIcon size={15} color={cfg.iconColor} style={{ flexShrink: 0, marginTop: 2 }} />
-          <div style={{ color: C.t1, fontSize: 13, lineHeight: 1.65, flex: 1, fontWeight: 300 }}>
+          <CalloutIcon size={17} color={cfg.iconColor} style={{ flexShrink: 0, marginTop: 2 }} />
+          <div style={{ color: C.t1, fontSize: 14.5, lineHeight: 1.7, flex: 1, fontWeight: 300 }}>
             {inlineRender(b.text)}
           </div>
         </div>
@@ -677,10 +676,10 @@ function renderContentBlock(b: ContentBlock, k: number): JSX.Element {
     }
     case 'ul':
       return (
-        <ul key={k} style={{ margin: '10px 0 16px', paddingLeft: 0, listStyle: 'none' }}>
+        <ul key={k} style={{ margin: '12px 0 18px', paddingLeft: 0, listStyle: 'none' }}>
           {b.items.map((it, i) => (
-            <li key={i} style={{ position: 'relative', paddingLeft: 18, marginBottom: 8, fontSize: 14, lineHeight: 1.7 }}>
-              <span style={{ position: 'absolute', left: 4, top: 11, width: 5, height: 5, borderRadius: '50%', background: C.t3 }} />
+            <li key={i} style={{ position: 'relative', paddingLeft: 20, marginBottom: 10, fontSize: 15.5, lineHeight: 1.75 }}>
+              <span style={{ position: 'absolute', left: 4, top: 12, width: 6, height: 6, borderRadius: '50%', background: C.t3 }} />
               {inlineRender(it)}
             </li>
           ))}
@@ -688,14 +687,14 @@ function renderContentBlock(b: ContentBlock, k: number): JSX.Element {
       );
     case 'ol':
       return (
-        <ol key={k} style={{ margin: '10px 0 16px', paddingLeft: 0, listStyle: 'none' }}>
+        <ol key={k} style={{ margin: '12px 0 18px', paddingLeft: 0, listStyle: 'none' }}>
           {b.items.map((it, i) => (
-            <li key={i} style={{ display: 'flex', gap: 12, marginBottom: 10, fontSize: 14, lineHeight: 1.7, alignItems: 'flex-start' }}>
+            <li key={i} style={{ display: 'flex', gap: 14, marginBottom: 12, fontSize: 15.5, lineHeight: 1.75, alignItems: 'flex-start' }}>
               <span style={{
-                width: 24, height: 24, borderRadius: '50%',
+                width: 26, height: 26, borderRadius: '50%',
                 background: C.l2, border: `1px solid ${C.bds}`,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                ...numeric, fontSize: 11, color: C.t2,
+                ...numeric, fontSize: 12, color: C.t2,
                 flexShrink: 0, marginTop: 1,
               }}>
                 {i + 1}
@@ -704,6 +703,27 @@ function renderContentBlock(b: ContentBlock, k: number): JSX.Element {
             </li>
           ))}
         </ol>
+      );
+    case 'img':
+      return (
+        <figure key={k} style={{ margin: '20px 0 24px' }}>
+          <div style={{
+            borderRadius: 12, overflow: 'hidden',
+            border: `1px solid ${C.bds}`, background: C.l2,
+          }}>
+            <img src={b.url} alt={b.alt}
+              style={{ width: '100%', height: 'auto', display: 'block' }}
+              loading="lazy" />
+          </div>
+          {(b.caption || b.alt) && (
+            <figcaption style={{
+              color: C.t3, fontSize: 12, marginTop: 8, textAlign: 'center',
+              fontStyle: 'italic', fontWeight: 300,
+            }}>
+              {b.caption || b.alt}
+            </figcaption>
+          )}
+        </figure>
       );
     case 'hr':
       return <hr key={k} style={{ border: 'none', borderTop: `1px solid ${C.bds}`, margin: '20px 0' }} />;
@@ -735,6 +755,29 @@ function inlineRender(text: string): (string | JSX.Element)[] {
   }
   if (lastIdx < text.length) parts.push(text.slice(lastIdx));
   return parts;
+}
+
+/**
+ * A loader that only shows its spinner after 220 ms — most Supabase reads
+ * come back well before that, so a hard "blank screen + spinner" flash for
+ * fast navigations is avoided.
+ */
+function DeferredSpinner({ background }: { background?: boolean }) {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setVisible(true), 220);
+    return () => clearTimeout(t);
+  }, []);
+  return (
+    <div style={{
+      background: background ? C.bg : 'transparent',
+      minHeight: background ? '100vh' : 240, fontFamily: FONT,
+      textAlign: 'center', padding: 80,
+    }}>
+      {visible && <Loader2 size={18} color={C.t3} style={{ animation: 'spin 1s linear infinite' }} />}
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+    </div>
+  );
 }
 
 function isYouTube(url: string): boolean {

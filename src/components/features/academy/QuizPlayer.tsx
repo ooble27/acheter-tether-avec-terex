@@ -104,16 +104,7 @@ export function QuizPlayer({
     setStep('take');
   };
 
-  if (loading) {
-    return (
-      <div style={{ background: C.bg, minHeight: '100vh', fontFamily: FONT }}>
-        <div style={{ textAlign: 'center', padding: 80 }}>
-          <Loader2 size={18} color={C.t3} style={{ animation: 'spin 1s linear infinite' }} />
-        </div>
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-      </div>
-    );
-  }
+  if (loading) return <DeferredSpinner />;
   if (!quiz) return null;
 
   // ─── Intro ─────────────────────────────────────────────────────────────
@@ -430,6 +421,23 @@ export function QuizPlayer({
 
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
+    </div>
+  );
+}
+
+function DeferredSpinner() {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setVisible(true), 220);
+    return () => clearTimeout(t);
+  }, []);
+  return (
+    <div style={{
+      background: C.bg, minHeight: '100vh', fontFamily: FONT,
+      textAlign: 'center', padding: 80,
+    }}>
+      {visible && <Loader2 size={18} color={C.t3} style={{ animation: 'spin 1s linear infinite' }} />}
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 }
