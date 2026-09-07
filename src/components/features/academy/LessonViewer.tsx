@@ -1,0 +1,748 @@
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
+import { useIsMobile } from '@/hooks/use-mobile';
+import {
+  ArrowLeft, CheckCircle2, Circle, ChevronLeft, ChevronRight, Loader2,
+  FileText, Video, Radio, Type, Clock, Play, BookOpen,
+  Lightbulb, AlertTriangle, Info,
+} from 'lucide-react';
+import {
+  C, FONT, card, cardHeaderRow, cardTitle, sH, numeric,
+  btnPrimary, btnGhost,
+  primaryHoverIn, primaryHoverOut, ghostHoverIn, ghostHoverOut,
+} from '@/components/admin/adminTheme';
+
+const OK = '#4ade80';
+
+type Lesson = {
+  id: string; module_id: string; title: string; content_type: string;
+  content_url: string | null; content_text: string | null;
+  zoom_date: string | null; duration_min: number | null;
+  position: number; is_free_preview: boolean;
+};
+type Module = { id: string; title: string; position: number };
+type ModuleLite = { id: string; lessons: Lesson[] };
+
+const TYPE_LABEL: Record<string, string> = { video: 'Vidéo', pdf: 'PDF', text: 'Lecture', zoom: 'Session live' };
+const TYPE_ICON: Record<string, typeof Video> = { video: Video, pdf: FileText, text: Type, zoom: Radio };
+
+export function LessonViewer({
+  lessonId, courseId, onBackToModule, onOpenLesson,
+}: {
+  lessonId: string; courseId: string;
+  onBackToModule: () => void; onOpenLesson: (lId: string) => void;
+}) {
+  const [lesson, setLesson] = useState<(Lesson & { module?: Module }) | null>(null);
+  const [moduleLessons, setModuleLessons] = useState<Lesson[]>([]);
+  const [allModules, setAllModules] = useState<ModuleLite[]>([]);
+  const [completed, setCompleted] = useState(false);
+  const [progressMap, setProgressMap] = useState<Record<string, boolean>>({});
+  const [loading, setLoading] = useState(true);
+  const [marking, setMarking] = useState(false);
+  const [activeSection, setActiveSection] = useState(0);
+  const scrollAnchorRef = useRef<HTMLDivElement | null>(null);
+  const { user } = useAuth();
+  const isMobile = useIsMobile();
+
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      const { data: l } = await supabase.from('lessons' as any).select('*').eq('id', lessonId).single();
+      const lessonData = l as any as Lesson;
+      let moduleData: Module | undefined;
+      if (lessonData?.module_id) {
+        const { data: m } = await supabase.from('course_modules' as any).select('*').eq('id', lessonData.module_id).single();
+        moduleData = m as any as Module;
+        const { data: siblings } = await supabase.from('lessons' as any).select('*').eq('module_id', lessonData.module_id).order('position');
+        setModuleLessons((siblings as any[]) ?? []);
+      }
+      setLesson({ ...lessonData, module: moduleData });
+
+      const { data: mods } = await supabase.from('course_modules' as any).select('id').eq('course_id', courseId).order('position');
+      const withLessons = await Promise.all(((mods as any[]) ?? []).map(async (mod: any) => {
+        const { data: ls } = await supabase.from('lessons' as any).select('*').eq('module_id', mod.id).order('position');
+        return { id: mod.id, lessons: (ls as any[]) ?? [] };
+      }));
+      setAllModules(withLessons);
+
+      if (user) {
+        const { data: p } = await supabase.from('lesson_progress' as any).select('lesson_id, completed').eq('user_id', user.id);
+        const map: Record<string, boolean> = {};
+        ((p as any[]) ?? []).forEach(row => { map[row.lesson_id] = !!row.completed; });
+        setProgressMap(map);
+        setCompleted(!!map[lessonId]);
+      }
+      setLoading(false);
+      setActiveSection(0);
+      window.scrollTo(0, 0);
+    })();
+  }, [lessonId, courseId, user]);
+
+  // Parse lesson content into sections for section-based navigation
+  const sections = useMemo(() => {
+    if (!lesson?.content_text) return [] as Section[];
+    return parseIntoSections(lesson.content_text);
+  }, [lesson?.content_text]);
+
+  const flat = useMemo(() => allModules.flatMap(m => m.lessons), [allModules]);
+  const idx = flat.findIndex(l => l.id === lessonId);
+  const prev = idx > 0 ? flat[idx - 1] : null;
+  const next = idx >= 0 && idx < flat.length - 1 ? flat[idx + 1] : null;
+  const currentLessonInModuleIdx = useMemo(() => moduleLessons.findIndex(l => l.id === lessonId), [moduleLessons, lessonId]);
+  const currentModuleIdx = useMemo(() => allModules.findIndex(m => m.lessons.some(l => l.id === lessonId)), [allModules, lessonId]);
+
+  const totalSections = sections.length;
+  const hasSections = totalSections > 0;
+  const currentSection = hasSections ? sections[Math.min(activeSection, totalSections - 1)] : null;
+  const isLastSection = activeSection >= totalSections - 1;
+
+  const goToSection = (i: number) => {
+    setActiveSection(Math.max(0, Math.min(totalSections - 1, i)));
+    setTimeout(() => scrollAnchorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  };
+
+  const toggleComplete = async () => {
+    if (!user) return;
+    setMarking(true);
+    const newState = !completed;
+    const { data: existing } = await supabase.from('lesson_progress' as any)
+      .select('id').eq('user_id', user.id).eq('lesson_id', lessonId).maybeSingle();
+    if (existing) {
+      await supabase.from('lesson_progress' as any).update({
+        completed: newState, completed_at: newState ? new Date().toISOString() : null,
+      } as any).eq('id', (existing as any).id);
+    } else {
+      await supabase.from('lesson_progress' as any).insert({
+        user_id: user.id, lesson_id: lessonId,
+        completed: newState, completed_at: newState ? new Date().toISOString() : null,
+      } as any);
+    }
+    setCompleted(newState);
+    setProgressMap(p => ({ ...p, [lessonId]: newState }));
+    setMarking(false);
+    if (newState && next) setTimeout(() => onOpenLesson(next.id), 400);
+  };
+
+  if (loading) {
+    return (
+      <div style={{ background: C.bg, minHeight: '100vh', fontFamily: FONT }}>
+        <div style={{ textAlign: 'center', padding: 80 }}>
+          <Loader2 size={18} color={C.t3} style={{ animation: 'spin 1s linear infinite' }} />
+        </div>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
+  if (!lesson) return null;
+
+  const label = TYPE_LABEL[lesson.content_type] ?? 'Leçon';
+
+  return (
+    <div style={{ background: C.bg, minHeight: '100vh', fontFamily: FONT, color: C.t1, fontWeight: 300 }}>
+      <div style={{
+        maxWidth: 1100, margin: '0 auto',
+        padding: isMobile ? '0 0 100px' : '0 24px 120px',
+      }}>
+        {/* Sticky header */}
+        <div style={{
+          position: 'sticky', top: 0, zIndex: 20, background: C.bg,
+          borderBottom: `1px solid ${C.bds}`,
+          padding: isMobile ? '14px 16px 12px' : '18px 0 14px',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <button onClick={onBackToModule}
+              style={{
+                width: 34, height: 34, borderRadius: 9,
+                background: C.l2, border: `1px solid ${C.bds}`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: C.t2, cursor: 'pointer', flexShrink: 0, transition: 'all 0.15s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = C.bd; e.currentTarget.style.color = C.t1; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = C.bds; e.currentTarget.style.color = C.t2; }}>
+              <ArrowLeft size={15} />
+            </button>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ ...sH, fontSize: 10, marginBottom: 2 }}>
+                Module <span style={{ ...numeric, color: C.t2, letterSpacing: 0 }}>{String(currentModuleIdx + 1).padStart(2, '0')}</span>
+                <span style={{ margin: '0 6px', color: C.t3 }}>·</span>
+                Leçon <span style={{ ...numeric, color: C.t2, letterSpacing: 0 }}>{currentLessonInModuleIdx + 1}/{moduleLessons.length}</span>
+              </div>
+              <div style={{
+                fontSize: 13, color: C.t1, fontWeight: 300,
+                overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+              }}>
+                {lesson.title}
+              </div>
+            </div>
+            {hasSections && (
+              <div style={{
+                display: isMobile ? 'none' : 'flex', alignItems: 'center', gap: 4,
+                background: C.l2, border: `1px solid ${C.bds}`,
+                borderRadius: 8, padding: '4px 10px',
+                color: C.t2, fontSize: 11, ...numeric,
+              }}>
+                Section {activeSection + 1}/{totalSections}
+              </div>
+            )}
+          </div>
+          {hasSections && (
+            <div style={{ height: 2, background: 'rgba(255,255,255,0.04)', marginTop: 12, borderRadius: 1 }}>
+              <div style={{
+                height: '100%', borderRadius: 1, background: C.accent,
+                width: `${((activeSection + 1) / totalSections) * 100}%`,
+                transition: 'width 0.3s ease',
+              }} />
+            </div>
+          )}
+        </div>
+
+        <div style={{ padding: isMobile ? '20px 16px 0' : '28px 0 0' }} ref={scrollAnchorRef}>
+          {/* Lesson meta head */}
+          <p style={{ ...sH, marginBottom: 8 }}>{label}</p>
+          <h1 style={{
+            fontFamily: FONT, fontWeight: 300, letterSpacing: '-0.02em',
+            fontSize: isMobile ? 24 : 32, lineHeight: 1.18,
+            color: C.t1, margin: '0 0 12px', textWrap: 'balance' as any,
+          }}>
+            {lesson.title}
+          </h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 24, flexWrap: 'wrap' }}>
+            {lesson.duration_min && (
+              <span style={{ ...numeric, fontSize: 12, color: C.t3, display: 'flex', alignItems: 'center', gap: 5 }}>
+                <Clock size={12} /> {lesson.duration_min} min
+              </span>
+            )}
+            {hasSections && (
+              <span style={{ ...numeric, fontSize: 12, color: C.t3, display: 'flex', alignItems: 'center', gap: 5 }}>
+                <BookOpen size={12} /> {totalSections} section{totalSections > 1 ? 's' : ''}
+              </span>
+            )}
+          </div>
+
+          {/* Two-column layout on desktop, stacked on mobile */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: !isMobile && hasSections ? '220px 1fr' : '1fr',
+            gap: isMobile ? 0 : 28,
+            alignItems: 'flex-start',
+          }}>
+            {/* TOC sidebar (desktop only, when sections exist) */}
+            {!isMobile && hasSections && (
+              <aside style={{
+                position: 'sticky', top: 110,
+                background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12,
+                padding: 8, overflow: 'hidden',
+              }}>
+                <p style={{ ...sH, fontSize: 10, padding: '10px 12px 8px', margin: 0 }}>Sections</p>
+                {sections.map((s, si) => {
+                  const active = si === activeSection;
+                  return (
+                    <button key={si} onClick={() => goToSection(si)}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 10,
+                        width: '100%', textAlign: 'left', padding: '9px 12px',
+                        borderRadius: 8, background: active ? 'rgba(255,255,255,0.05)' : 'transparent',
+                        border: 'none', cursor: 'pointer', color: active ? C.t1 : C.t2,
+                        fontFamily: FONT, fontWeight: active ? 400 : 300, fontSize: 12.5,
+                        marginBottom: 2, transition: 'background 0.12s',
+                      }}
+                      onMouseEnter={e => { if (!active) e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; }}
+                      onMouseLeave={e => { if (!active) e.currentTarget.style.background = 'transparent'; }}>
+                      <span style={{
+                        width: 20, height: 20, borderRadius: '50%', flexShrink: 0,
+                        background: active ? C.accent : C.l2,
+                        border: `1px solid ${active ? C.accent : C.bds}`,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        ...numeric, fontSize: 10, fontWeight: 500,
+                        color: active ? '#111' : C.t3,
+                      }}>
+                        {si + 1}
+                      </span>
+                      <span style={{
+                        flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                      }}>
+                        {s.heading || `Section ${si + 1}`}
+                      </span>
+                    </button>
+                  );
+                })}
+              </aside>
+            )}
+
+            {/* Main content column */}
+            <div>
+              {/* Mobile section pills */}
+              {isMobile && hasSections && totalSections > 1 && (
+                <div style={{
+                  display: 'flex', gap: 6, overflowX: 'auto', paddingBottom: 6,
+                  margin: '0 -16px 20px', padding: '0 16px 6px',
+                  scrollbarWidth: 'none',
+                }}>
+                  {sections.map((s, si) => {
+                    const active = si === activeSection;
+                    return (
+                      <button key={si} onClick={() => goToSection(si)}
+                        style={{
+                          flexShrink: 0, display: 'flex', alignItems: 'center', gap: 6,
+                          padding: '7px 12px', borderRadius: 8, cursor: 'pointer',
+                          background: active ? 'rgba(255,255,255,0.05)' : C.l1,
+                          border: `1px solid ${active ? C.accentBd : C.bds}`,
+                          color: active ? C.t1 : C.t3, fontSize: 11, fontFamily: FONT,
+                          fontWeight: 300, whiteSpace: 'nowrap',
+                        }}>
+                        <span style={{ ...numeric, fontSize: 10 }}>{si + 1}</span>
+                        <span style={{ maxWidth: 140, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {s.heading || `Section ${si + 1}`}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Media (video / pdf link / zoom info) */}
+              <LessonMedia lesson={lesson} />
+
+              {/* Text — section-by-section OR whole content if no sections parsed */}
+              {hasSections && currentSection ? (
+                <SectionCard section={currentSection} sectionIndex={activeSection} total={totalSections} isMobile={isMobile} />
+              ) : lesson.content_text ? (
+                <div style={{
+                  background: C.l1, borderRadius: 14, border: `1px solid ${C.bds}`,
+                  padding: isMobile ? '18px 18px' : '24px 28px',
+                  color: C.t2, fontSize: 14, lineHeight: 1.75, fontWeight: 300,
+                  whiteSpace: 'pre-wrap',
+                }}>
+                  {lesson.content_text}
+                </div>
+              ) : null}
+
+              {/* Section-level nav (only when we have sections) */}
+              {hasSections && totalSections > 1 && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 20 }}>
+                  <button
+                    onClick={() => goToSection(activeSection - 1)}
+                    disabled={activeSection === 0}
+                    style={{
+                      ...btnGhost, height: 46, justifyContent: 'flex-start', paddingLeft: 14, paddingRight: 14,
+                      fontSize: 12.5, opacity: activeSection === 0 ? 0.4 : 1,
+                      cursor: activeSection === 0 ? 'default' : 'pointer',
+                    }}
+                    onMouseEnter={e => { if (activeSection !== 0) ghostHoverIn(e.currentTarget); }}
+                    onMouseLeave={e => { if (activeSection !== 0) ghostHoverOut(e.currentTarget); }}>
+                    <ChevronLeft size={13} /> Section précédente
+                  </button>
+                  <button
+                    onClick={() => goToSection(activeSection + 1)}
+                    disabled={isLastSection}
+                    style={{
+                      ...btnGhost, height: 46, justifyContent: 'flex-end', paddingLeft: 14, paddingRight: 14,
+                      fontSize: 12.5, opacity: isLastSection ? 0.4 : 1,
+                      cursor: isLastSection ? 'default' : 'pointer',
+                    }}
+                    onMouseEnter={e => { if (!isLastSection) ghostHoverIn(e.currentTarget); }}
+                    onMouseLeave={e => { if (!isLastSection) ghostHoverOut(e.currentTarget); }}>
+                    Section suivante <ChevronRight size={13} />
+                  </button>
+                </div>
+              )}
+
+              {/* Mark as done — show only on last section (or always if no sections) */}
+              {user && (!hasSections || isLastSection) && (
+                <button onClick={toggleComplete} disabled={marking}
+                  style={{
+                    ...(completed ? btnGhost : btnPrimary),
+                    width: '100%', height: 48, marginTop: 20,
+                    justifyContent: 'center', fontSize: 13, fontWeight: 400,
+                    ...(completed ? { color: OK, borderColor: 'rgba(74,222,128,0.30)', background: 'rgba(74,222,128,0.06)' } : {}),
+                  }}
+                  onMouseEnter={e => { if (!completed) primaryHoverIn(e.currentTarget); }}
+                  onMouseLeave={e => { if (!completed) primaryHoverOut(e.currentTarget); }}>
+                  {marking
+                    ? <Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} />
+                    : completed
+                      ? <><CheckCircle2 size={14} /> Leçon terminée</>
+                      : <><Circle size={14} /> Marquer comme terminé{next ? ' & continuer' : ''}</>}
+                </button>
+              )}
+
+              {/* Prev/Next lesson */}
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: prev && next ? '1fr 1fr' : '1fr',
+                gap: 10, marginTop: 14,
+              }}>
+                {prev && <NavCard direction="prev" label={prev.title} onClick={() => onOpenLesson(prev.id)} />}
+                {next && <NavCard direction="next" label={next.title} onClick={() => onOpenLesson(next.id)} />}
+              </div>
+
+              {/* Desktop module lessons list */}
+              {!isMobile && moduleLessons.length > 1 && (
+                <div style={{ ...card, marginTop: 28, fontFamily: FONT }}>
+                  <div style={cardHeaderRow}>
+                    <span style={cardTitle}>Leçons du module</span>
+                    <span style={{ ...numeric, fontSize: 11, color: C.t3 }}>{moduleLessons.length}</span>
+                  </div>
+                  {moduleLessons.map((l, li) => {
+                    const isCurrent = l.id === lessonId;
+                    const done = progressMap[l.id];
+                    const isLast = li === moduleLessons.length - 1;
+                    return (
+                      <div key={l.id}
+                        onClick={() => !isCurrent && onOpenLesson(l.id)}
+                        style={{
+                          padding: '12px 20px',
+                          borderBottom: isLast ? 'none' : `1px solid ${C.bds}`,
+                          display: 'flex', alignItems: 'center', gap: 12,
+                          cursor: isCurrent ? 'default' : 'pointer',
+                          background: isCurrent ? 'rgba(255,255,255,0.03)' : 'transparent',
+                          transition: 'background 0.12s',
+                        }}
+                        onMouseEnter={e => { if (!isCurrent) e.currentTarget.style.background = 'rgba(255,255,255,0.015)'; }}
+                        onMouseLeave={e => { if (!isCurrent) e.currentTarget.style.background = 'transparent'; }}>
+                        <span style={{
+                          width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          color: done ? OK : isCurrent ? C.t1 : C.t3, ...numeric, fontSize: 11, flexShrink: 0,
+                        }}>
+                          {done ? <CheckCircle2 size={13} /> : li + 1}
+                        </span>
+                        <span style={{
+                          fontSize: 13, color: isCurrent ? C.t1 : done ? C.t2 : C.t1,
+                          fontWeight: 300, flex: 1,
+                          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                        }}>
+                          {l.title}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// Section card — renders one parsed section
+// ═══════════════════════════════════════════════════════════════════════
+function SectionCard({ section, sectionIndex, total, isMobile }: {
+  section: Section; sectionIndex: number; total: number; isMobile: boolean;
+}) {
+  return (
+    <div style={{
+      background: C.l1, borderRadius: 16, border: `1px solid ${C.bds}`,
+      padding: isMobile ? '20px 20px 22px' : '28px 32px 30px',
+      fontFamily: FONT,
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+        <span style={{
+          width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
+          background: C.l2, border: `1px solid ${C.bd}`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          color: C.t2, ...numeric, fontSize: 12, fontWeight: 400,
+        }}>
+          {sectionIndex + 1}
+        </span>
+        <span style={{ ...sH, fontSize: 10 }}>Section {sectionIndex + 1} / {total}</span>
+      </div>
+      {section.heading && (
+        <h2 style={{
+          fontFamily: FONT, fontWeight: 300, letterSpacing: '-0.015em',
+          fontSize: isMobile ? 20 : 24, lineHeight: 1.25,
+          color: C.t1, margin: '0 0 18px',
+          paddingBottom: 14, borderBottom: `1px solid ${C.bds}`,
+        }}>
+          {inlineRender(section.heading)}
+        </h2>
+      )}
+      <div style={{ color: C.t2, fontSize: 14.5, lineHeight: 1.8, fontWeight: 300 }}>
+        {section.blocks.map((b, bi) => renderContentBlock(b, bi))}
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// Media
+// ═══════════════════════════════════════════════════════════════════════
+function LessonMedia({ lesson }: { lesson: Lesson }) {
+  if (lesson.content_type === 'video' && lesson.content_url) {
+    return (
+      <div style={{
+        position: 'relative', paddingBottom: '56.25%',
+        background: '#000', borderRadius: 14, overflow: 'hidden',
+        marginBottom: 22, border: `1px solid ${C.bds}`,
+      }}>
+        {isYouTube(lesson.content_url) ? (
+          <iframe src={toYouTubeEmbed(lesson.content_url)}
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none' }}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+        ) : (
+          <video controls style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+            <source src={lesson.content_url} />
+          </video>
+        )}
+      </div>
+    );
+  }
+  if (lesson.content_type === 'pdf' && lesson.content_url) {
+    return (
+      <a href={lesson.content_url} target="_blank" rel="noopener noreferrer"
+        style={{
+          display: 'flex', alignItems: 'center', gap: 12, color: C.t1,
+          fontSize: 13, textDecoration: 'none', fontFamily: FONT,
+          background: C.l1, borderRadius: 12, padding: '14px 18px', border: `1px solid ${C.bds}`,
+          marginBottom: 22, fontWeight: 300,
+        }}>
+        <FileText size={16} color={C.t2} />
+        <span style={{ flex: 1 }}>Ouvrir le document PDF</span>
+        <ChevronRight size={14} color={C.t3} />
+      </a>
+    );
+  }
+  if (lesson.content_type === 'zoom') {
+    return (
+      <div style={{ background: C.l1, borderRadius: 14, padding: 20, border: `1px solid ${C.bds}`, marginBottom: 22 }}>
+        <p style={{ ...sH, marginBottom: 8 }}>Session en direct</p>
+        {lesson.zoom_date ? (
+          <p style={{ color: C.t1, fontSize: 14, margin: 0, fontWeight: 300 }}>
+            Prévue le {new Date(lesson.zoom_date).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+            {' à '}{new Date(lesson.zoom_date).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+          </p>
+        ) : (
+          <p style={{ color: C.t2, fontSize: 13, margin: 0, fontWeight: 300 }}>Date à confirmer.</p>
+        )}
+        {lesson.content_url && (
+          <a href={lesson.content_url} target="_blank" rel="noopener noreferrer"
+            style={{ ...btnPrimary, textDecoration: 'none', marginTop: 14 }}>
+            <Play size={12} fill="#111" /> Rejoindre
+          </a>
+        )}
+      </div>
+    );
+  }
+  return null;
+}
+
+function NavCard({ direction, label, onClick }: { direction: 'prev' | 'next'; label: string; onClick: () => void }) {
+  const isNext = direction === 'next';
+  return (
+    <button onClick={onClick}
+      style={{
+        display: 'flex', alignItems: 'center', gap: 10,
+        padding: '14px 16px', borderRadius: 12,
+        background: C.l1, border: `1px solid ${C.bds}`,
+        cursor: 'pointer', textAlign: isNext ? 'right' : 'left',
+        color: C.t1, flexDirection: isNext ? 'row-reverse' : 'row',
+        fontFamily: FONT, transition: 'all 0.15s',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.background = C.l2; e.currentTarget.style.borderColor = C.bd; }}
+      onMouseLeave={e => { e.currentTarget.style.background = C.l1; e.currentTarget.style.borderColor = C.bds; }}>
+      <ChevronRight size={15} color={C.t3} style={isNext ? {} : { transform: 'rotate(180deg)' }} />
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ ...sH, fontSize: 10, marginBottom: 3 }}>
+          {isNext ? 'Leçon suivante' : 'Leçon précédente'}
+        </div>
+        <div style={{
+          fontSize: 12.5, color: C.t1, whiteSpace: 'nowrap',
+          overflow: 'hidden', textOverflow: 'ellipsis', fontWeight: 300,
+        }}>
+          {label}
+        </div>
+      </div>
+    </button>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// Markdown-like parser (same logic used before, extracted)
+// ═══════════════════════════════════════════════════════════════════════
+type ContentBlock =
+  | { type: 'p'; text: string }
+  | { type: 'h3'; text: string }
+  | { type: 'callout'; text: string; variant: 'tip' | 'warning' | 'info' }
+  | { type: 'ul'; items: string[] }
+  | { type: 'ol'; items: string[] }
+  | { type: 'hr' };
+
+type Section = { heading: string | null; blocks: ContentBlock[] };
+
+function parseIntoSections(src: string): Section[] {
+  const lines = src.replace(/\r\n/g, '\n').split('\n');
+  const sections: Section[] = [];
+  let current: Section = { heading: null, blocks: [] };
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    if (line.trim() === '') { i++; continue; }
+    if (line.startsWith('## ')) {
+      if (current.blocks.length > 0 || current.heading) sections.push(current);
+      current = { heading: line.slice(3).trim(), blocks: [] };
+      i++; continue;
+    }
+    if (line.startsWith('### ')) { current.blocks.push({ type: 'h3', text: line.slice(4).trim() }); i++; continue; }
+    if (/^---+$/.test(line.trim())) { current.blocks.push({ type: 'hr' }); i++; continue; }
+    if (line.startsWith('> ')) {
+      let acc = line.slice(2); i++;
+      while (i < lines.length && lines[i].startsWith('> ')) { acc += ' ' + lines[i].slice(2); i++; }
+      current.blocks.push({ type: 'callout', text: acc, variant: detectCalloutVariant(acc) });
+      continue;
+    }
+    if (/^\s*[•\-\*]\s+/.test(line)) {
+      const items: string[] = [];
+      while (i < lines.length && /^\s*[•\-\*]\s+/.test(lines[i])) { items.push(lines[i].replace(/^\s*[•\-\*]\s+/, '')); i++; }
+      current.blocks.push({ type: 'ul', items });
+      continue;
+    }
+    if (/^\s*\d+\.\s+/.test(line)) {
+      const items: string[] = [];
+      while (i < lines.length && /^\s*\d+\.\s+/.test(lines[i])) { items.push(lines[i].replace(/^\s*\d+\.\s+/, '')); i++; }
+      current.blocks.push({ type: 'ol', items });
+      continue;
+    }
+    if (isUppercaseHeading(line) && !line.startsWith('#')) {
+      if (current.blocks.length > 0 || current.heading) sections.push(current);
+      current = { heading: toTitleCase(line.trim()), blocks: [] };
+      i++; continue;
+    }
+    let acc = line; i++;
+    while (i < lines.length && lines[i].trim() !== '' && !isBlockStart(lines[i]) && !isUppercaseHeading(lines[i])) {
+      acc += ' ' + lines[i]; i++;
+    }
+    current.blocks.push({ type: 'p', text: acc });
+  }
+  if (current.blocks.length > 0 || current.heading) sections.push(current);
+  return sections;
+}
+
+function isUppercaseHeading(line: string): boolean {
+  const trimmed = line.trim();
+  if (trimmed.length < 4 || trimmed.length > 80) return false;
+  const upper = trimmed.replace(/[^a-zA-ZÀ-ÿ]/g, '');
+  if (upper.length < 3) return false;
+  return upper === upper.toUpperCase() && /[A-ZÀ-Ÿ]/.test(upper);
+}
+function toTitleCase(text: string): string {
+  const cleaned = text.replace(/[—\-:]+$/, '').trim();
+  return cleaned.charAt(0).toUpperCase() + cleaned.slice(1).toLowerCase();
+}
+function detectCalloutVariant(text: string): 'tip' | 'warning' | 'info' {
+  const lower = text.toLowerCase();
+  if (lower.includes('attention') || lower.includes('danger') || lower.includes('important') || lower.includes('arnaque') || lower.includes('erreur') || lower.includes('jamais') || lower.includes('ne faites pas')) return 'warning';
+  if (lower.includes('conseil') || lower.includes('astuce') || lower.includes('recommand') || lower.includes('retenez') || lower.includes('retenir')) return 'tip';
+  return 'info';
+}
+function isBlockStart(l: string): boolean {
+  return /^---+$/.test(l.trim()) || l.startsWith('## ') || l.startsWith('### ') || l.startsWith('> ')
+    || /^\s*[•\-\*]\s+/.test(l) || /^\s*\d+\.\s+/.test(l);
+}
+
+function renderContentBlock(b: ContentBlock, k: number): JSX.Element {
+  switch (b.type) {
+    case 'h3':
+      return (
+        <h3 key={k} style={{
+          fontSize: 15, fontWeight: 400, color: C.t1, fontFamily: FONT,
+          margin: k === 0 ? '0 0 10px' : '22px 0 10px', letterSpacing: '-0.005em',
+        }}>
+          {inlineRender(b.text)}
+        </h3>
+      );
+    case 'callout': {
+      const cfg = b.variant === 'warning'
+        ? { Icon: AlertTriangle, bg: 'rgba(239,68,68,0.05)', border: 'rgba(239,68,68,0.20)', iconColor: '#f87171' }
+        : b.variant === 'tip'
+          ? { Icon: Lightbulb, bg: C.l2, border: C.bd, iconColor: C.t2 }
+          : { Icon: Info, bg: C.l2, border: C.bd, iconColor: C.t2 };
+      const CalloutIcon = cfg.Icon;
+      return (
+        <div key={k} style={{
+          margin: '16px 0', padding: '14px 16px',
+          borderRadius: 10, background: cfg.bg, border: `1px solid ${cfg.border}`,
+          display: 'flex', gap: 10, alignItems: 'flex-start',
+        }}>
+          <CalloutIcon size={15} color={cfg.iconColor} style={{ flexShrink: 0, marginTop: 2 }} />
+          <div style={{ color: C.t1, fontSize: 13, lineHeight: 1.65, flex: 1, fontWeight: 300 }}>
+            {inlineRender(b.text)}
+          </div>
+        </div>
+      );
+    }
+    case 'ul':
+      return (
+        <ul key={k} style={{ margin: '10px 0 16px', paddingLeft: 0, listStyle: 'none' }}>
+          {b.items.map((it, i) => (
+            <li key={i} style={{ position: 'relative', paddingLeft: 18, marginBottom: 8, fontSize: 14, lineHeight: 1.7 }}>
+              <span style={{ position: 'absolute', left: 4, top: 11, width: 5, height: 5, borderRadius: '50%', background: C.t3 }} />
+              {inlineRender(it)}
+            </li>
+          ))}
+        </ul>
+      );
+    case 'ol':
+      return (
+        <ol key={k} style={{ margin: '10px 0 16px', paddingLeft: 0, listStyle: 'none' }}>
+          {b.items.map((it, i) => (
+            <li key={i} style={{ display: 'flex', gap: 12, marginBottom: 10, fontSize: 14, lineHeight: 1.7, alignItems: 'flex-start' }}>
+              <span style={{
+                width: 24, height: 24, borderRadius: '50%',
+                background: C.l2, border: `1px solid ${C.bds}`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                ...numeric, fontSize: 11, color: C.t2,
+                flexShrink: 0, marginTop: 1,
+              }}>
+                {i + 1}
+              </span>
+              <span style={{ flex: 1 }}>{inlineRender(it)}</span>
+            </li>
+          ))}
+        </ol>
+      );
+    case 'hr':
+      return <hr key={k} style={{ border: 'none', borderTop: `1px solid ${C.bds}`, margin: '20px 0' }} />;
+    case 'p':
+    default:
+      return <p key={k} style={{ margin: '0 0 14px' }}>{inlineRender(b.text)}</p>;
+  }
+}
+
+function inlineRender(text: string): (string | JSX.Element)[] {
+  const parts: (string | JSX.Element)[] = [];
+  const regex = /(\*\*[^*]+\*\*)|(`[^`]+`)/g;
+  let lastIdx = 0;
+  let m: RegExpExecArray | null;
+  let key = 0;
+  while ((m = regex.exec(text)) !== null) {
+    if (m.index > lastIdx) parts.push(text.slice(lastIdx, m.index));
+    const token = m[0];
+    if (token.startsWith('**')) {
+      parts.push(<strong key={key++} style={{ color: C.t1, fontWeight: 500 }}>{token.slice(2, -2)}</strong>);
+    } else {
+      parts.push(<code key={key++} style={{
+        fontFamily: 'ui-monospace, "SF Mono", Menlo, monospace',
+        fontSize: '0.88em', background: C.l2, border: `1px solid ${C.bds}`,
+        padding: '2px 7px', borderRadius: 5, color: C.t1,
+      }}>{token.slice(1, -1)}</code>);
+    }
+    lastIdx = m.index + token.length;
+  }
+  if (lastIdx < text.length) parts.push(text.slice(lastIdx));
+  return parts;
+}
+
+function isYouTube(url: string): boolean {
+  return url.includes('youtube.com') || url.includes('youtu.be');
+}
+function toYouTubeEmbed(url: string): string {
+  let videoId = '';
+  if (url.includes('youtu.be/')) videoId = url.split('youtu.be/')[1]?.split(/[?&#]/)[0] ?? '';
+  else if (url.includes('v=')) videoId = url.split('v=')[1]?.split(/[&#]/)[0] ?? '';
+  return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
+}

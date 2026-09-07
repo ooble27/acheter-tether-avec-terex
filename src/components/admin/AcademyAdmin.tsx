@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import {
   Plus, ArrowLeft, Trash2, GripVertical, Save, Loader2,
   BookOpen, Video, FileText, Type, Radio, ChevronRight,
-  Users, Search, X, Check,
+  Users, Search, X, Check, HelpCircle, Circle,
 } from 'lucide-react';
 import { PageHeader, drillStyles } from '@/components/admin/AdminDrill';
 import {
@@ -16,11 +16,16 @@ import {
 type Course = {
   id: string; title: string; slug: string; description: string | null;
   price_cfa: number; level: string; status: string; duration_hours: number | null;
+  cover_url: string | null;
   created_at: string;
 };
 type Module = {
   id: string; course_id: string; title: string; position: number;
+  summary: string | null;
 };
+type QuizAnswer = { id: string; question_id: string; answer: string; is_correct: boolean; position: number };
+type QuizQuestion = { id: string; quiz_id: string; question: string; explanation: string | null; position: number; answers: QuizAnswer[] };
+type Quiz = { id: string; module_id: string; title: string; description: string | null; pass_score: number; questions: QuizQuestion[] };
 type Lesson = {
   id: string; module_id: string; title: string; content_type: string;
   content_url: string | null; content_text: string | null;
@@ -132,6 +137,8 @@ function CourseList({ onNew, onEdit, onEnrollments }: { onNew: () => void; onEdi
   );
 }
 
+type ModuleFull = Module & { lessons: Lesson[]; quiz: Quiz | null };
+
 function CourseEditor({ id, onBack }: { id: string | null; onBack: () => void }) {
   const isNew = !id;
   const [saving, setSaving] = useState(false);
@@ -140,12 +147,13 @@ function CourseEditor({ id, onBack }: { id: string | null; onBack: () => void })
   const [title, setTitle] = useState('');
   const [slug, setSlug] = useState('');
   const [description, setDescription] = useState('');
+  const [coverUrl, setCoverUrl] = useState('');
   const [level, setLevel] = useState('debutant');
   const [priceCfa, setPriceCfa] = useState(0);
   const [durationHours, setDurationHours] = useState<number | ''>('');
   const [status, setStatus] = useState('draft');
 
-  const [modules, setModules] = useState<(Module & { lessons: Lesson[] })[]>([]);
+  const [modules, setModules] = useState<ModuleFull[]>([]);
   const [courseId, setCourseId] = useState<string | null>(id);
 
   useEffect(() => {
@@ -158,12 +166,27 @@ function CourseEditor({ id, onBack }: { id: string | null; onBack: () => void })
         setTitle(course.title); setSlug(course.slug); setDescription(course.description ?? '');
         setLevel(course.level); setPriceCfa(course.price_cfa); setStatus(course.status);
         setDurationHours(course.duration_hours ?? '');
+        setCoverUrl(course.cover_url ?? '');
       }
       const { data: mods } = await supabase.from('course_modules' as any).select('*').eq('course_id', id).order('position');
       const modList = (mods as any[]) ?? [];
       const withLessons = await Promise.all(modList.map(async (m: any) => {
-        const { data: ls } = await supabase.from('lessons' as any).select('*').eq('module_id', m.id).order('position');
-        return { ...m, lessons: (ls as any[]) ?? [] };
+        const [{ data: ls }, { data: q }] = await Promise.all([
+          supabase.from('lessons' as any).select('*').eq('module_id', m.id).order('position'),
+          supabase.from('quizzes' as any).select('*').eq('module_id', m.id).maybeSingle(),
+        ]);
+        let quiz: Quiz | null = null;
+        if (q) {
+          const quizRow = q as any;
+          const { data: questions } = await supabase.from('quiz_questions' as any).select('*').eq('quiz_id', quizRow.id).order('position');
+          const questionsList = (questions as any[]) ?? [];
+          const withAnswers = await Promise.all(questionsList.map(async (qu: any) => {
+            const { data: answers } = await supabase.from('quiz_answers' as any).select('*').eq('question_id', qu.id).order('position');
+            return { ...qu, answers: (answers as any[]) ?? [] };
+          }));
+          quiz = { ...quizRow, questions: withAnswers };
+        }
+        return { ...m, lessons: (ls as any[]) ?? [], quiz };
       }));
       setModules(withLessons);
       setLoading(false);
@@ -174,6 +197,7 @@ function CourseEditor({ id, onBack }: { id: string | null; onBack: () => void })
     setSaving(true);
     const payload: any = {
       title, slug: slug || slugify(title), description: description || null,
+      cover_url: coverUrl || null,
       level, price_cfa: priceCfa, status,
       duration_hours: durationHours === '' ? null : Number(durationHours),
     };
@@ -191,7 +215,7 @@ function CourseEditor({ id, onBack }: { id: string | null; onBack: () => void })
 
     for (let mi = 0; mi < modules.length; mi++) {
       const m = modules[mi];
-      const mPayload: any = { course_id: savedId, title: m.title, position: mi };
+      const mPayload: any = { course_id: savedId, title: m.title, position: mi, summary: m.summary || null };
       let modId = m.id;
       if (m.id.startsWith('new-')) {
         const { data, error } = await supabase.from('course_modules' as any).insert(mPayload).select('id').single();
@@ -215,13 +239,199 @@ function CourseEditor({ id, onBack }: { id: string | null; onBack: () => void })
           await supabase.from('lessons' as any).update(lPayload).eq('id', l.id);
         }
       }
+
+      // Quiz save
+      if (m.quiz) {
+        const qPayload: any = {
+          module_id: modId, title: m.quiz.title,
+          description: m.quiz.description || null, pass_score: m.quiz.pass_score,
+        };
+        let quizId = m.quiz.id;
+        if (m.quiz.id.startsWith('new-')) {
+          const { data, error } = await supabase.from('quizzes' as any).insert(qPayload).select('id').single();
+          if (error) continue;
+          quizId = (data as any).id;
+        } else {
+          await supabase.from('quizzes' as any).update(qPayload).eq('id', quizId);
+        }
+
+        for (let qi = 0; qi < m.quiz.questions.length; qi++) {
+          const qu = m.quiz.questions[qi];
+          const quPayload: any = {
+            quiz_id: quizId, question: qu.question,
+            explanation: qu.explanation || null, position: qi,
+          };
+          let questionId = qu.id;
+          if (qu.id.startsWith('new-')) {
+            const { data, error } = await supabase.from('quiz_questions' as any).insert(quPayload).select('id').single();
+            if (error) continue;
+            questionId = (data as any).id;
+          } else {
+            await supabase.from('quiz_questions' as any).update(quPayload).eq('id', questionId);
+          }
+
+          for (let ai = 0; ai < qu.answers.length; ai++) {
+            const a = qu.answers[ai];
+            const aPayload: any = {
+              question_id: questionId, answer: a.answer, is_correct: a.is_correct, position: ai,
+            };
+            if (a.id.startsWith('new-')) {
+              await supabase.from('quiz_answers' as any).insert(aPayload);
+            } else {
+              await supabase.from('quiz_answers' as any).update(aPayload).eq('id', a.id);
+            }
+          }
+        }
+      }
     }
     setSaving(false);
     onBack();
   };
 
   const addModule = () => {
-    setModules(prev => [...prev, { id: 'new-' + Date.now(), course_id: courseId ?? '', title: '', position: prev.length, lessons: [] }]);
+    setModules(prev => [...prev, { id: 'new-' + Date.now(), course_id: courseId ?? '', title: '', position: prev.length, summary: null, lessons: [], quiz: null }]);
+  };
+
+  const addQuiz = (mi: number) => {
+    setModules(prev => prev.map((m, i) => i !== mi ? m : {
+      ...m,
+      quiz: {
+        id: 'new-' + Date.now(), module_id: m.id, title: 'Quiz du module',
+        description: null, pass_score: 70,
+        questions: [{
+          id: 'new-q-' + Date.now(), quiz_id: '', question: '', explanation: null, position: 0,
+          answers: [
+            { id: 'new-a-' + Date.now() + '-1', question_id: '', answer: '', is_correct: true,  position: 0 },
+            { id: 'new-a-' + Date.now() + '-2', question_id: '', answer: '', is_correct: false, position: 1 },
+          ],
+        }],
+      },
+    }));
+  };
+
+  const removeQuiz = async (mi: number) => {
+    const m = modules[mi];
+    if (m.quiz && !m.quiz.id.startsWith('new-')) {
+      if (!confirm('Supprimer le quiz de ce module ?')) return;
+      await supabase.from('quizzes' as any).delete().eq('id', m.quiz.id);
+    }
+    setModules(prev => prev.map((mo, i) => i !== mi ? mo : { ...mo, quiz: null }));
+  };
+
+  const updateQuiz = (mi: number, field: string, value: any) => {
+    setModules(prev => prev.map((m, i) => i !== mi ? m : { ...m, quiz: m.quiz ? { ...m.quiz, [field]: value } : m.quiz }));
+  };
+
+  const addQuestion = (mi: number) => {
+    setModules(prev => prev.map((m, i) => {
+      if (i !== mi || !m.quiz) return m;
+      return {
+        ...m,
+        quiz: {
+          ...m.quiz,
+          questions: [...m.quiz.questions, {
+            id: 'new-q-' + Date.now(), quiz_id: m.quiz.id, question: '', explanation: null,
+            position: m.quiz.questions.length,
+            answers: [
+              { id: 'new-a-' + Date.now() + '-1', question_id: '', answer: '', is_correct: true,  position: 0 },
+              { id: 'new-a-' + Date.now() + '-2', question_id: '', answer: '', is_correct: false, position: 1 },
+            ],
+          }],
+        },
+      };
+    }));
+  };
+
+  const removeQuestion = async (mi: number, qi: number) => {
+    const q = modules[mi].quiz?.questions[qi];
+    if (q && !q.id.startsWith('new-')) {
+      await supabase.from('quiz_questions' as any).delete().eq('id', q.id);
+    }
+    setModules(prev => prev.map((m, i) => {
+      if (i !== mi || !m.quiz) return m;
+      return { ...m, quiz: { ...m.quiz, questions: m.quiz.questions.filter((_, j) => j !== qi) } };
+    }));
+  };
+
+  const updateQuestion = (mi: number, qi: number, field: string, value: any) => {
+    setModules(prev => prev.map((m, i) => {
+      if (i !== mi || !m.quiz) return m;
+      return {
+        ...m,
+        quiz: {
+          ...m.quiz,
+          questions: m.quiz.questions.map((q, j) => j !== qi ? q : { ...q, [field]: value }),
+        },
+      };
+    }));
+  };
+
+  const addAnswer = (mi: number, qi: number) => {
+    setModules(prev => prev.map((m, i) => {
+      if (i !== mi || !m.quiz) return m;
+      return {
+        ...m,
+        quiz: {
+          ...m.quiz,
+          questions: m.quiz.questions.map((q, j) => j !== qi ? q : {
+            ...q,
+            answers: [...q.answers, {
+              id: 'new-a-' + Date.now(), question_id: q.id, answer: '', is_correct: false,
+              position: q.answers.length,
+            }],
+          }),
+        },
+      };
+    }));
+  };
+
+  const removeAnswer = async (mi: number, qi: number, ai: number) => {
+    const a = modules[mi].quiz?.questions[qi].answers[ai];
+    if (a && !a.id.startsWith('new-')) {
+      await supabase.from('quiz_answers' as any).delete().eq('id', a.id);
+    }
+    setModules(prev => prev.map((m, i) => {
+      if (i !== mi || !m.quiz) return m;
+      return {
+        ...m,
+        quiz: {
+          ...m.quiz,
+          questions: m.quiz.questions.map((q, j) => j !== qi ? q : {
+            ...q, answers: q.answers.filter((_, k) => k !== ai),
+          }),
+        },
+      };
+    }));
+  };
+
+  const updateAnswer = (mi: number, qi: number, ai: number, field: string, value: any) => {
+    setModules(prev => prev.map((m, i) => {
+      if (i !== mi || !m.quiz) return m;
+      return {
+        ...m,
+        quiz: {
+          ...m.quiz,
+          questions: m.quiz.questions.map((q, j) => j !== qi ? q : {
+            ...q, answers: q.answers.map((a, k) => k !== ai ? a : { ...a, [field]: value }),
+          }),
+        },
+      };
+    }));
+  };
+
+  const setCorrectAnswer = (mi: number, qi: number, ai: number) => {
+    setModules(prev => prev.map((m, i) => {
+      if (i !== mi || !m.quiz) return m;
+      return {
+        ...m,
+        quiz: {
+          ...m.quiz,
+          questions: m.quiz.questions.map((q, j) => j !== qi ? q : {
+            ...q, answers: q.answers.map((a, k) => ({ ...a, is_correct: k === ai })),
+          }),
+        },
+      };
+    }));
   };
 
   const addLesson = (moduleIndex: number) => {
@@ -306,6 +516,10 @@ function CourseEditor({ id, onBack }: { id: string | null; onBack: () => void })
             <textarea style={{ ...inputStyle, minHeight: 70, resize: 'vertical' }} value={description} onChange={e => setDescription(e.target.value)}
               placeholder="Décrivez le contenu de cette formation..." />
           </Field>
+          <Field label="URL de couverture (image)">
+            <input style={inputStyle} value={coverUrl} onChange={e => setCoverUrl(e.target.value)}
+              placeholder="https://images.unsplash.com/..." />
+          </Field>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14 }}>
             <Field label="Niveau">
               <select style={inputStyle} value={level} onChange={e => setLevel(e.target.value)}>
@@ -347,17 +561,41 @@ function CourseEditor({ id, onBack }: { id: string | null; onBack: () => void })
               <input style={{ ...inputStyle, fontWeight: 500, fontSize: 13 }} value={m.title} placeholder="Titre du module"
                 onChange={e => updateModule(mi, 'title', e.target.value)} />
               <button style={chipAction} onClick={() => addLesson(mi)}><Plus size={11} /> Leçon</button>
+              {!m.quiz && (
+                <button style={chipAction} onClick={() => addQuiz(mi)}><HelpCircle size={11} /> Quiz</button>
+              )}
               <button style={{ ...iconButton, width: 26, height: 26 }} onClick={() => removeModule(mi)}
                 onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(248,113,113,0.4)'; e.currentTarget.style.color = '#f87171'; }}
                 onMouseLeave={e => iconButtonHoverOut(e.currentTarget)}>
                 <Trash2 size={12} />
               </button>
             </div>
+            <div style={{ padding: '0 18px 10px 60px' }}>
+              <textarea
+                style={{ ...inputStyle, minHeight: 40, resize: 'vertical', fontSize: 12 }}
+                value={m.summary ?? ''}
+                placeholder="Résumé du module (1-2 phrases, affiché sur la fiche formation)"
+                onChange={e => updateModule(mi, 'summary', e.target.value)} />
+            </div>
             {m.lessons.map((l, li) => (
-              <LessonRow key={l.id} lesson={l} index={li} isLast={li === m.lessons.length - 1}
+              <LessonRow key={l.id} lesson={l} index={li} isLast={li === m.lessons.length - 1 && !m.quiz}
                 onUpdate={(f, v) => updateLesson(mi, li, f, v)}
                 onRemove={() => removeLesson(mi, li)} />
             ))}
+            {m.quiz && (
+              <QuizEditor
+                quiz={m.quiz}
+                onUpdateQuiz={(f, v) => updateQuiz(mi, f, v)}
+                onAddQuestion={() => addQuestion(mi)}
+                onUpdateQuestion={(qi, f, v) => updateQuestion(mi, qi, f, v)}
+                onRemoveQuestion={qi => removeQuestion(mi, qi)}
+                onAddAnswer={qi => addAnswer(mi, qi)}
+                onUpdateAnswer={(qi, ai, f, v) => updateAnswer(mi, qi, ai, f, v)}
+                onSetCorrect={(qi, ai) => setCorrectAnswer(mi, qi, ai)}
+                onRemoveAnswer={(qi, ai) => removeAnswer(mi, qi, ai)}
+                onRemoveQuiz={() => removeQuiz(mi)}
+              />
+            )}
           </div>
         ))}
       </div>
@@ -431,6 +669,106 @@ function LessonRow({ lesson, index, isLast, onUpdate, onRemove }: {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function QuizEditor({
+  quiz, onUpdateQuiz, onAddQuestion, onUpdateQuestion, onRemoveQuestion,
+  onAddAnswer, onUpdateAnswer, onSetCorrect, onRemoveAnswer, onRemoveQuiz,
+}: {
+  quiz: Quiz;
+  onUpdateQuiz: (field: string, value: any) => void;
+  onAddQuestion: () => void;
+  onUpdateQuestion: (qi: number, field: string, value: any) => void;
+  onRemoveQuestion: (qi: number) => void;
+  onAddAnswer: (qi: number) => void;
+  onUpdateAnswer: (qi: number, ai: number, field: string, value: any) => void;
+  onSetCorrect: (qi: number, ai: number) => void;
+  onRemoveAnswer: (qi: number, ai: number) => void;
+  onRemoveQuiz: () => void;
+}) {
+  return (
+    <div style={{ marginLeft: 38, padding: '14px 18px', borderTop: `1px solid ${C.bds}`, background: 'rgba(255,255,255,0.008)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+        <HelpCircle size={14} color={C.t2} />
+        <span style={{ color: C.t1, fontSize: 12.5, fontFamily: FONT, fontWeight: 500 }}>Quiz du module</span>
+        <div style={{ flex: 1 }} />
+        <span style={{ color: C.t3, fontSize: 11, fontFamily: FONT }}>
+          Seuil de réussite : {quiz.pass_score}%
+        </span>
+        <button style={{ ...iconButton, width: 26, height: 26 }} onClick={onRemoveQuiz}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(248,113,113,0.4)'; e.currentTarget.style.color = '#f87171'; }}
+          onMouseLeave={e => iconButtonHoverOut(e.currentTarget)} title="Supprimer le quiz">
+          <Trash2 size={12} />
+        </button>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 120px', gap: 10, marginBottom: 12 }}>
+        <input style={{ ...inputStyle, fontSize: 12.5 }} value={quiz.title}
+          onChange={e => onUpdateQuiz('title', e.target.value)} placeholder="Titre du quiz" />
+        <input style={{ ...inputStyle, fontSize: 12.5 }} type="number" min={0} max={100}
+          value={quiz.pass_score} onChange={e => onUpdateQuiz('pass_score', Math.max(0, Math.min(100, Number(e.target.value))))} />
+      </div>
+
+      {quiz.questions.map((q, qi) => (
+        <div key={q.id} style={{
+          background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 10, padding: 12, marginBottom: 10,
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+            <span style={{ color: C.t3, fontSize: 11, fontFamily: FONT, flexShrink: 0 }}>Q{qi + 1}</span>
+            <input style={{ ...inputStyle, fontSize: 12.5, fontWeight: 500 }} value={q.question}
+              onChange={e => onUpdateQuestion(qi, 'question', e.target.value)} placeholder="Question…" />
+            <button style={{ ...iconButton, width: 24, height: 24 }} onClick={() => onRemoveQuestion(qi)}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(248,113,113,0.4)'; e.currentTarget.style.color = '#f87171'; }}
+              onMouseLeave={e => iconButtonHoverOut(e.currentTarget)} title="Supprimer la question">
+              <X size={11} />
+            </button>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 8 }}>
+            {q.answers.map((a, ai) => (
+              <div key={a.id} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <button
+                  onClick={() => onSetCorrect(qi, ai)}
+                  title={a.is_correct ? 'Bonne réponse' : 'Marquer comme bonne réponse'}
+                  style={{
+                    width: 20, height: 20, borderRadius: '50%', flexShrink: 0,
+                    background: a.is_correct ? 'rgba(74,222,128,0.15)' : 'transparent',
+                    border: `1.5px solid ${a.is_correct ? '#4ade80' : C.bd}`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    cursor: 'pointer', color: '#4ade80',
+                  }}>
+                  {a.is_correct && <Check size={11} />}
+                </button>
+                <input style={{ ...inputStyle, fontSize: 12 }} value={a.answer}
+                  onChange={e => onUpdateAnswer(qi, ai, 'answer', e.target.value)}
+                  placeholder={`Réponse ${ai + 1}`} />
+                {q.answers.length > 2 && (
+                  <button style={{ ...iconButton, width: 22, height: 22 }} onClick={() => onRemoveAnswer(qi, ai)}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(248,113,113,0.4)'; e.currentTarget.style.color = '#f87171'; }}
+                    onMouseLeave={e => iconButtonHoverOut(e.currentTarget)}>
+                    <X size={10} />
+                  </button>
+                )}
+              </div>
+            ))}
+            <button style={{ ...chipAction, alignSelf: 'flex-start', marginTop: 2 }} onClick={() => onAddAnswer(qi)}>
+              <Plus size={10} /> Ajouter une réponse
+            </button>
+          </div>
+
+          <textarea
+            style={{ ...inputStyle, fontSize: 12, minHeight: 40, resize: 'vertical' }}
+            value={q.explanation ?? ''}
+            onChange={e => onUpdateQuestion(qi, 'explanation', e.target.value)}
+            placeholder="Explication affichée après la réponse (optionnel)" />
+        </div>
+      ))}
+
+      <button style={chipAction} onClick={onAddQuestion}>
+        <Plus size={11} /> Ajouter une question
+      </button>
     </div>
   );
 }
