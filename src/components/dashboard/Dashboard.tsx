@@ -197,8 +197,9 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
               va DIRECTEMENT à la page Profil (qui contient tout le menu). Pas de
               menu déroulant ni de hamburger. Masqué lorsqu'on est déjà sur le profil,
               ou en mode immersif (Academy — plein écran d'apprentissage). */}
-          {/* Bascule clair/sombre globale — masquée dans l'Academy, qui a la sienne. */}
-          {activeSection !== 'academy' && <ThemeToggle />}
+          {/* Bascule clair/sombre globale — masquée dans l'Academy, qui a la sienne.
+              Décalée à gauche du bouton profil quand celui-ci est visible. */}
+          {activeSection !== 'academy' && <ThemeToggle offset={activeSection !== 'profile'} />}
 
           {activeSection !== 'profile' && activeSection !== 'academy' && (
             <Button
