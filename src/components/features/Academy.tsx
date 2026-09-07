@@ -7,13 +7,15 @@ import {
   CheckCircle2, Lock, Clock, ChevronRight,
   GraduationCap, Play, Loader2, Download,
   Layers, BookOpen, HelpCircle, Award, Sparkles,
+  Sun, Moon,
 } from 'lucide-react';
 import {
   C, FONT, card, heroCard, sH,
   cardHeaderRow, cardTitle, btnPrimary, numeric,
   listRowHoverIn, listRowHoverOut,
   primaryHoverIn, primaryHoverOut,
-} from '@/components/admin/adminTheme';
+  ACADEMY_THEME_CSS, loadAcademyTheme, saveAcademyTheme,
+} from './academy/academyTheme';
 import { LessonViewer } from './academy/LessonViewer';
 import { QuizPlayer } from './academy/QuizPlayer';
 
@@ -44,7 +46,7 @@ const LEVELS: Record<string, string> = {
 const TYPE_LABEL: Record<string, string> = { video: 'Vidéo', pdf: 'PDF', text: 'Lecture', zoom: 'Live' };
 const TYPE_ICON: Record<string, typeof Video> = { video: Video, pdf: FileText, text: Type, zoom: Radio };
 
-const OK = '#4ade80';
+const OK = C.ok;
 
 // ═══════════════════════════════════════════════════════════════════════
 // Root
@@ -56,9 +58,24 @@ export function Academy({ onBack }: { onBack: () => void }) {
   const [lessonId, setLessonId] = useState<string | null>(null);
   const [quizId, setQuizId] = useState<string | null>(null);
   const [quizModuleTitle, setQuizModuleTitle] = useState<string>('');
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => loadAcademyTheme());
+
+  const toggleTheme = () => {
+    setTheme(prev => {
+      const nextMode = prev === 'dark' ? 'light' : 'dark';
+      saveAcademyTheme(nextMode);
+      return nextMode;
+    });
+  };
 
   return (
-    <div style={{ background: C.bg, minHeight: '100vh', color: C.t1, fontFamily: FONT, fontWeight: 300 }}>
+    <div
+      className="ac-scope"
+      data-ac-theme={theme}
+      style={{ background: C.bg, minHeight: '100vh', color: C.t1, fontFamily: FONT, fontWeight: 300 }}
+    >
+      <style>{ACADEMY_THEME_CSS}</style>
+      <ThemeToggle theme={theme} onToggle={toggleTheme} />
       {view === 'catalog' && (
         <Catalog onBack={onBack} onOpenCourse={(id) => { setCourseId(id); setView('course'); }} />
       )}
@@ -268,16 +285,16 @@ function CourseCover({ url, tone }: { url: string | null; tone: number }) {
       {/* Decorative rings */}
       <div style={{
         position: 'absolute', top: -80, right: -60, width: 200, height: 200, borderRadius: '50%',
-        border: `1px solid rgba(255,255,255,0.03)`, pointerEvents: 'none',
+        border: `1px solid ${C.ov3}`, pointerEvents: 'none',
       }} />
       <div style={{
         position: 'absolute', bottom: -70, left: -50, width: 160, height: 160, borderRadius: '50%',
-        border: `1px solid rgba(255,255,255,0.02)`, pointerEvents: 'none',
+        border: `1px solid ${C.ov2}`, pointerEvents: 'none',
       }} />
       <div style={{
         position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
-        <GraduationCap size={64} color="rgba(255,255,255,0.06)" strokeWidth={1} />
+        <GraduationCap size={64} color="${C.ov6}" strokeWidth={1} />
       </div>
     </div>
   );
@@ -386,7 +403,7 @@ function CourseDetail({ courseId, onBack, onOpenModule }: {
 
         {enrolled && totalLessons > 0 && (
           <div style={{ padding: isMobile ? '0 20px 20px' : '0 26px 24px' }}>
-            <div style={{ height: 3, background: 'rgba(255,255,255,0.05)', borderRadius: 2 }}>
+            <div style={{ height: 3, background: C.ov5, borderRadius: 2 }}>
               <div style={{
                 height: '100%', borderRadius: 2, background: pct === 100 ? OK : C.accent,
                 width: `${pct}%`, transition: 'width 0.4s ease',
@@ -403,7 +420,7 @@ function CourseDetail({ courseId, onBack, onOpenModule }: {
             <div style={{
               display: 'flex', alignItems: 'center', gap: 10,
               padding: '11px 14px', borderRadius: 10,
-              background: 'rgba(255,255,255,0.02)', border: `1px solid ${C.bds}`,
+              background: C.ov2, border: `1px solid ${C.bds}`,
             }}>
               <Lock size={13} color={C.t3} />
               <p style={{ color: C.t2, fontSize: 12.5, margin: 0, fontWeight: 300 }}>
@@ -481,7 +498,7 @@ function CourseDetail({ courseId, onBack, onOpenModule }: {
                   )}
                   {enrolled && m.lessons.length > 0 ? (
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <div style={{ flex: 1, height: 2, background: 'rgba(255,255,255,0.04)', borderRadius: 1 }}>
+                      <div style={{ flex: 1, height: 2, background: C.ov4, borderRadius: 1 }}>
                         <div style={{
                           height: '100%', borderRadius: 1,
                           background: complete ? OK : C.accent,
@@ -543,11 +560,11 @@ function CourseHero({ course, pct, enrolled, isMobile }: {
         <>
           <div style={{
             position: 'absolute', top: -120, right: -80, width: 320, height: 320, borderRadius: '50%',
-            border: `1px solid rgba(255,255,255,0.03)`, pointerEvents: 'none',
+            border: `1px solid ${C.ov3}`, pointerEvents: 'none',
           }} />
           <div style={{
             position: 'absolute', bottom: -100, left: -60, width: 240, height: 240, borderRadius: '50%',
-            border: `1px solid rgba(255,255,255,0.02)`, pointerEvents: 'none',
+            border: `1px solid ${C.ov2}`, pointerEvents: 'none',
           }} />
           <div style={{
             position: 'absolute', top: '50%', right: '18%', transform: 'translateY(-50%)',
@@ -722,7 +739,7 @@ function ModuleDetail({ moduleId, courseId, onBack, onOpenLesson, onOpenQuiz }: 
                 </span>
               </p>
             </div>
-            <div style={{ height: 3, borderRadius: 2, background: 'rgba(255,255,255,0.05)' }}>
+            <div style={{ height: 3, borderRadius: 2, background: C.ov5 }}>
               <div style={{
                 height: '100%', borderRadius: 2,
                 background: complete ? OK : C.accent,
@@ -795,10 +812,10 @@ function ModuleDetail({ moduleId, courseId, onBack, onOpenLesson, onOpenQuiz }: 
                   cursor: accessible ? 'pointer' : 'default',
                   opacity: accessible ? 1 : 0.5,
                   transition: 'background 0.12s',
-                  background: isNext ? 'rgba(255,255,255,0.02)' : 'transparent',
+                  background: isNext ? C.ov2 : 'transparent',
                 }}
-                onMouseEnter={e => { if (accessible) e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; }}
-                onMouseLeave={e => { e.currentTarget.style.background = isNext ? 'rgba(255,255,255,0.02)' : 'transparent'; }}>
+                onMouseEnter={e => { if (accessible) e.currentTarget.style.background = C.ov2; }}
+                onMouseLeave={e => { e.currentTarget.style.background = isNext ? C.ov2 : 'transparent'; }}>
 
                 <span style={{
                   width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
@@ -928,6 +945,35 @@ function QuizCard({
 // ═══════════════════════════════════════════════════════════════════════
 // Shared helpers
 // ═══════════════════════════════════════════════════════════════════════
+/**
+ * Floating light/dark toggle, fixed to the top-right of the Academy. The app
+ * chrome (profile button, bottom nav) is hidden inside the Academy, so this
+ * corner is free. Shows the icon of the mode you'll switch TO.
+ */
+function ThemeToggle({ theme, onToggle }: { theme: 'dark' | 'light'; onToggle: () => void }) {
+  const isDark = theme === 'dark';
+  return (
+    <button
+      onClick={onToggle}
+      aria-label={isDark ? 'Passer en mode clair' : 'Passer en mode sombre'}
+      title={isDark ? 'Mode clair' : 'Mode sombre'}
+      style={{
+        position: 'fixed', zIndex: 50,
+        top: 'calc(env(safe-area-inset-top, 0px) + 16px)',
+        right: 'max(16px, calc((100vw - 1000px) / 2 + 16px))',
+        width: 40, height: 40, borderRadius: 11,
+        background: C.l2, border: `1px solid ${C.bd}`,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        color: C.t2, cursor: 'pointer', transition: 'all 0.15s',
+        backdropFilter: 'blur(6px)',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.borderColor = C.accentBd; e.currentTarget.style.color = C.t1; }}
+      onMouseLeave={e => { e.currentTarget.style.borderColor = C.bd; e.currentTarget.style.color = C.t2; }}>
+      {isDark ? <Sun size={17} strokeWidth={1.8} /> : <Moon size={17} strokeWidth={1.8} />}
+    </button>
+  );
+}
+
 function BackButton({ onClick, noMargin }: { onClick: () => void; noMargin?: boolean }) {
   return (
     <button onClick={onClick}
