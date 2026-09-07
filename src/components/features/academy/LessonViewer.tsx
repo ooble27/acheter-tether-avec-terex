@@ -601,6 +601,7 @@ type ContentBlock =
   | { type: 'ul'; items: string[] }
   | { type: 'ol'; items: string[] }
   | { type: 'img'; url: string; alt: string; caption?: string }
+  | { type: 'table'; head: string[]; rows: string[][] }
   | { type: 'hr' };
 
 type Section = { heading: string | null; blocks: ContentBlock[] };
@@ -620,6 +621,16 @@ function parseIntoSections(src: string): Section[] {
     }
     if (line.startsWith('### ')) { current.blocks.push({ type: 'h3', text: line.slice(4).trim() }); i++; continue; }
     if (/^---+$/.test(line.trim())) { current.blocks.push({ type: 'hr' }); i++; continue; }
+    // Markdown table: a header row of pipes, a separator row (---|---), then data rows.
+    if (/^\s*\|.*\|\s*$/.test(line) && i + 1 < lines.length && /^\s*\|?[\s:\-|]+\|?\s*$/.test(lines[i + 1]) && lines[i + 1].includes('-')) {
+      const splitRow = (r: string) => r.trim().replace(/^\||\|$/g, '').split('|').map(c => c.trim());
+      const head = splitRow(line);
+      i += 2; // skip header + separator
+      const rows: string[][] = [];
+      while (i < lines.length && /^\s*\|.*\|\s*$/.test(lines[i])) { rows.push(splitRow(lines[i])); i++; }
+      current.blocks.push({ type: 'table', head, rows });
+      continue;
+    }
     // Markdown image: ![alt](url), optionally followed on the same line by a caption in _italics_
     const imgMatch = line.match(/^\s*!\[([^\]]*)\]\(([^)]+)\)\s*(?:_([^_]+)_)?\s*$/);
     if (imgMatch) {
@@ -679,7 +690,8 @@ function detectCalloutVariant(text: string): 'tip' | 'warning' | 'info' {
 function isBlockStart(l: string): boolean {
   return /^---+$/.test(l.trim()) || l.startsWith('## ') || l.startsWith('### ') || l.startsWith('> ')
     || /^\s*[•\-\*]\s+/.test(l) || /^\s*\d+\.\s+/.test(l)
-    || /^\s*!\[[^\]]*\]\([^)]+\)/.test(l);
+    || /^\s*!\[[^\]]*\]\([^)]+\)/.test(l)
+    || /^\s*\|.*\|\s*$/.test(l);
 }
 
 function renderContentBlock(b: ContentBlock, k: number): JSX.Element {
@@ -765,6 +777,45 @@ function renderContentBlock(b: ContentBlock, k: number): JSX.Element {
           )}
         </figure>
       );
+    case 'table':
+      // Wrapped in an overflow-x container so wide tables scroll inside
+      // themselves on mobile instead of blowing out the page width.
+      return (
+        <div key={k} style={{ margin: '20px 0 24px', overflowX: 'auto', WebkitOverflowScrolling: 'touch', borderRadius: 10, border: `1px solid ${C.bds}` }}>
+          <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: b.head.length > 2 ? 460 : 300, fontSize: 14 }}>
+            <thead>
+              <tr>
+                {b.head.map((cell, ci) => (
+                  <th key={ci} style={{
+                    textAlign: 'left', padding: '11px 14px',
+                    background: C.l2, color: C.t1, fontWeight: 500, fontSize: 12.5,
+                    borderBottom: `1px solid ${C.bd}`,
+                    whiteSpace: 'nowrap',
+                  }}>
+                    {inlineRender(cell)}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {b.rows.map((row, ri) => (
+                <tr key={ri}>
+                  {row.map((cell, ci) => (
+                    <td key={ci} style={{
+                      padding: '11px 14px', color: ci === 0 ? C.t1 : C.t2,
+                      fontWeight: ci === 0 ? 400 : 300, lineHeight: 1.5,
+                      borderBottom: ri === b.rows.length - 1 ? 'none' : `1px solid ${C.bds}`,
+                      verticalAlign: 'top',
+                    }}>
+                      {inlineRender(cell)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
     case 'hr':
       return <hr key={k} style={{ border: 'none', borderTop: `1px solid ${C.bds}`, margin: '20px 0' }} />;
     case 'p':
@@ -775,20 +826,38 @@ function renderContentBlock(b: ContentBlock, k: number): JSX.Element {
 
 function inlineRender(text: string): (string | JSX.Element)[] {
   const parts: (string | JSX.Element)[] = [];
-  const regex = /(\*\*[^*]+\*\*)|(`[^`]+`)/g;
+  // Order matters: match links [text](url) first, then bold, then inline code.
+  const regex = /(\[[^\]]+\]\([^)]+\))|(\*\*[^*]+\*\*)|(`[^`]+`)/g;
   let lastIdx = 0;
   let m: RegExpExecArray | null;
   let key = 0;
   while ((m = regex.exec(text)) !== null) {
     if (m.index > lastIdx) parts.push(text.slice(lastIdx, m.index));
     const token = m[0];
-    if (token.startsWith('**')) {
+    if (token.startsWith('[')) {
+      const linkMatch = token.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+      if (linkMatch) {
+        let href = linkMatch[2].trim();
+        // Bare domains (etherscan.io) → prefix with https:// so they resolve.
+        if (!/^https?:\/\//i.test(href) && !href.startsWith('/') && !href.startsWith('mailto:')) {
+          href = 'https://' + href;
+        }
+        parts.push(
+          <a key={key++} href={href} target="_blank" rel="noopener noreferrer"
+            style={{ color: C.accent, textDecoration: 'underline', textUnderlineOffset: 2, fontWeight: 400 }}>
+            {linkMatch[1]}
+          </a>
+        );
+      } else {
+        parts.push(token);
+      }
+    } else if (token.startsWith('**')) {
       parts.push(<strong key={key++} style={{ color: C.t1, fontWeight: 500 }}>{token.slice(2, -2)}</strong>);
     } else {
       parts.push(<code key={key++} style={{
         fontFamily: 'ui-monospace, "SF Mono", Menlo, monospace',
         fontSize: '0.88em', background: C.l2, border: `1px solid ${C.bds}`,
-        padding: '2px 7px', borderRadius: 5, color: C.t1,
+        padding: '2px 7px', borderRadius: 5, color: C.t1, wordBreak: 'break-all',
       }}>{token.slice(1, -1)}</code>);
     }
     lastIdx = m.index + token.length;
