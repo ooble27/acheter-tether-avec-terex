@@ -6,7 +6,7 @@ import {
   ArrowLeft, BookOpen, Video, FileText, Type, Radio,
   CheckCircle2, Circle, Lock, Clock, ChevronRight, ChevronLeft,
   ChevronDown, ChevronUp, GraduationCap, Play, Loader2,
-  Lightbulb, AlertTriangle, Info, Layers, Target,
+  Lightbulb, AlertTriangle, Info, Layers, Target, Download,
 } from 'lucide-react';
 
 // ─── Types ──────────────────────────────────────────────────────────────
@@ -14,7 +14,7 @@ type Course = {
   id: string; title: string; slug: string; description: string | null;
   price_cfa: number; level: string; status: string; duration_hours: number | null;
 };
-type Module = { id: string; course_id: string; title: string; position: number };
+type Module = { id: string; course_id: string; title: string; position: number; pptx_url: string | null; pdf_url: string | null };
 type Lesson = {
   id: string; module_id: string; title: string; content_type: string;
   content_url: string | null; content_text: string | null;
@@ -431,6 +431,38 @@ function CourseDetail({ courseId, onBack, onOpenLesson }: {
               {/* Lesson list (collapsed/expanded) */}
               {expanded && (
                 <div style={{ padding: '0 0 6px' }}>
+                  {/* Download buttons for course materials */}
+                  {enrolled && (m.pdf_url || m.pptx_url) && (
+                    <div style={{
+                      display: 'flex', gap: 8, flexWrap: 'wrap',
+                      padding: isMobile ? '4px 14px 10px 58px' : '4px 18px 10px 62px',
+                    }}>
+                      {m.pdf_url && (
+                        <a href={m.pdf_url} download
+                          style={{
+                            display: 'inline-flex', alignItems: 'center', gap: 6,
+                            fontSize: 11, fontWeight: 500, color: '#f472b6',
+                            background: 'rgba(244,114,182,0.08)', border: '1px solid rgba(244,114,182,0.18)',
+                            borderRadius: 8, padding: '5px 12px', textDecoration: 'none',
+                            cursor: 'pointer', transition: 'background 0.15s',
+                          }}>
+                          <Download size={12} /> PDF du cours
+                        </a>
+                      )}
+                      {m.pptx_url && (
+                        <a href={m.pptx_url} download
+                          style={{
+                            display: 'inline-flex', alignItems: 'center', gap: 6,
+                            fontSize: 11, fontWeight: 500, color: '#818cf8',
+                            background: 'rgba(129,140,248,0.08)', border: '1px solid rgba(129,140,248,0.18)',
+                            borderRadius: 8, padding: '5px 12px', textDecoration: 'none',
+                            cursor: 'pointer', transition: 'background 0.15s',
+                          }}>
+                          <Download size={12} /> PowerPoint
+                        </a>
+                      )}
+                    </div>
+                  )}
                   {m.lessons.map((l, li) => {
                     const meta = TYPE_META[l.content_type] ?? TYPE_META.text;
                     const Icon = meta.icon;
