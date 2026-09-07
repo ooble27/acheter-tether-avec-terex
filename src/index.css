@@ -172,6 +172,29 @@ html, body {
   color-scheme: light;
 }
 
+/* ── Compatibilité mode clair (globale) ───────────────────────────────────
+   Beaucoup d'écrans utilisent des classes de couleur « en dur » (text-white,
+   text-gray-400, bg-black, border-white…) qui ne passent pas par les tokens.
+   Plutôt que de convertir chaque page une par une, on les remappe ici, une
+   seule fois, vers la palette de thème — uniquement quand le mode clair est
+   actif. Les surfaces `bg-terex-*`, `bg-background/card`, etc. basculent déjà
+   toutes seules via les variables. Le `!important` prime sur les utilitaires
+   Tailwind. */
+.light .text-white { color: hsl(var(--foreground)) !important; }
+.light .text-gray-100,
+.light .text-gray-200,
+.light .text-gray-300,
+.light .text-gray-400,
+.light .text-gray-500,
+.light .text-gray-600 { color: hsl(var(--muted-foreground)) !important; }
+/* Bordures blanches (souvent translucides border-white/10) → bordure de thème. */
+.light [class*="border-white"] { border-color: hsl(var(--border)) !important; }
+/* Fonds noirs pleins → fond clair de la plateforme. */
+.light .bg-black { background-color: hsl(var(--terex-dark)) !important; }
+/* Dégradés blancs vers/depuis → tokens (rares, gardés lisibles). */
+.light .from-white { --tw-gradient-from: hsl(var(--card)) var(--tw-gradient-from-position) !important; }
+.light .to-white { --tw-gradient-to: hsl(var(--card)) var(--tw-gradient-to-position) !important; }
+
 /* Fondu doux au changement de section du tableau de bord — évite l'impression
    de « flash » quand une page apparaît d'un coup. Opacité seule : aucun
    décalage de mise en page. */
