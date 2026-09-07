@@ -79,10 +79,27 @@ export function LessonViewer({
     })();
   }, [lessonId, courseId, user]);
 
-  // Parse lesson content into sections for section-based navigation
-  const sections = useMemo(() => {
-    if (!lesson?.content_text) return [] as Section[];
-    return parseIntoSections(lesson.content_text);
+  // Parse lesson content into sections for section-based navigation.
+  // If the very first block of the first section is an image (the lesson's
+  // hero picture, prepended in Supabase), lift it out so it can be rendered
+  // full-bleed above the sections instead of inside a bordered card.
+  const { hero, sections } = useMemo(() => {
+    if (!lesson?.content_text) return { hero: null as ContentBlock | null, sections: [] as Section[] };
+    const parsed = parseIntoSections(lesson.content_text);
+    let heroBlock: ContentBlock | null = null;
+    if (parsed.length > 0 && !parsed[0].heading && parsed[0].blocks[0]?.type === 'img') {
+      heroBlock = parsed[0].blocks[0];
+      // Drop the extracted image; if that leaves the first section empty,
+      // drop the section too.
+      const [first, ...rest] = parsed;
+      const remaining = first.blocks.slice(1);
+      const cleanedFirst = { ...first, blocks: remaining };
+      return {
+        hero: heroBlock,
+        sections: remaining.length > 0 ? [cleanedFirst, ...rest] : rest,
+      };
+    }
+    return { hero: null, sections: parsed };
   }, [lesson?.content_text]);
 
   const flat = useMemo(() => allModules.flatMap(m => m.lessons), [allModules]);
@@ -135,11 +152,14 @@ export function LessonViewer({
         maxWidth: 1100, margin: '0 auto',
         padding: isMobile ? '0 0 100px' : '0 24px 120px',
       }}>
-        {/* Sticky header */}
+        {/* Sticky header — respects the PWA / mobile safe area so the title
+            never hides behind the status bar (notch, wifi / clock strip). */}
         <div style={{
           position: 'sticky', top: 0, zIndex: 20, background: C.bg,
           borderBottom: `1px solid ${C.bds}`,
-          padding: isMobile ? '14px 16px 12px' : '18px 0 14px',
+          padding: isMobile
+            ? 'calc(env(safe-area-inset-top, 0px) + 14px) 16px 12px'
+            : '22px 0 16px',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <button onClick={onBackToModule}
@@ -210,6 +230,26 @@ export function LessonViewer({
               </span>
             )}
           </div>
+
+          {/* Hero image — full-width, no card, sits above the two-column layout */}
+          {hero && hero.type === 'img' && (
+            <figure style={{ margin: '0 0 32px' }}>
+              <img src={hero.url} alt={hero.alt} loading="lazy"
+                style={{
+                  width: '100%', display: 'block',
+                  aspectRatio: '16 / 9', objectFit: 'cover',
+                  borderRadius: 12, background: C.l2,
+                }} />
+              {(hero.caption || hero.alt) && (
+                <figcaption style={{
+                  color: C.t3, fontSize: 12, marginTop: 10,
+                  fontStyle: 'italic', fontWeight: 300, lineHeight: 1.5,
+                }}>
+                  {hero.caption || hero.alt}
+                </figcaption>
+              )}
+            </figure>
+          )}
 
           {/* Two-column layout on desktop, stacked on mobile */}
           <div style={{
@@ -426,18 +466,17 @@ export function LessonViewer({
 function SectionCard({ section, sectionIndex, total, isMobile }: {
   section: Section; sectionIndex: number; total: number; isMobile: boolean;
 }) {
+  // Renders directly on the page — no card border or background, so the text
+  // flows like a real article. The visual grouping comes from the heading rule
+  // and the eyebrow, not from an outer box.
   return (
-    <div style={{
-      background: C.l1, borderRadius: 16, border: `1px solid ${C.bds}`,
-      padding: isMobile ? '20px 20px 22px' : '28px 32px 30px',
-      fontFamily: FONT,
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+    <div style={{ fontFamily: FONT }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
         <span style={{
-          width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
+          width: 26, height: 26, borderRadius: '50%', flexShrink: 0,
           background: C.l2, border: `1px solid ${C.bd}`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          color: C.t2, ...numeric, fontSize: 12, fontWeight: 400,
+          color: C.t2, ...numeric, fontSize: 11, fontWeight: 400,
         }}>
           {sectionIndex + 1}
         </span>
@@ -446,14 +485,14 @@ function SectionCard({ section, sectionIndex, total, isMobile }: {
       {section.heading && (
         <h2 style={{
           fontFamily: FONT, fontWeight: 300, letterSpacing: '-0.02em',
-          fontSize: isMobile ? 22 : 26, lineHeight: 1.25,
-          color: C.t1, margin: '0 0 20px',
-          paddingBottom: 16, borderBottom: `1px solid ${C.bds}`,
+          fontSize: isMobile ? 24 : 30, lineHeight: 1.2,
+          color: C.t1, margin: '0 0 20px', textWrap: 'balance' as any,
+          paddingBottom: 14, borderBottom: `1px solid ${C.bds}`,
         }}>
           {inlineRender(section.heading)}
         </h2>
       )}
-      <div style={{ color: C.t2, fontSize: 15.5, lineHeight: 1.85, fontWeight: 300 }}>
+      <div style={{ color: C.t2, fontSize: isMobile ? 15.5 : 16.5, lineHeight: 1.85, fontWeight: 300 }}>
         {section.blocks.map((b, bi) => renderContentBlock(b, bi))}
       </div>
     </div>
@@ -705,20 +744,21 @@ function renderContentBlock(b: ContentBlock, k: number): JSX.Element {
         </ol>
       );
     case 'img':
+      // Images flow directly on the page — no bordered card, no fill background.
+      // We force a consistent 16:9 aspect ratio + object-fit: cover so photos of
+      // different natural sizes still read as one system across lessons.
       return (
-        <figure key={k} style={{ margin: '20px 0 24px' }}>
-          <div style={{
-            borderRadius: 12, overflow: 'hidden',
-            border: `1px solid ${C.bds}`, background: C.l2,
-          }}>
-            <img src={b.url} alt={b.alt}
-              style={{ width: '100%', height: 'auto', display: 'block' }}
-              loading="lazy" />
-          </div>
+        <figure key={k} style={{ margin: '24px 0 28px' }}>
+          <img src={b.url} alt={b.alt} loading="lazy"
+            style={{
+              width: '100%', display: 'block',
+              aspectRatio: '16 / 9', objectFit: 'cover',
+              borderRadius: 10, background: C.l2,
+            }} />
           {(b.caption || b.alt) && (
             <figcaption style={{
-              color: C.t3, fontSize: 12, marginTop: 8, textAlign: 'center',
-              fontStyle: 'italic', fontWeight: 300,
+              color: C.t3, fontSize: 12, marginTop: 10, textAlign: 'left',
+              fontStyle: 'italic', fontWeight: 300, lineHeight: 1.5,
             }}>
               {b.caption || b.alt}
             </figcaption>
