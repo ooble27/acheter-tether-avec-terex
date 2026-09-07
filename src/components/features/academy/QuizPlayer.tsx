@@ -10,9 +10,9 @@ import {
   C, FONT, card, heroCard, sH, cardHeaderRow, cardTitle,
   btnPrimary, btnGhost, numeric,
   primaryHoverIn, primaryHoverOut, ghostHoverIn, ghostHoverOut,
-} from '@/components/admin/adminTheme';
+} from './academyTheme';
 
-const OK = '#4ade80';
+const OK = C.ok;
 const BAD = '#f87171';
 
 type Quiz = {
@@ -328,7 +328,7 @@ export function QuizPlayer({
               {answered}/{questions.length} répondu{answered > 1 ? 'es' : ''}
             </p>
           </div>
-          <div style={{ height: 3, borderRadius: 2, background: 'rgba(255,255,255,0.05)' }}>
+          <div style={{ height: 3, borderRadius: 2, background: C.ov5 }}>
             <div style={{
               height: '100%', borderRadius: 2, background: C.accent,
               width: `${((current + 1) / questions.length) * 100}%`,
@@ -360,7 +360,7 @@ export function QuizPlayer({
                   style={{
                     display: 'flex', alignItems: 'center', gap: 12,
                     padding: '14px 16px', borderRadius: 10,
-                    background: picked ? 'rgba(255,255,255,0.05)' : C.bg,
+                    background: picked ? C.ov5 : C.bg,
                     border: `1px solid ${picked ? C.accentBd : C.bds}`,
                     cursor: 'pointer', textAlign: 'left', fontFamily: FONT,
                     transition: 'all 0.15s', color: C.t1,

@@ -11,9 +11,9 @@ import {
   C, FONT, card, cardHeaderRow, cardTitle, sH, numeric,
   btnPrimary, btnGhost,
   primaryHoverIn, primaryHoverOut,
-} from '@/components/admin/adminTheme';
+} from './academyTheme';
 
-const OK = '#4ade80';
+const OK = C.ok;
 
 type Lesson = {
   id: string; module_id: string; title: string; content_type: string;
@@ -264,7 +264,7 @@ export function LessonViewer({
                       fontFamily: FONT, fontWeight: 300, fontSize: 12.5,
                       marginBottom: 2, transition: 'background 0.12s',
                     }}
-                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.color = C.t1; }}
+                    onMouseEnter={e => { e.currentTarget.style.background = C.ov3; e.currentTarget.style.color = C.t1; }}
                     onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.t2; }}>
                     <span style={{
                       width: 20, height: 20, borderRadius: '50%', flexShrink: 0,
@@ -354,10 +354,10 @@ export function LessonViewer({
                           borderBottom: isLast ? 'none' : `1px solid ${C.bds}`,
                           display: 'flex', alignItems: 'center', gap: 12,
                           cursor: isCurrent ? 'default' : 'pointer',
-                          background: isCurrent ? 'rgba(255,255,255,0.03)' : 'transparent',
+                          background: isCurrent ? C.ov3 : 'transparent',
                           transition: 'background 0.12s',
                         }}
-                        onMouseEnter={e => { if (!isCurrent) e.currentTarget.style.background = 'rgba(255,255,255,0.015)'; }}
+                        onMouseEnter={e => { if (!isCurrent) e.currentTarget.style.background = C.ov15; }}
                         onMouseLeave={e => { if (!isCurrent) e.currentTarget.style.background = 'transparent'; }}>
                         <span style={{
                           width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center',
