@@ -111,7 +111,9 @@ export function QuizPlayer({
   if (step === 'intro') {
     return (
       <div style={{ background: C.bg, minHeight: '100vh', fontFamily: FONT, color: C.t1, fontWeight: 300 }}>
-        <div style={{ maxWidth: 680, margin: '0 auto', padding: isMobile ? '20px 16px 100px' : '32px 24px 120px' }}>
+        <div style={{ maxWidth: 680, margin: '0 auto', padding: isMobile
+          ? 'calc(env(safe-area-inset-top, 0px) + 24px) 16px 100px'
+          : '40px 24px 120px' }}>
           <BackBtn onClick={onBackToModule} />
 
           <div style={{ ...heroCard, padding: isMobile ? '26px 22px' : '32px 30px', fontFamily: FONT }}>
@@ -191,7 +193,9 @@ export function QuizPlayer({
   if (step === 'result') {
     return (
       <div style={{ background: C.bg, minHeight: '100vh', fontFamily: FONT, color: C.t1, fontWeight: 300 }}>
-        <div style={{ maxWidth: 680, margin: '0 auto', padding: isMobile ? '20px 16px 100px' : '32px 24px 120px' }}>
+        <div style={{ maxWidth: 680, margin: '0 auto', padding: isMobile
+          ? 'calc(env(safe-area-inset-top, 0px) + 24px) 16px 100px'
+          : '40px 24px 120px' }}>
           <BackBtn onClick={onBackToModule} />
 
           {/* Big score card */}
@@ -311,7 +315,9 @@ export function QuizPlayer({
 
   return (
     <div style={{ background: C.bg, minHeight: '100vh', fontFamily: FONT, color: C.t1, fontWeight: 300 }}>
-      <div style={{ maxWidth: 680, margin: '0 auto', padding: isMobile ? '20px 16px 100px' : '32px 24px 120px' }}>
+      <div style={{ maxWidth: 680, margin: '0 auto', padding: isMobile
+          ? 'calc(env(safe-area-inset-top, 0px) + 24px) 16px 100px'
+          : '40px 24px 120px' }}>
         <BackBtn onClick={() => setStep('intro')} />
 
         {/* Progress */}

@@ -125,7 +125,9 @@ function Catalog({ onBack, onOpenCourse }: { onBack: () => void; onOpenCourse: (
   const isEnrolled = (id: string) => enrollments.some(e => e.course_id === id && e.status === 'active');
 
   return (
-    <div style={{ maxWidth: 1000, margin: '0 auto', padding: isMobile ? '20px 16px 100px' : '32px 24px 120px' }}>
+    <div style={{ maxWidth: 1000, margin: '0 auto', padding: isMobile
+        ? 'calc(env(safe-area-inset-top, 0px) + 24px) 16px 100px'
+        : '40px 24px 120px' }}>
       {/* Simple page head */}
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14, marginBottom: 32 }}>
         <BackButton onClick={onBack} noMargin />
@@ -346,7 +348,9 @@ function CourseDetail({ courseId, onBack, onOpenModule }: {
   if (!course) return <EmptyState label="Formation introuvable." />;
 
   return (
-    <div style={{ maxWidth: 960, margin: '0 auto', padding: isMobile ? '20px 16px 100px' : '32px 24px 120px' }}>
+    <div style={{ maxWidth: 960, margin: '0 auto', padding: isMobile
+        ? 'calc(env(safe-area-inset-top, 0px) + 24px) 16px 100px'
+        : '40px 24px 120px' }}>
       <BackButton onClick={onBack} />
 
       {/* Hero — cover image / gradient with title overlay + stats below */}
@@ -681,7 +685,9 @@ function ModuleDetail({ moduleId, courseId, onBack, onOpenLesson, onOpenQuiz }: 
   if (!module_) return <EmptyState label="Module introuvable." />;
 
   return (
-    <div style={{ maxWidth: 820, margin: '0 auto', padding: isMobile ? '20px 16px 100px' : '32px 24px 120px' }}>
+    <div style={{ maxWidth: 820, margin: '0 auto', padding: isMobile
+        ? 'calc(env(safe-area-inset-top, 0px) + 24px) 16px 100px'
+        : '40px 24px 120px' }}>
       <BackButton onClick={onBack} />
 
       {/* Hero */}
