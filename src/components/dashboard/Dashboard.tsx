@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { MobileBottomNav } from '@/components/dashboard/MobileBottomNav';
@@ -30,7 +30,12 @@ import { LogOut, User } from 'lucide-react';
 import { HighVolumeRequest } from '@/components/features/HighVolumeRequest';
 import { B2BPage } from '@/components/features/B2BPage';
 import { SavedDataPrefetch } from '@/components/dashboard/SavedDataPrefetch';
-import { Academy } from '@/components/features/Academy';
+// Lazy-load the Academy: it ships a lot of code (LessonViewer, QuizPlayer, …)
+// and only opens when the user clicks into it, so we keep it out of the
+// initial dashboard bundle for a much faster cold-start.
+const Academy = lazy(() =>
+  import('@/components/features/Academy').then(m => ({ default: m.Academy }))
+);
 import { ThemeToggle } from '@/components/dashboard/ThemeToggle';
 
 interface DashboardProps {
@@ -163,7 +168,11 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       case 'b2b':
         return <B2BPage onBack={() => setActiveSection('home')} />;
       case 'academy':
-        return academyAccess ? <Academy onBack={() => setActiveSection('home')} /> : <div className="text-foreground">Accès non autorisé</div>;
+        return academyAccess ? (
+          <Suspense fallback={<div style={{ minHeight: '100vh', background: 'hsl(var(--terex-dark))' }} />}>
+            <Academy onBack={() => setActiveSection('home')} />
+          </Suspense>
+        ) : <div className="text-foreground">Accès non autorisé</div>;
       case 'faq':
         return <FAQ onNavigate={setActiveSection} />;
       case 'user-guide':
