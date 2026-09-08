@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { setBrowserThemeColor } from '@/contexts/ThemeContext';
+import { setBrowserThemeColor, useTheme } from '@/contexts/ThemeContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import {
   ArrowLeft, Video, FileText, Type, Radio,
@@ -15,7 +15,7 @@ import {
   cardHeaderRow, cardTitle, btnPrimary, numeric,
   listRowHoverIn, listRowHoverOut,
   primaryHoverIn, primaryHoverOut,
-  ACADEMY_THEME_CSS, loadAcademyTheme, saveAcademyTheme,
+  ACADEMY_THEME_CSS,
 } from './academy/academyTheme';
 import { LessonViewer } from './academy/LessonViewer';
 import { QuizPlayer } from './academy/QuizPlayer';
@@ -59,27 +59,17 @@ export function Academy({ onBack }: { onBack: () => void }) {
   const [lessonId, setLessonId] = useState<string | null>(null);
   const [quizId, setQuizId] = useState<string | null>(null);
   const [quizModuleTitle, setQuizModuleTitle] = useState<string>('');
-  const [theme, setTheme] = useState<'dark' | 'light'>(() => loadAcademyTheme());
+  // Single source of truth: the global app theme. Academy and Dashboard share
+  // the same state via ThemeContext (localStorage key `terex-theme`), so a
+  // switch on either side reflects on the other instantly.
+  const { theme, toggleTheme } = useTheme();
 
-  // The Academy runs its own light/dark scope, so keep the browser chrome
-  // (Safari/Chrome status bar) in sync with IT while mounted, then restore the
-  // global app theme's colour when leaving the Academy.
+  // Keep the browser chrome (Safari/Chrome status bar) in sync while the
+  // Academy is mounted; the global theme drives it either way, but we still
+  // call setBrowserThemeColor to force the update when re-entering.
   useEffect(() => {
     setBrowserThemeColor(theme === 'light');
-    return () => {
-      let globalLight = false;
-      try { globalLight = localStorage.getItem('terex-theme') === 'light'; } catch { /* ignore */ }
-      setBrowserThemeColor(globalLight);
-    };
   }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(prev => {
-      const nextMode = prev === 'dark' ? 'light' : 'dark';
-      saveAcademyTheme(nextMode);
-      return nextMode;
-    });
-  };
 
   return (
     <div
@@ -959,30 +949,50 @@ function QuizCard({
 // Shared helpers
 // ═══════════════════════════════════════════════════════════════════════
 /**
- * Floating light/dark toggle, fixed to the top-right of the Academy. The app
- * chrome (profile button, bottom nav) is hidden inside the Academy, so this
- * corner is free. Shows the icon of the mode you'll switch TO.
+ * Same flat horizontal sliding switch as the Dashboard's ThemeToggle,
+ * fixed to the top-right of the Academy so it stays in view while scrolling.
+ * The knob slides left (dark) ↔ right (light); the sun/moon icon rides on it.
+ * The theme state is shared with the Dashboard via ThemeContext.
  */
 function ThemeToggle({ theme, onToggle }: { theme: 'dark' | 'light'; onToggle: () => void }) {
-  const isDark = theme === 'dark';
+  const light = theme === 'light';
+  const W = 58, H = 30, KNOB = 24, PAD = 3;
   return (
     <button
       onClick={onToggle}
-      aria-label={isDark ? 'Passer en mode clair' : 'Passer en mode sombre'}
-      title={isDark ? 'Mode clair' : 'Mode sombre'}
+      aria-label={light ? 'Passer en mode sombre' : 'Passer en mode clair'}
       style={{
         position: 'fixed', zIndex: 50,
         top: 'calc(env(safe-area-inset-top, 0px) + 16px)',
         right: 'max(16px, calc((100vw - 1000px) / 2 + 16px))',
-        width: 40, height: 40, borderRadius: 11,
-        background: C.l2, border: `1px solid ${C.bd}`,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        color: C.t2, cursor: 'pointer', transition: 'all 0.15s',
-        backdropFilter: 'blur(6px)',
+        width: W, height: H,
+        borderRadius: 999,
+        border: `1px solid ${C.accentBd}`,
+        background: C.l2,
+        padding: 0,
+        cursor: 'pointer',
+        outline: 'none',
+        WebkitTapHighlightColor: 'transparent',
+        flexShrink: 0,
+        transition: 'background 0.2s',
       }}
-      onMouseEnter={e => { e.currentTarget.style.borderColor = C.accentBd; e.currentTarget.style.color = C.t1; }}
-      onMouseLeave={e => { e.currentTarget.style.borderColor = C.bd; e.currentTarget.style.color = C.t2; }}>
-      {isDark ? <Sun size={17} strokeWidth={1.8} /> : <Moon size={17} strokeWidth={1.8} />}
+    >
+      <span
+        style={{
+          position: 'absolute',
+          top: PAD,
+          left: light ? W - KNOB - PAD : PAD,
+          width: KNOB, height: KNOB,
+          borderRadius: '50%',
+          background: C.accent,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          transition: 'left 0.22s cubic-bezier(0.4, 0, 0.2, 1)',
+        }}
+      >
+        {light
+          ? <Moon size={13} color={C.accentFg} />
+          : <Sun size={13} color={C.accentFg} />}
+      </span>
     </button>
   );
 }

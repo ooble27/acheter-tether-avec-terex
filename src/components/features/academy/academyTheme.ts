@@ -201,17 +201,6 @@ export const ACADEMY_THEME_CSS = `
 }
 `;
 
-const STORAGE_KEY = 'terex-academy-theme';
-
-export function loadAcademyTheme(): 'dark' | 'light' {
-  try {
-    const v = localStorage.getItem(STORAGE_KEY);
-    return v === 'light' ? 'light' : 'dark';
-  } catch {
-    return 'dark';
-  }
-}
-
-export function saveAcademyTheme(mode: 'dark' | 'light') {
-  try { localStorage.setItem(STORAGE_KEY, mode); } catch { /* ignore */ }
-}
+// Theme is now driven by the global ThemeContext (`terex-theme` in localStorage),
+// so the Academy and the Dashboard always share the same light/dark state.
+// The old `terex-academy-theme` key and its loader/saver were removed.
