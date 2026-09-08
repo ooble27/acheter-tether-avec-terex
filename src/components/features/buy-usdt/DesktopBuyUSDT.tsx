@@ -310,7 +310,7 @@ export function DesktopBuyUSDT() {
                   <div style={{ display: 'flex', background: 'hsl(var(--terex-accent) / 0.04)', borderRadius: '10px', padding: '3px', gap: '2px' }}>
                     {(['XOF', 'USDT'] as const).map(c => (
                       <button key={c} onClick={() => { setInputCurrency(c); setRawAmount(''); }}
-                        style={{ padding: '4px 12px', borderRadius: '8px', border: 'none', fontSize: '12px', fontWeight: 500, cursor: 'pointer', background: inputCurrency === c ? 'hsl(var(--terex-gray))' : 'transparent', color: inputCurrency === c ? 'hsl(var(--foreground))' : 'hsl(var(--terex-accent) / 0.4)' }}>
+                        style={{ padding: '4px 12px', borderRadius: '8px', border: 'none', fontSize: '12px', fontWeight: 500, cursor: 'pointer', background: inputCurrency === c ? 'hsl(var(--terex-accent))' : 'transparent', color: inputCurrency === c ? 'hsl(var(--terex-accent-fg))' : 'hsl(var(--terex-accent) / 0.4)' }}>
                         {c === 'XOF' ? 'CFA' : 'USDT'}
                       </button>
                     ))}

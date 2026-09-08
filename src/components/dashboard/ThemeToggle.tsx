@@ -1,32 +1,49 @@
 import { Sun, Moon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { useTheme } from '@/contexts/ThemeContext';
 
 /**
- * Floating light/dark toggle for the whole platform. Sits top-right, just left
- * of the profile button (or in the profile button's slot when that button is
- * hidden). Uses a clearly-contrasting surface so it stays visible on both the
- * dark and the light ground. Sun in dark mode (tap → light), moon in light
- * mode (tap → dark).
+ * Light/dark theme switch — a flat horizontal slider (no shadow), meant to sit
+ * directly in the page flow (it scrolls with the content, it is not fixed).
+ * The knob slides left (dark) ↔ right (light); the sun/moon icon rides on it.
  */
-export function ThemeToggle({ offset = false }: { offset?: boolean }) {
+export function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
-  // Same right anchor as the profile button; shift 56px further in when the
-  // profile button is present so the two sit side by side.
-  const baseRight = 'max(16px, calc((100vw - 1000px) / 2 + 8px))';
+  const light = theme === 'light';
+  const W = 58, H = 30, KNOB = 24, PAD = 3;
   return (
-    <Button
-      variant="ghost"
-      size="icon"
+    <button
       onClick={toggleTheme}
-      aria-label={theme === 'dark' ? 'Passer en mode clair' : 'Passer en mode sombre'}
-      className="fixed z-50 bg-terex-gray/90 backdrop-blur-sm border border-terex-gray-light text-foreground hover:bg-terex-gray-light rounded-xl w-12 h-12 shadow-lg"
+      aria-label={light ? 'Passer en mode sombre' : 'Passer en mode clair'}
       style={{
-        top: 'calc(env(safe-area-inset-top, 0px) + 16px)',
-        right: offset ? `calc(${baseRight} + 56px)` : baseRight,
+        position: 'relative',
+        width: W, height: H,
+        borderRadius: 999,
+        border: '1px solid hsl(var(--terex-accent) / 0.14)',
+        background: 'hsl(var(--terex-accent) / 0.06)',
+        padding: 0,
+        cursor: 'pointer',
+        outline: 'none',
+        WebkitTapHighlightColor: 'transparent',
+        flexShrink: 0,
+        transition: 'background 0.2s',
       }}
     >
-      {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-    </Button>
+      <span
+        style={{
+          position: 'absolute',
+          top: PAD,
+          left: light ? W - KNOB - PAD : PAD,
+          width: KNOB, height: KNOB,
+          borderRadius: '50%',
+          background: 'hsl(var(--terex-accent))',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          transition: 'left 0.22s cubic-bezier(0.4, 0, 0.2, 1)',
+        }}
+      >
+        {light
+          ? <Moon size={13} color="hsl(var(--terex-accent-fg))" />
+          : <Sun size={13} color="hsl(var(--terex-accent-fg))" />}
+      </span>
+    </button>
   );
 }
