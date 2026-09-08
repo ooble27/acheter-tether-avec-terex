@@ -31,7 +31,7 @@ const CARD: React.CSSProperties = {
   overflow: 'hidden',
 };
 const BORDER = 'rgba(255,255,255,0.07)';
-const BTN = '#2d2d2d';
+const BTN = 'hsl(var(--terex-gray))';
 const SEL_BG = 'rgba(255,255,255,0.06)';
 const SEL_BORDER = 'rgba(255,255,255,0.18)';
 
@@ -41,7 +41,7 @@ const inputStyle: React.CSSProperties = {
   border: `1px solid ${BORDER}`,
   borderRadius: '12px',
   padding: '13px 16px',
-  color: '#fff',
+  color: 'hsl(var(--foreground))',
   fontSize: '15px',
   outline: 'none',
   boxSizing: 'border-box',
@@ -67,7 +67,7 @@ function ContinueBtn({ onClick, disabled, children }: { onClick: () => void; dis
           borderRadius: '16px',
           border: `1px solid rgba(255,255,255,${disabled ? '0.05' : '0.10'})`,
           padding: '13px 22px',
-          color: disabled ? '#6b7280' : '#fff',
+          color: disabled ? 'hsl(var(--muted-foreground))' : '#fff',
           fontSize: '14px', fontWeight: 600,
           cursor: disabled ? 'not-allowed' : 'pointer',
         }}
@@ -89,7 +89,7 @@ function ConfirmBtn({ onClick, disabled, loading }: { onClick: () => void; disab
           background: disabled || loading ? 'rgba(255,255,255,0.08)' : '#ffffff',
           borderRadius: '16px', border: 'none',
           padding: '13px 22px',
-          color: disabled || loading ? '#6b7280' : '#141414',
+          color: disabled || loading ? 'hsl(var(--muted-foreground))' : '#141414',
           fontSize: '14px', fontWeight: 700,
           cursor: disabled || loading ? 'not-allowed' : 'pointer',
         }}
@@ -277,7 +277,7 @@ export function DesktopBuyUSDT() {
   const backBtn = (to: 'amount' | 'network' | 'address' | 'binance') => (
     <button
       onClick={() => setStep(to)}
-      style={{ padding: '8px', background: SEL_BG, borderRadius: '10px', border: 'none', cursor: 'pointer', color: '#fff', display: 'flex', alignItems: 'center', marginBottom: '16px' }}
+      style={{ padding: '8px', background: SEL_BG, borderRadius: '10px', border: 'none', cursor: 'pointer', color: 'hsl(var(--foreground))', display: 'flex', alignItems: 'center', marginBottom: '16px' }}
     >
       <ArrowLeft size={18} />
     </button>
@@ -286,7 +286,7 @@ export function DesktopBuyUSDT() {
   const row = (label: string, value: string) => (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: `1px solid ${BORDER}` }}>
       <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>{label}</span>
-      <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>{value}</span>
+      <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 500 }}>{value}</span>
     </div>
   );
 
@@ -299,7 +299,7 @@ export function DesktopBuyUSDT() {
           <div>
             <div>
               <div style={{ marginBottom: '20px' }}>
-                <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Acheter USDT</h2>
+                <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Acheter USDT</h2>
                 <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px' }}>Entrez le montant que vous souhaitez dépenser</p>
               </div>
 
@@ -310,7 +310,7 @@ export function DesktopBuyUSDT() {
                   <div style={{ display: 'flex', background: 'rgba(255,255,255,0.04)', borderRadius: '10px', padding: '3px', gap: '2px' }}>
                     {(['XOF', 'USDT'] as const).map(c => (
                       <button key={c} onClick={() => { setInputCurrency(c); setRawAmount(''); }}
-                        style={{ padding: '4px 12px', borderRadius: '8px', border: 'none', fontSize: '12px', fontWeight: 500, cursor: 'pointer', background: inputCurrency === c ? '#2d2d2d' : 'transparent', color: inputCurrency === c ? '#fff' : 'rgba(255,255,255,0.4)' }}>
+                        style={{ padding: '4px 12px', borderRadius: '8px', border: 'none', fontSize: '12px', fontWeight: 500, cursor: 'pointer', background: inputCurrency === c ? 'hsl(var(--terex-gray))' : 'transparent', color: inputCurrency === c ? 'hsl(var(--foreground))' : 'rgba(255,255,255,0.4)' }}>
                         {c === 'XOF' ? 'CFA' : 'USDT'}
                       </button>
                     ))}
@@ -368,19 +368,19 @@ export function DesktopBuyUSDT() {
                 {inputCurrency === 'USDT' && (
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
                     <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px' }}>Vous payez</span>
-                    <span style={{ color: '#fff', fontSize: '12px' }}>{fiatAmount || '0'} {currency}</span>
+                    <span style={{ color: 'hsl(var(--foreground))', fontSize: '12px' }}>{fiatAmount || '0'} {currency}</span>
                   </div>
                 )}
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
                   <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px' }}>Vous recevez</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ color: '#fff', fontSize: '12px' }}>{usdtAmount} USDT</span>
+                    <span style={{ color: 'hsl(var(--foreground))', fontSize: '12px' }}>{usdtAmount} USDT</span>
                     <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" style={{ width: '16px', height: '16px' }} />
                   </div>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px' }}>Taux</span>
-                  <span style={{ color: '#fff', fontSize: '12px' }}>1 USDT = {exchangeRate} {currency}</span>
+                  <span style={{ color: 'hsl(var(--foreground))', fontSize: '12px' }}>1 USDT = {exchangeRate} {currency}</span>
                 </div>
               </div>
             </div>
@@ -394,7 +394,7 @@ export function DesktopBuyUSDT() {
           <div>
             <div>
               {backBtn('amount')}
-              <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Destination</h2>
+              <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Destination</h2>
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Choisissez où vous voulez recevoir vos USDT</p>
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
@@ -413,7 +413,7 @@ export function DesktopBuyUSDT() {
           <div>
             <div>
               {backBtn('network')}
-              <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Adresse de réception</h2>
+              <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Adresse de réception</h2>
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Entrez votre adresse {network} pour recevoir les USDT</p>
 
               <AddressBook
@@ -444,7 +444,7 @@ export function DesktopBuyUSDT() {
           <div style={CARD}>
             <div style={{ padding: '28px 24px 0', maxHeight: 'calc(100vh - 12rem)', overflowY: 'auto' }}>
               {backBtn('network')}
-              <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 400, marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <img src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" alt="Binance" style={{ width: '24px', height: '24px', borderRadius: '6px' }} />
                 Compte Binance
               </h2>
@@ -466,7 +466,7 @@ export function DesktopBuyUSDT() {
           <div>
             <div>
               {backBtn(isBinanceNetwork ? 'binance' : 'address')}
-              <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Confirmer l'achat</h2>
+              <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Confirmer l'achat</h2>
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Vérifiez les détails de votre transaction</p>
 
               <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '4px 16px' }}>
@@ -475,7 +475,7 @@ export function DesktopBuyUSDT() {
                 {row('Destination', isBinanceNetwork ? 'Binance' : network)}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '10px 0' }}>
                   <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>{isBinanceNetwork ? 'Email' : 'Adresse'}</span>
-                  <span style={{ color: '#fff', fontSize: '11px', fontFamily: 'monospace', textAlign: 'right', maxWidth: '60%', wordBreak: 'break-all' }}>
+                  <span style={{ color: 'hsl(var(--foreground))', fontSize: '11px', fontFamily: 'monospace', textAlign: 'right', maxWidth: '60%', wordBreak: 'break-all' }}>
                     {isBinanceNetwork ? binanceEmail : walletAddress}
                   </span>
                 </div>

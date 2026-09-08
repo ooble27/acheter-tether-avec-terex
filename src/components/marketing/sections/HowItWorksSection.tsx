@@ -28,7 +28,7 @@ const steps = [
 
 export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionProps) {
   return (
-    <section id="how-it-works" className="py-20 sm:py-28" style={{ backgroundColor: '#1a1a1a' }}>
+    <section id="how-it-works" className="py-20 sm:py-28" style={{ backgroundColor: 'hsl(var(--terex-dark))' }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSection className="text-center mb-16 sm:mb-20">
           <span
@@ -57,7 +57,7 @@ export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionPr
             <AnimatedItem key={step.number} index={index}>
               <div
                 className="h-full rounded-2xl p-8 transition-colors duration-300"
-                style={{ backgroundColor: '#1e1e1e', border: '1px solid rgba(255,255,255,0.07)' }}
+                style={{ backgroundColor: 'hsl(var(--terex-darker))', border: '1px solid rgba(255,255,255,0.07)' }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)';
                 }}

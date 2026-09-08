@@ -31,7 +31,7 @@ const CARD: React.CSSProperties = {
   overflow: 'hidden',
 };
 const BORDER = 'rgba(255,255,255,0.07)';
-const BTN = '#2d2d2d';
+const BTN = 'hsl(var(--terex-gray))';
 const SEL_BG = 'rgba(255,255,255,0.06)';
 const SEL_BORDER = 'rgba(255,255,255,0.18)';
 
@@ -41,7 +41,7 @@ const inputStyle: React.CSSProperties = {
   border: `1px solid rgba(255,255,255,0.07)`,
   borderRadius: '12px',
   padding: '13px 16px',
-  color: '#fff',
+  color: 'hsl(var(--foreground))',
   fontSize: '15px',
   outline: 'none',
   boxSizing: 'border-box',
@@ -64,7 +64,7 @@ function ContinueBtn({ onClick, disabled, children }: { onClick: () => void; dis
           display: 'flex', alignItems: 'center', gap: '8px',
           background: disabled ? 'rgba(255,255,255,0.04)' : BTN,
           borderRadius: '16px', border: `1px solid rgba(255,255,255,${disabled ? '0.05' : '0.10'})`,
-          padding: '13px 22px', color: disabled ? '#6b7280' : '#fff',
+          padding: '13px 22px', color: disabled ? 'hsl(var(--muted-foreground))' : '#fff',
           fontSize: '14px', fontWeight: 600, cursor: disabled ? 'not-allowed' : 'pointer',
         }}
       >
@@ -83,7 +83,7 @@ function ConfirmBtn({ onClick, disabled, loading }: { onClick: () => void; disab
           display: 'flex', alignItems: 'center', gap: '8px',
           background: disabled || loading ? 'rgba(255,255,255,0.08)' : '#ffffff',
           borderRadius: '16px', border: 'none',
-          padding: '13px 22px', color: disabled || loading ? '#6b7280' : '#141414',
+          padding: '13px 22px', color: disabled || loading ? 'hsl(var(--muted-foreground))' : '#141414',
           fontSize: '14px', fontWeight: 700, cursor: disabled || loading ? 'not-allowed' : 'pointer',
         }}
       >
@@ -202,7 +202,7 @@ export function DesktopSellUSDT() {
   const backBtn = (to: typeof step) => (
     <button
       onClick={() => setStep(to)}
-      style={{ padding: '8px', background: SEL_BG, borderRadius: '10px', border: 'none', cursor: 'pointer', color: '#fff', display: 'flex', alignItems: 'center', marginBottom: '16px' }}
+      style={{ padding: '8px', background: SEL_BG, borderRadius: '10px', border: 'none', cursor: 'pointer', color: 'hsl(var(--foreground))', display: 'flex', alignItems: 'center', marginBottom: '16px' }}
     >
       <ArrowLeft size={18} />
     </button>
@@ -211,7 +211,7 @@ export function DesktopSellUSDT() {
   const rowItem = (label: string, value: string) => (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: `1px solid ${BORDER}` }}>
       <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>{label}</span>
-      <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>{value}</span>
+      <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 500 }}>{value}</span>
     </div>
   );
 
@@ -224,7 +224,7 @@ export function DesktopSellUSDT() {
           <div>
             <div>
               <div style={{ marginBottom: '20px' }}>
-                <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Vendre USDT</h2>
+                <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Vendre USDT</h2>
                 <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px' }}>Entrez le montant que vous souhaitez vendre</p>
               </div>
 
@@ -233,7 +233,7 @@ export function DesktopSellUSDT() {
                 <div style={{ display: 'flex', background: 'rgba(255,255,255,0.04)', borderRadius: '10px', padding: '3px', gap: '2px' }}>
                   {(['USDT', 'XOF'] as const).map(c => (
                     <button key={c} onClick={() => { setInputCurrency(c); setRawAmount(''); }}
-                      style={{ padding: '4px 12px', borderRadius: '8px', border: 'none', fontSize: '12px', fontWeight: 500, cursor: 'pointer', background: inputCurrency === c ? '#2d2d2d' : 'transparent', color: inputCurrency === c ? '#fff' : 'rgba(255,255,255,0.4)' }}>
+                      style={{ padding: '4px 12px', borderRadius: '8px', border: 'none', fontSize: '12px', fontWeight: 500, cursor: 'pointer', background: inputCurrency === c ? 'hsl(var(--terex-gray))' : 'transparent', color: inputCurrency === c ? 'hsl(var(--foreground))' : 'rgba(255,255,255,0.4)' }}>
                       {c === 'XOF' ? 'CFA' : c}
                     </button>
                   ))}
@@ -259,16 +259,16 @@ export function DesktopSellUSDT() {
                 {inputCurrency === 'XOF' && (
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
                     <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px' }}>Vous vendez</span>
-                    <span style={{ color: '#fff', fontSize: '12px' }}>{usdtAmount || '0'} USDT</span>
+                    <span style={{ color: 'hsl(var(--foreground))', fontSize: '12px' }}>{usdtAmount || '0'} USDT</span>
                   </div>
                 )}
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
                   <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px' }}>Vous recevez</span>
-                  <span style={{ color: '#fff', fontSize: '12px' }}>{inputCurrency === 'USDT' ? fiatAmount : rawAmount || '0'} CFA</span>
+                  <span style={{ color: 'hsl(var(--foreground))', fontSize: '12px' }}>{inputCurrency === 'USDT' ? fiatAmount : rawAmount || '0'} CFA</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px' }}>Taux</span>
-                  <span style={{ color: '#fff', fontSize: '12px' }}>1 USDT = {terexBuyRateCfa} CFA</span>
+                  <span style={{ color: 'hsl(var(--foreground))', fontSize: '12px' }}>1 USDT = {terexBuyRateCfa} CFA</span>
                 </div>
               </div>
             </div>
@@ -282,7 +282,7 @@ export function DesktopSellUSDT() {
           <div>
             <div>
               {backBtn('amount')}
-              <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Mode d'envoi</h2>
+              <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Mode d'envoi</h2>
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Choisissez comment envoyer vos USDT</p>
 
               {/* Binance Pay toggle */}
@@ -290,7 +290,7 @@ export function DesktopSellUSDT() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <img src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" alt="Binance" style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
                   <div>
-                    <div style={{ color: '#fff', fontSize: '14px', fontWeight: 500 }}>Binance Pay</div>
+                    <div style={{ color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 500 }}>Binance Pay</div>
                     <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: '11px' }}>Envoi instantané depuis Binance</div>
                   </div>
                 </div>
@@ -315,14 +315,14 @@ export function DesktopSellUSDT() {
           <div>
             <div>
               {backBtn('network')}
-              <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 400, marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <img src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" alt="Binance" style={{ width: '24px', height: '24px', borderRadius: '6px' }} />
                 Binance Pay
               </h2>
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Instructions pour l'envoi via Binance Pay</p>
 
               <div style={{ background: 'rgba(255,165,0,0.06)', border: '1px solid rgba(255,165,0,0.2)', borderRadius: '12px', padding: '14px 16px', marginBottom: '16px' }}>
-                <p style={{ color: '#fff', fontSize: '13px', fontWeight: 500, marginBottom: '8px' }}>Pour envoyer vos USDT via Binance Pay :</p>
+                <p style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 500, marginBottom: '8px' }}>Pour envoyer vos USDT via Binance Pay :</p>
                 <ol style={{ color: 'rgba(255,255,255,0.6)', fontSize: '12px', lineHeight: '1.8', paddingLeft: '16px', margin: 0 }}>
                   <li>Ouvrez l'application Binance</li>
                   <li>Allez dans "Pay" puis "Envoyer"</li>
@@ -338,7 +338,7 @@ export function DesktopSellUSDT() {
                   <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: `1px solid ${BORDER}` }}>
                     <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '12px' }}>{label}</span>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ color: '#fff', fontSize: '13px' }}>{val}</span>
+                      <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px' }}>{val}</span>
                       <button onClick={() => copyToClipboard(val, label)}
                         style={{ display: 'flex', alignItems: 'center', justifyContent: 'center',
                           width: 24, height: 24,
@@ -365,7 +365,7 @@ export function DesktopSellUSDT() {
           <div>
             <div>
               {backBtn(useBinancePay ? 'binance' : 'network')}
-              <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Informations de paiement</h2>
+              <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Informations de paiement</h2>
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Entrez votre numéro Mobile Money</p>
 
               <label style={labelStyle}>Service Mobile Money</label>
@@ -403,7 +403,7 @@ export function DesktopSellUSDT() {
           <div>
             <div>
               {backBtn('phone')}
-              <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Confirmer la vente</h2>
+              <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Confirmer la vente</h2>
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Vérifiez les détails de votre transaction</p>
 
               <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '4px 16px' }}>
@@ -413,7 +413,7 @@ export function DesktopSellUSDT() {
                 {rowItem('Service', provider === 'wave' ? 'Wave' : 'Orange Money')}
                 <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0' }}>
                   <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Numéro</span>
-                  <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>{phoneNumber}</span>
+                  <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 500 }}>{phoneNumber}</span>
                 </div>
               </div>
             </div>
@@ -426,7 +426,7 @@ export function DesktopSellUSDT() {
         {step === 'instructions' && (
           <div>
             <div>
-              <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Envoyer vos USDT</h2>
+              <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Envoyer vos USDT</h2>
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Suivez ces instructions pour compléter votre vente</p>
 
               <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '20px' }}>
@@ -437,10 +437,10 @@ export function DesktopSellUSDT() {
                   )}
                   <div style={{ flex: 1 }}>
                     <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '12px', margin: 0 }}>Envoyez exactement</p>
-                    <p style={{ color: '#fff', fontSize: '24px', fontWeight: 700, margin: 0, letterSpacing: '-0.5px' }}>{usdtAmount} <span style={{ fontSize: '14px', fontWeight: 500, color: '#9ca3af' }}>USDT</span></p>
+                    <p style={{ color: 'hsl(var(--foreground))', fontSize: '24px', fontWeight: 700, margin: 0, letterSpacing: '-0.5px' }}>{usdtAmount} <span style={{ fontSize: '14px', fontWeight: 500, color: 'hsl(var(--muted-foreground))' }}>USDT</span></p>
                   </div>
                 </div>
-                {!useBinancePay && <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '12px', marginBottom: '12px' }}>sur le réseau <span style={{ color: '#fff', fontWeight: 600 }}>{network}</span></p>}
+                {!useBinancePay && <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '12px', marginBottom: '12px' }}>sur le réseau <span style={{ color: 'hsl(var(--foreground))', fontWeight: 600 }}>{network}</span></p>}
 
                 {useBinancePay ? (
                   <div style={{ borderTop: `1px solid ${BORDER}`, paddingTop: '12px' }}>
@@ -449,8 +449,8 @@ export function DesktopSellUSDT() {
                       <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                         <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px' }}>{label}</span>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <span style={{ color: '#fff', fontSize: '13px' }}>{val}</span>
-                          <button onClick={() => copyToClipboard(val)} style={{ padding: '4px', background: SEL_BG, border: 'none', borderRadius: '6px', cursor: 'pointer', color: '#fff', display: 'flex' }}>
+                          <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px' }}>{val}</span>
+                          <button onClick={() => copyToClipboard(val)} style={{ padding: '4px', background: SEL_BG, border: 'none', borderRadius: '6px', cursor: 'pointer', color: 'hsl(var(--foreground))', display: 'flex' }}>
                             <Copy size={12} />
                           </button>
                         </div>
@@ -462,7 +462,7 @@ export function DesktopSellUSDT() {
                         if (ua) window.location.href = 'binance://';
                         else window.open('https://www.binance.com', '_blank');
                       }}
-                      style={{ display: 'flex', alignItems: 'center', gap: '8px', background: BTN, border: `1px solid ${BORDER}`, borderRadius: '12px', padding: '10px 16px', color: '#fff', fontSize: '13px', cursor: 'pointer', marginTop: '8px', width: '100%', justifyContent: 'center' }}
+                      style={{ display: 'flex', alignItems: 'center', gap: '8px', background: BTN, border: `1px solid ${BORDER}`, borderRadius: '12px', padding: '10px 16px', color: 'hsl(var(--foreground))', fontSize: '13px', cursor: 'pointer', marginTop: '8px', width: '100%', justifyContent: 'center' }}
                     >
                       <img src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" alt="Binance" style={{ width: '20px', height: '20px', borderRadius: '4px' }} />
                       Ouvrir Binance Pay
@@ -471,7 +471,7 @@ export function DesktopSellUSDT() {
                 ) : (
                   <div style={{ borderTop: `1px solid ${BORDER}`, paddingTop: '14px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginBottom: '12px' }}>
-                      <p style={{ color: '#fff', fontSize: '13px', fontWeight: 600, margin: 0 }}>Scannez le QR</p>
+                      <p style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 600, margin: 0 }}>Scannez le QR</p>
                       <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px' }}>ou copiez l'adresse</span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '14px' }}>
@@ -486,7 +486,7 @@ export function DesktopSellUSDT() {
                     <div style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '10px 12px' }}>
                       <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '10px', margin: '0 0 6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Adresse {network}</p>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <span style={{ color: '#fff', fontSize: '12px', fontFamily: 'monospace', flex: 1, wordBreak: 'break-all' }}>
+                        <span style={{ color: 'hsl(var(--foreground))', fontSize: '12px', fontFamily: 'monospace', flex: 1, wordBreak: 'break-all' }}>
                           {WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES]}
                         </span>
                         <button onClick={() => copyToClipboard(WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES], 'address')}

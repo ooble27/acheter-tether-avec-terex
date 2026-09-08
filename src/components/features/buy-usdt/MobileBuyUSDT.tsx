@@ -16,7 +16,7 @@ import { useNabooPay } from '@/hooks/useNabooPay';
 
 const CARD = 'rgba(255,255,255,0.03)';
 const BORDER = 'rgba(255,255,255,0.07)';
-const BTN = '#2d2d2d';
+const BTN = 'hsl(var(--terex-gray))';
 const SEL_BG = 'rgba(255,255,255,0.06)';
 const SEL_BORDER = 'rgba(255,255,255,0.18)';
 
@@ -47,10 +47,10 @@ function StepHeader({ onBack, title, description }: { onBack: () => void; title:
   return (
     <div style={{ padding: '0 20px 16px' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-        <button onClick={onBack} style={circleBackBtn}><ArrowLeft size={18} color="#fff" /></button>
-        <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 700, margin: 0, letterSpacing: '-0.3px', display: 'flex', alignItems: 'center', gap: '8px' }}>{title}</h2>
+        <button onClick={onBack} style={circleBackBtn}><ArrowLeft size={18} color="hsl(var(--foreground))" /></button>
+        <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 700, margin: 0, letterSpacing: '-0.3px', display: 'flex', alignItems: 'center', gap: '8px' }}>{title}</h2>
       </div>
-      <p style={{ color: '#6b7280', fontSize: '13px', margin: '8px 0 0' }}>{description}</p>
+      <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px', margin: '8px 0 0' }}>{description}</p>
     </div>
   );
 }
@@ -65,7 +65,7 @@ function ContinueBtn({ onClick, disabled, children }: { onClick: () => void; dis
           display: 'flex', alignItems: 'center', gap: '8px',
           background: disabled ? 'rgba(255,255,255,0.04)' : BTN,
           borderRadius: '16px', border: '1px solid rgba(255,255,255,0.10)',
-          padding: '13px 22px', color: disabled ? '#6b7280' : '#fff',
+          padding: '13px 22px', color: disabled ? 'hsl(var(--muted-foreground))' : '#fff',
           fontSize: '14px', fontWeight: 600, cursor: disabled ? 'not-allowed' : 'pointer',
           outline: 'none', WebkitTapHighlightColor: 'transparent', transition: 'background 0.15s',
         }}
@@ -240,21 +240,21 @@ export function MobileBuyUSDT() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#1a1a1a' }}>
+    <div style={{ minHeight: '100vh', background: 'hsl(var(--terex-dark))' }}>
       <div style={{ maxWidth: '480px', margin: '0 auto' }}>
 
         {/* ── Step 1: Amount ─────────────────────────────────────────── */}
         {step === 'amount' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', padding: '80px 20px 100px' }}>
             <div>
-              <h2 style={{ color: '#fff', fontSize: '26px', fontWeight: 700, margin: '0 0 4px', letterSpacing: '-0.4px' }}>Acheter USDT</h2>
-              <p style={{ color: '#6b7280', fontSize: '13px', margin: 0 }}>Entrez le montant que vous souhaitez dépenser</p>
+              <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '26px', fontWeight: 700, margin: '0 0 4px', letterSpacing: '-0.4px' }}>Acheter USDT</h2>
+              <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px', margin: 0 }}>Entrez le montant que vous souhaitez dépenser</p>
             </div>
 
             {/* Amount input card */}
             <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '20px' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-                <span style={{ color: '#6b7280', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Montant</span>
+                <span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Montant</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   {/* Currency toggle */}
                   <div style={{ display: 'inline-flex', background: 'rgba(255,255,255,0.04)', borderRadius: '10px', padding: '3px', gap: '2px' }}>
@@ -262,7 +262,7 @@ export function MobileBuyUSDT() {
                       <button key={c} onClick={() => { setInputCurrency(c); setRawAmount(''); }}
                         style={{ padding: '5px 12px', borderRadius: '7px', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: 600, outline: 'none',
                           background: inputCurrency === c ? BTN : 'transparent',
-                          color: inputCurrency === c ? '#fff' : '#6b7280', transition: 'all 0.15s' }}>
+                          color: inputCurrency === c ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))', transition: 'all 0.15s' }}>
                         {c === 'XOF' ? 'CFA' : 'USDT'}
                       </button>
                     ))}
@@ -272,7 +272,7 @@ export function MobileBuyUSDT() {
                     <div style={{ display: 'flex', gap: '8px' }}>
                       <button
                         onClick={() => setRawAmount(inputCurrency === 'USDT' && exchangeRate > 0 ? (limits.min / exchangeRate).toFixed(2) : limits.min.toString())}
-                        style={{ color: '#9ca3af', fontSize: '11px', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', fontWeight: 500 }}>
+                        style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', fontWeight: 500 }}>
                         Min
                       </button>
                       <button
@@ -283,7 +283,7 @@ export function MobileBuyUSDT() {
                             setRawAmount(limits.max.toString());
                           }
                         }}
-                        style={{ color: '#9ca3af', fontSize: '11px', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', fontWeight: 500 }}>
+                        style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', fontWeight: 500 }}>
                         Max
                       </button>
                     </div>
@@ -313,19 +313,19 @@ export function MobileBuyUSDT() {
                       setRawAmount(val);
                     }
                   }}
-                  style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '18px 84px 18px 20px', color: '#fff', fontSize: '34px', fontWeight: 700, outline: 'none', letterSpacing: '-1px', boxSizing: 'border-box', fontFamily: 'inherit' }}
+                  style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '18px 84px 18px 20px', color: 'hsl(var(--foreground))', fontSize: '34px', fontWeight: 700, outline: 'none', letterSpacing: '-1px', boxSizing: 'border-box', fontFamily: 'inherit' }}
                 />
                 <span style={{ position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                   {inputCurrency === 'USDT' ? (
-                    <><img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" style={{ width: '20px', height: '20px' }} /><span style={{ color: '#6b7280', fontSize: '14px', fontWeight: 500 }}>USDT</span></>
+                    <><img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" style={{ width: '20px', height: '20px' }} /><span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '14px', fontWeight: 500 }}>USDT</span></>
                   ) : (
-                    <span style={{ color: '#6b7280', fontSize: '14px', fontWeight: 500 }}>{currency}</span>
+                    <span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '14px', fontWeight: 500 }}>{currency}</span>
                   )}
                 </span>
               </div>
 
               {limitMessage.type && (
-                <p style={{ fontSize: '12px', margin: '8px 0 0', color: limitMessage.type === 'error' ? '#f87171' : limitMessage.type === 'max-reached' ? '#9ca3af' : '#fbbf24' }}>
+                <p style={{ fontSize: '12px', margin: '8px 0 0', color: limitMessage.type === 'error' ? '#f87171' : limitMessage.type === 'max-reached' ? 'hsl(var(--muted-foreground))' : '#fbbf24' }}>
                   {limitMessage.message}
                 </p>
               )}
@@ -335,27 +335,27 @@ export function MobileBuyUSDT() {
             <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {inputCurrency === 'USDT' && (
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ color: '#6b7280', fontSize: '13px' }}>Vous payez</span>
-                  <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>{fiatAmount || '0'} {currency}</span>
+                  <span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px' }}>Vous payez</span>
+                  <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 500 }}>{fiatAmount || '0'} {currency}</span>
                 </div>
               )}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ color: '#6b7280', fontSize: '13px' }}>Vous recevez</span>
+                <span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px' }}>Vous recevez</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ color: '#fff', fontSize: '14px', fontWeight: 600 }}>{usdtAmount} USDT</span>
+                  <span style={{ color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600 }}>{usdtAmount} USDT</span>
                   <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" style={{ width: '18px', height: '18px' }} />
                 </div>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ color: '#6b7280', fontSize: '13px' }}>Taux</span>
-                <span style={{ color: '#9ca3af', fontSize: '13px' }}>1 USDT = {exchangeRate} {currency}</span>
+                <span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px' }}>Taux</span>
+                <span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px' }}>1 USDT = {exchangeRate} {currency}</span>
               </div>
             </div>
 
             {/* Continue — LEFT */}
             <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
               <button onClick={handleContinueToNetwork}
-                style={{ display: 'flex', alignItems: 'center', gap: '8px', background: BTN, borderRadius: '16px', border: '1px solid rgba(255,255,255,0.10)', padding: '13px 22px', color: '#fff', fontSize: '14px', fontWeight: 600, cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent' }}>
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', background: BTN, borderRadius: '16px', border: '1px solid rgba(255,255,255,0.10)', padding: '13px 22px', color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600, cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent' }}>
                 <Coins size={17} strokeWidth={2} /> Continuer
               </button>
             </div>
@@ -456,7 +456,7 @@ export function MobileBuyUSDT() {
                   { label: isBinanceNetwork ? 'Email' : 'Adresse', value: isBinanceNetwork ? binanceEmail : walletAddress, mono: true },
                 ].map(({ label, value, mono, accent, bold }, i, arr) => (
                   <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 16px', borderBottom: i < arr.length - 1 ? `1px solid ${BORDER}` : 'none' }}>
-                    <span style={{ color: '#6b7280', fontSize: '13px' }}>{label}</span>
+                    <span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px' }}>{label}</span>
                     <span style={{ color: accent ? '#f97316' : '#fff', fontSize: mono ? '11px' : '13px', fontWeight: bold ? 700 : 500, maxWidth: '60%', textAlign: 'right', wordBreak: 'break-all', fontFamily: mono ? 'monospace' : undefined }}>
                       {value}
                     </span>
@@ -467,7 +467,7 @@ export function MobileBuyUSDT() {
 
             <div style={{ display: 'flex', justifyContent: 'flex-start', padding: '16px 20px 28px' }}>
               <button onClick={handleConfirm} disabled={loading}
-                style={{ display: 'flex', alignItems: 'center', gap: '8px', background: loading ? 'rgba(255,255,255,0.04)' : '#ffffff', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.15)', padding: '13px 22px', color: loading ? '#6b7280' : '#141414', fontSize: '14px', fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', outline: 'none' }}>
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', background: loading ? 'rgba(255,255,255,0.04)' : '#ffffff', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.15)', padding: '13px 22px', color: loading ? 'hsl(var(--muted-foreground))' : '#141414', fontSize: '14px', fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', outline: 'none' }}>
                 <Coins size={17} strokeWidth={2} />
                 {loading ? 'Traitement…' : 'Confirmer et payer'}
               </button>

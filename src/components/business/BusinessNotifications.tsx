@@ -3,10 +3,10 @@ import { Bell, Check, X, Send, ArrowDownToLine, AlertTriangle, Info, CheckCircle
 import { useAuth } from '@/contexts/AuthContext';
 
 const C = {
-  bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030',
-  bd: '#383838', bds: '#2a2a2a', bdh: '#484848',
+  bg: 'hsl(var(--terex-dark))', l1: 'hsl(var(--terex-darker))', l2: 'hsl(var(--terex-gray))', l3: 'hsl(var(--terex-gray))',
+  bd: 'hsl(var(--terex-gray))', bds: 'hsl(var(--terex-gray))', bdh: '#484848',
   teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.08)', tealB: 'rgba(255, 255, 255,0.20)',
-  t1: '#f0f0f0', t2: '#888888', t3: '#686868',
+  t1: '#f0f0f0', t2: 'hsl(var(--muted-foreground))', t3: '#686868',
   red: '#ef4444', redT: 'rgba(239,68,68,0.08)', redB: 'rgba(239,68,68,0.16)',
   amber: '#f59e0b', amberT: 'rgba(245,158,11,0.08)', amberB: 'rgba(245,158,11,0.20)',
   blue: '#3b82f6', blueT: 'rgba(59,130,246,0.08)', blueB: 'rgba(59,130,246,0.20)',
@@ -319,7 +319,7 @@ export function BusinessNotifications({ user, onNavigate }: Props) {
               <button
                 onClick={saveAlert}
                 disabled={!alertThreshold.trim()}
-                style={{ height: 36, padding: '0 12px', borderRadius: 7, background: alertSaved ? C.teal : (alertThreshold.trim() ? C.teal : C.l3), border: 'none', color: alertThreshold.trim() ? '#fff' : C.t3, fontSize: 12, fontWeight: 600, cursor: alertThreshold.trim() ? 'pointer' : 'not-allowed', fontFamily: FONT, display: 'flex', alignItems: 'center', gap: 6, transition: 'all 0.12s' }}>
+                style={{ height: 36, padding: '0 12px', borderRadius: 7, background: alertSaved ? C.teal : (alertThreshold.trim() ? C.teal : C.l3), border: 'none', color: alertThreshold.trim() ? 'hsl(var(--foreground))' : C.t3, fontSize: 12, fontWeight: 600, cursor: alertThreshold.trim() ? 'pointer' : 'not-allowed', fontFamily: FONT, display: 'flex', alignItems: 'center', gap: 6, transition: 'all 0.12s' }}>
                 {alertSaved ? <><Check style={{ width: 12, height: 12 }} /> OK</> : 'Activer'}
               </button>
             </div>

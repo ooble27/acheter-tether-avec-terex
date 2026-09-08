@@ -10,7 +10,7 @@ import { useTerexRates } from '@/hooks/useTerexRates';
 import waveLogo from '@/assets/wave-logo.png';
 import orangeLogo from '@/assets/orange-money-logo.png';
 
-const BG = '#1a1a1a';
+const BG = 'hsl(var(--terex-dark))';
 const BORDER = 'rgba(255,255,255,0.07)';
 const ICON_BG = 'rgba(255,255,255,0.06)';
 const TETHER = 'https://coin-images.coingecko.com/coins/images/325/large/Tether.png';
@@ -77,7 +77,7 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
   const rateDisplay = !rateLoading && terexRateCfa ? terexRateCfa.toLocaleString('fr-FR') : null;
 
   return (
-    <div style={{ background: BG, minHeight: '100vh', color: '#fff', position: 'relative', overflowX: 'hidden' }}>
+    <div style={{ background: BG, minHeight: '100vh', color: 'hsl(var(--foreground))', position: 'relative', overflowX: 'hidden' }}>
       <style>{`
         @keyframes tx-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
         .tx-fade { animation: tx-up 0.7s cubic-bezier(0.22,1,0.36,1) both; }
@@ -129,7 +129,7 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
                 {user ? 'Mon tableau de bord' : 'Commencer gratuitement'} <ArrowRight size={16} />
               </button>
               <button onClick={() => document.getElementById('how')?.scrollIntoView({ behavior: 'smooth' })}
-                style={{ background: '#2d2d2d', color: '#fff', border: `1px solid ${BORDER}`, borderRadius: 12, height: 50, padding: '0 24px', fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>
+                style={{ background: 'hsl(var(--terex-gray))', color: 'hsl(var(--foreground))', border: `1px solid ${BORDER}`, borderRadius: 12, height: 50, padding: '0 24px', fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>
                 Comment ça marche
               </button>
             </div>
@@ -137,7 +137,7 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
 
           {/* App directement sur le fond — taux (temps réel) + actions (aucune ombre, aucun cadre) */}
           <div>
-            <p style={{ color: '#6b7280', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 8px' }}>Taux USDT / CFA · en direct</p>
+            <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 8px' }}>Taux USDT / CFA · en direct</p>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 26 }}>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, minHeight: 52 }}>
                 {rateDisplay ? (
@@ -304,7 +304,7 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
                 <div key={i} style={{ borderBottom: `1px solid ${BORDER}` }}>
                   <button onClick={() => setFaqOpen(open ? null : i)}
                     style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '20px 0', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' }}>
-                    <span style={{ fontSize: 15, fontWeight: 500, color: open ? '#fff' : 'rgba(255,255,255,0.8)' }}>{item.q}</span>
+                    <span style={{ fontSize: 15, fontWeight: 500, color: open ? 'hsl(var(--foreground))' : 'rgba(255,255,255,0.8)' }}>{item.q}</span>
                     <ChevronDown size={17} color="rgba(255,255,255,0.4)" style={{ flexShrink: 0, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
                   </button>
                   {open && <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7, margin: '0 0 20px' }}>{item.a}</p>}

@@ -9,13 +9,13 @@ import { TransferPending } from './TransferPending';
 import { KYCPage } from '../KYCPage';
 
 const CARD: React.CSSProperties = {
-  background: '#1e1e1e',
+  background: 'hsl(var(--terex-darker))',
   border: '1px solid rgba(255,255,255,0.07)',
   borderRadius: '20px',
   overflow: 'hidden',
 };
 const BORDER = 'rgba(255,255,255,0.07)';
-const BTN = '#2d2d2d';
+const BTN = 'hsl(var(--terex-gray))';
 const SEL_BG = 'rgba(255,255,255,0.06)';
 const SEL_BORDER = 'rgba(255,255,255,0.18)';
 
@@ -25,7 +25,7 @@ const inputStyle: React.CSSProperties = {
   border: `1px solid ${BORDER}`,
   borderRadius: '12px',
   padding: '13px 16px',
-  color: '#fff',
+  color: 'hsl(var(--foreground))',
   fontSize: '15px',
   outline: 'none',
   boxSizing: 'border-box',
@@ -53,7 +53,7 @@ function ContinueBtn({ onClick, disabled, children }: { onClick: () => void; dis
           borderRadius: '16px',
           border: `1px solid rgba(255,255,255,${disabled ? '0.05' : '0.10'})`,
           padding: '13px 22px',
-          color: disabled ? '#6b7280' : '#fff',
+          color: disabled ? 'hsl(var(--muted-foreground))' : '#fff',
           fontSize: '14px',
           fontWeight: 600,
           cursor: disabled ? 'not-allowed' : 'pointer',
@@ -80,7 +80,7 @@ function ConfirmBtn({ onClick, disabled, loading }: { onClick: () => void; disab
           borderRadius: '16px',
           border: 'none',
           padding: '13px 22px',
-          color: disabled || loading ? '#6b7280' : '#141414',
+          color: disabled || loading ? 'hsl(var(--muted-foreground))' : '#141414',
           fontSize: '14px',
           fontWeight: 700,
           cursor: disabled || loading ? 'not-allowed' : 'pointer',
@@ -246,19 +246,19 @@ export function MobileInternationalTransfer() {
   const row = (label: string, value: string) => (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: `1px solid ${BORDER}` }}>
       <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>{label}</span>
-      <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>{value}</span>
+      <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 500 }}>{value}</span>
     </div>
   );
 
   return (
-    <div style={{ minHeight: '100vh', background: '#1a1a1a', paddingBottom: '96px' }}>
+    <div style={{ minHeight: '100vh', background: 'hsl(var(--terex-dark))', paddingBottom: '96px' }}>
       {/* Header */}
-      <div style={{ position: 'sticky', top: 0, zIndex: 10, background: '#1a1a1a', borderBottom: `1px solid ${BORDER}`, padding: '16px 20px' }}>
+      <div style={{ position: 'sticky', top: 0, zIndex: 10, background: 'hsl(var(--terex-dark))', borderBottom: `1px solid ${BORDER}`, padding: '16px 20px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
           {step !== 'amount' && (
             <button
               onClick={goBack}
-              style={{ padding: '8px', background: SEL_BG, borderRadius: '10px', border: 'none', cursor: 'pointer', color: '#fff', display: 'flex', alignItems: 'center' }}
+              style={{ padding: '8px', background: SEL_BG, borderRadius: '10px', border: 'none', cursor: 'pointer', color: 'hsl(var(--foreground))', display: 'flex', alignItems: 'center' }}
             >
               <ArrowLeft size={18} />
             </button>
@@ -268,7 +268,7 @@ export function MobileInternationalTransfer() {
               <Send size={18} color="rgba(255,255,255,0.8)" />
             </div>
             <div>
-              <div style={{ color: '#fff', fontSize: '16px', fontWeight: 500 }}>Virement international</div>
+              <div style={{ color: 'hsl(var(--foreground))', fontSize: '16px', fontWeight: 500 }}>Virement international</div>
               <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px' }}>Étape {stepNum} sur 4</div>
             </div>
           </div>
@@ -286,7 +286,7 @@ export function MobileInternationalTransfer() {
             <div style={{ padding: '24px 20px 0' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '24px' }}>
                 <Globe size={20} color="rgba(255,255,255,0.6)" />
-                <span style={{ color: '#fff', fontSize: '15px', fontWeight: 500 }}>Montant à envoyer</span>
+                <span style={{ color: 'hsl(var(--foreground))', fontSize: '15px', fontWeight: 500 }}>Montant à envoyer</span>
               </div>
 
               <div style={{ marginBottom: '16px' }}>
@@ -307,9 +307,9 @@ export function MobileInternationalTransfer() {
                   onChange={(e) => setRecipientCountry(e.target.value)}
                   style={{ ...inputStyle, appearance: 'none', WebkitAppearance: 'none' }}
                 >
-                  <option value="" disabled style={{ background: '#1e1e1e' }}>Sélectionner un pays</option>
+                  <option value="" disabled style={{ background: 'hsl(var(--terex-darker))' }}>Sélectionner un pays</option>
                   {countries.map(c => (
-                    <option key={c.code} value={c.code} style={{ background: '#1e1e1e' }}>{c.flag} {c.name}</option>
+                    <option key={c.code} value={c.code} style={{ background: 'hsl(var(--terex-darker))' }}>{c.flag} {c.name}</option>
                   ))}
                 </select>
               </div>
@@ -318,7 +318,7 @@ export function MobileInternationalTransfer() {
                 <div style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '16px', marginBottom: '8px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                     <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '12px' }}>Le bénéficiaire recevra</span>
-                    <span style={{ color: '#fff', fontSize: '20px', fontWeight: 500 }}>{receiveAmount} CFA</span>
+                    <span style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 500 }}>{receiveAmount} CFA</span>
                   </div>
                   <div style={{ color: 'rgba(255,255,255,0.3)', fontSize: '11px' }}>Taux : 1 CAD = {exchangeRate} CFA</div>
                 </div>
@@ -333,7 +333,7 @@ export function MobileInternationalTransfer() {
         {step === 'recipient' && (
           <div style={CARD}>
             <div style={{ padding: '24px 20px 0' }}>
-              <div style={{ color: '#fff', fontSize: '15px', fontWeight: 500, marginBottom: '20px' }}>Informations du bénéficiaire</div>
+              <div style={{ color: 'hsl(var(--foreground))', fontSize: '15px', fontWeight: 500, marginBottom: '20px' }}>Informations du bénéficiaire</div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
                 <div>
@@ -387,7 +387,7 @@ export function MobileInternationalTransfer() {
         {step === 'method' && (
           <div style={CARD}>
             <div style={{ padding: '24px 20px 0' }}>
-              <div style={{ color: '#fff', fontSize: '15px', fontWeight: 500, marginBottom: '20px' }}>Méthodes de paiement</div>
+              <div style={{ color: 'hsl(var(--foreground))', fontSize: '15px', fontWeight: 500, marginBottom: '20px' }}>Méthodes de paiement</div>
 
               {/* Send method */}
               <div style={{ marginBottom: '16px' }}>
@@ -413,7 +413,7 @@ export function MobileInternationalTransfer() {
                       ) : (
                         <div style={{ width: '32px', height: '20px', background: SEL_BG, borderRadius: '6px' }} />
                       )}
-                      <span style={{ color: '#fff', fontSize: '14px', flex: 1 }}>{m.label}</span>
+                      <span style={{ color: 'hsl(var(--foreground))', fontSize: '14px', flex: 1 }}>{m.label}</span>
                       {paymentMethod === m.value && <Check size={15} color="rgba(255,255,255,0.8)" />}
                     </button>
                   ))}
@@ -439,7 +439,7 @@ export function MobileInternationalTransfer() {
                         cursor: 'pointer',
                       }}
                     >
-                      <span style={{ color: '#fff', fontSize: '14px', flex: 1 }}>{m.label}</span>
+                      <span style={{ color: 'hsl(var(--foreground))', fontSize: '14px', flex: 1 }}>{m.label}</span>
                       {receiveMethod === m.value && <Check size={15} color="rgba(255,255,255,0.8)" />}
                     </button>
                   ))}
@@ -472,7 +472,7 @@ export function MobileInternationalTransfer() {
                         ) : (
                           <div style={{ width: '28px', height: '28px', background: SEL_BG, borderRadius: '6px' }} />
                         )}
-                        <span style={{ color: '#fff', fontSize: '12px', fontWeight: 500 }}>{p.label}</span>
+                        <span style={{ color: 'hsl(var(--foreground))', fontSize: '12px', fontWeight: 500 }}>{p.label}</span>
                         {p.fee && <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: '10px' }}>{p.fee} frais</span>}
                         {provider === p.value && (
                           <div style={{ position: 'absolute', top: '6px', right: '6px' }}>
@@ -525,7 +525,7 @@ export function MobileInternationalTransfer() {
         {step === 'confirm' && (
           <div style={CARD}>
             <div style={{ padding: '24px 20px 0' }}>
-              <div style={{ color: '#fff', fontSize: '15px', fontWeight: 500, marginBottom: '20px' }}>Récapitulatif du transfert</div>
+              <div style={{ color: 'hsl(var(--foreground))', fontSize: '15px', fontWeight: 500, marginBottom: '20px' }}>Récapitulatif du transfert</div>
 
               {/* Transfer details */}
               <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '4px 16px', marginBottom: '12px' }}>
@@ -547,7 +547,7 @@ export function MobileInternationalTransfer() {
                 {row('Pays', countries.find(c => c.code === recipientCountry)?.name ?? recipientCountry)}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0' }}>
                   <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Méthode de réception</span>
-                  <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>
+                  <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 500 }}>
                     {receiveMethod === 'mobile'
                       ? `${provider.charAt(0).toUpperCase() + provider.slice(1)} Money`
                       : 'Virement bancaire'}

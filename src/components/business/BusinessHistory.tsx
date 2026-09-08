@@ -5,10 +5,10 @@ import { useAuth } from '@/contexts/AuthContext';
 interface Props { user: { email: string; name: string } | null; }
 
 const C = {
-  bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030',
-  bd: '#383838', bds: '#2a2a2a', bdh: '#484848',
+  bg: 'hsl(var(--terex-dark))', l1: 'hsl(var(--terex-darker))', l2: 'hsl(var(--terex-gray))', l3: 'hsl(var(--terex-gray))',
+  bd: 'hsl(var(--terex-gray))', bds: 'hsl(var(--terex-gray))', bdh: '#484848',
   teal: '#ffffff', tealT: 'rgba(255, 255, 255,0.08)', tealB: 'rgba(255, 255, 255,0.20)',
-  t1: '#f0f0f0', t2: '#888888', t3: '#686868', t4: '#333333',
+  t1: '#f0f0f0', t2: 'hsl(var(--muted-foreground))', t3: '#686868', t4: 'hsl(var(--terex-gray))',
   red: '#ef4444',
 };
 const FONT = "'Inter', sans-serif";
@@ -86,10 +86,10 @@ function TransactionDrawer({ tx, onClose }: { tx: any; onClose: () => void }) {
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', justifyContent: 'flex-end' }}>
       <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(4px)' }} onClick={onClose} />
-      <div style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 440, background: '#1a1a1a', borderLeft: `1px solid ${C.bds}`, display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+      <div style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 440, background: 'hsl(var(--terex-dark))', borderLeft: `1px solid ${C.bds}`, display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
 
         {/* Drawer header */}
-        <div style={{ padding: '20px 24px', borderBottom: `1px solid ${C.bds}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0, position: 'sticky', top: 0, background: '#1a1a1a', zIndex: 2 }}>
+        <div style={{ padding: '20px 24px', borderBottom: `1px solid ${C.bds}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0, position: 'sticky', top: 0, background: 'hsl(var(--terex-dark))', zIndex: 2 }}>
           <div>
             <div style={{ fontSize: 14, fontWeight: 600, color: C.t1, fontFamily: FONT }}>{tx.supplierName}</div>
             <div style={{ fontSize: 11, color: C.t3, fontFamily: MONO, marginTop: 2 }}>{tx.reference}</div>
@@ -263,7 +263,7 @@ export function BusinessHistory({ user }: Props) {
       {selectedTx && <TransactionDrawer tx={selectedTx} onClose={() => setSelectedTx(null)} />}
 
       {/* ── Hero ─────────────────────────────────────────────────── */}
-      <div style={{ background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #1a1a1a 100%)', border: `1px solid ${C.bds}`, borderRadius: 16, padding: '26px 28px' }}>
+      <div style={{ background: 'linear-gradient(135deg, hsl(var(--terex-darker)) 0%, hsl(var(--terex-dark)) 60%, hsl(var(--terex-dark)) 100%)', border: `1px solid ${C.bds}`, borderRadius: 16, padding: '26px 28px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
           <div>
             <h2 style={{ color: C.t1, fontSize: 21, fontWeight: 700, letterSpacing: '-0.03em', margin: 0 }}>Historique & Reçus</h2>

@@ -14,7 +14,7 @@ const paymentMethods = [
 
 export function PaymentMethodsSection() {
   return (
-    <section className="py-20 sm:py-28" style={{ backgroundColor: "#1a1a1a" }}>
+    <section className="py-20 sm:py-28" style={{ backgroundColor: "hsl(var(--terex-dark))" }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-14 sm:mb-16">
           <p
@@ -43,7 +43,7 @@ export function PaymentMethodsSection() {
               key={index}
               className="flex items-center gap-4 px-6 py-5 sm:px-8 sm:py-6 rounded-2xl transition-colors duration-300 min-w-[200px] sm:min-w-[240px]"
               style={{
-                backgroundColor: "#1e1e1e",
+                backgroundColor: "hsl(var(--terex-darker))",
                 border: "1px solid rgba(255,255,255,0.07)",
               }}
               onMouseEnter={(e) => {

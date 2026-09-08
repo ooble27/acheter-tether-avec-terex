@@ -58,7 +58,7 @@ export function NetworkPill({ network, selected, onSelect }: NetworkPillProps) {
         outline: 'none',
         WebkitTapHighlightColor: 'transparent',
         transition: 'all 0.15s',
-        color: '#fff',
+        color: 'hsl(var(--foreground))',
         fontSize: '14px',
         fontWeight: 400,
         lineHeight: 1,

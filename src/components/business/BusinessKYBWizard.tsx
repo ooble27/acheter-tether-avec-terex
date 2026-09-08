@@ -37,17 +37,17 @@ function StepBar({ current, total }: { current: number; total: number }) {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-xs font-medium text-[#888] uppercase tracking-wide">{label}</label>
+      <label className="text-xs font-medium text-[hsl(var(--muted-foreground))] uppercase tracking-wide">{label}</label>
       {children}
     </div>
   );
 }
 
 const inputClass =
-  'bg-[#181818] border border-[#333] rounded-lg px-3 py-2 text-white text-sm w-full focus:outline-none focus:border-[#ffffff] transition-colors placeholder-[#444]';
+  'bg-[hsl(var(--terex-dark))] border border-[hsl(var(--terex-gray))] rounded-lg px-3 py-2 text-white text-sm w-full focus:outline-none focus:border-[#ffffff] transition-colors placeholder-[#444]';
 
 const selectClass =
-  'bg-[#181818] border border-[#333] rounded-lg px-3 py-2 text-white text-sm w-full focus:outline-none focus:border-[#ffffff] transition-colors appearance-none cursor-pointer';
+  'bg-[hsl(var(--terex-dark))] border border-[hsl(var(--terex-gray))] rounded-lg px-3 py-2 text-white text-sm w-full focus:outline-none focus:border-[#ffffff] transition-colors appearance-none cursor-pointer';
 
 // ─── File Upload Field ─────────────────────────────────────────────────────────
 function FileUploadField({
@@ -74,8 +74,8 @@ function FileUploadField({
           uploaded
             ? 'border-[#ffffff] bg-[#ffffff]/5'
             : uploading
-            ? 'border-[#ffffff]/50 bg-[#181818]'
-            : 'border-[#333] bg-[#181818] hover:border-[#ffffff]'
+            ? 'border-[#ffffff]/50 bg-[hsl(var(--terex-dark))]'
+            : 'border-[hsl(var(--terex-gray))] bg-[hsl(var(--terex-dark))] hover:border-[#ffffff]'
         }`}
       >
         <input
@@ -91,7 +91,7 @@ function FileUploadField({
         {uploading ? (
           <div className="flex flex-col items-center gap-2">
             <div className="w-6 h-6 border-2 border-[#ffffff] border-t-transparent rounded-full animate-spin" />
-            <p className="text-[#888] text-xs">Téléchargement…</p>
+            <p className="text-[hsl(var(--muted-foreground))] text-xs">Téléchargement…</p>
           </div>
         ) : uploaded ? (
           <div className="flex flex-col items-center gap-1.5">
@@ -110,7 +110,7 @@ function FileUploadField({
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
               </svg>
             </div>
-            <p className="text-[#888] text-xs">Cliquer pour importer</p>
+            <p className="text-[hsl(var(--muted-foreground))] text-xs">Cliquer pour importer</p>
             <p className="text-[#555] text-xs">PDF, JPG, PNG acceptés</p>
           </div>
         )}
@@ -264,7 +264,7 @@ function Step3({
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
       <div className="sm:col-span-2">
-        <p className="text-[#888] text-sm mb-4">
+        <p className="text-[hsl(var(--muted-foreground))] text-sm mb-4">
           Veuillez importer des copies lisibles des documents officiels de votre entreprise.
         </p>
       </div>
@@ -302,17 +302,17 @@ function Step4({ draft }: { draft: BusinessKYBData }) {
     url ? (
       <span className="text-[#ffffff] text-xs font-medium">✓ Fourni</span>
     ) : (
-      <span className="text-[#888] text-xs">Non fourni</span>
+      <span className="text-[hsl(var(--muted-foreground))] text-xs">Non fourni</span>
     );
 
   return (
     <div className="space-y-4">
-      <p className="text-[#888] text-sm">
+      <p className="text-[hsl(var(--muted-foreground))] text-sm">
         Vérifiez les informations avant de soumettre votre dossier.
       </p>
 
       {/* Company info */}
-      <div className="bg-[#1a1a1a] border border-[#222] rounded-xl p-4 space-y-3">
+      <div className="bg-[hsl(var(--terex-dark))] border border-[#222] rounded-xl p-4 space-y-3">
         <p className="text-xs font-semibold text-[#ffffff] uppercase tracking-wider">Entreprise</p>
         <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
           <div><span className="text-[#666]">Raison sociale</span><p className="text-white truncate">{draft.company_name || '—'}</p></div>
@@ -325,7 +325,7 @@ function Step4({ draft }: { draft: BusinessKYBData }) {
       </div>
 
       {/* Rep info */}
-      <div className="bg-[#1a1a1a] border border-[#222] rounded-xl p-4 space-y-3">
+      <div className="bg-[hsl(var(--terex-dark))] border border-[#222] rounded-xl p-4 space-y-3">
         <p className="text-xs font-semibold text-[#ffffff] uppercase tracking-wider">Représentant légal</p>
         <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
           <div><span className="text-[#666]">Nom</span><p className="text-white">{draft.rep_name || '—'}</p></div>
@@ -336,7 +336,7 @@ function Step4({ draft }: { draft: BusinessKYBData }) {
       </div>
 
       {/* Documents */}
-      <div className="bg-[#1a1a1a] border border-[#222] rounded-xl p-4 space-y-3">
+      <div className="bg-[hsl(var(--terex-dark))] border border-[#222] rounded-xl p-4 space-y-3">
         <p className="text-xs font-semibold text-[#ffffff] uppercase tracking-wider">Documents</p>
         <div className="space-y-2 text-sm">
           <div className="flex justify-between items-center"><span className="text-[#666]">RCCM</span>{docStatus(draft.rccm_document_url)}</div>
@@ -377,21 +377,21 @@ function PendingScreen({ companyName, onComplete }: { companyName: string; onCom
         {/* Title */}
         <div className="space-y-2">
           <h1 className="text-2xl font-bold text-white">Dossier soumis avec succès</h1>
-          <p className="text-[#888] text-sm leading-relaxed">
+          <p className="text-[hsl(var(--muted-foreground))] text-sm leading-relaxed">
             Notre équipe examine votre dossier. Vous serez notifié par email sous 24–48h.
           </p>
         </div>
 
         {/* Company badge */}
         {companyName && (
-          <div className="bg-[#181818] border border-[#222] rounded-xl px-4 py-3 inline-block">
+          <div className="bg-[hsl(var(--terex-dark))] border border-[#222] rounded-xl px-4 py-3 inline-block">
             <p className="text-xs text-[#666] mb-0.5">Entreprise</p>
             <p className="text-white font-semibold">{companyName}</p>
           </div>
         )}
 
         {/* Checklist */}
-        <div className="bg-[#181818] border border-[#222] rounded-xl p-4 text-left space-y-2">
+        <div className="bg-[hsl(var(--terex-dark))] border border-[#222] rounded-xl p-4 text-left space-y-2">
           <p className="text-xs font-semibold text-[#ffffff] uppercase tracking-wider mb-3">Ce qui sera vérifié</p>
           {checks.map(item => (
             <div key={item} className="flex items-center gap-3">
@@ -508,11 +508,11 @@ export function BusinessKYBWizard({ userId, onComplete }: { userId: string; onCo
             </div>
             <span className="text-white font-bold text-base">Terex Business</span>
           </div>
-          <span className="text-[#888] text-sm">Étape {step} sur 4</span>
+          <span className="text-[hsl(var(--muted-foreground))] text-sm">Étape {step} sur 4</span>
         </div>
 
         {/* Card */}
-        <div className="bg-[#181818] border border-[#222222] rounded-xl p-6">
+        <div className="bg-[hsl(var(--terex-dark))] border border-[hsl(var(--terex-darker))] rounded-xl p-6">
           {/* Step progress */}
           <StepBar current={step} total={4} />
 
@@ -531,7 +531,7 @@ export function BusinessKYBWizard({ userId, onComplete }: { userId: string; onCo
               <button
                 onClick={handleBack}
                 disabled={saving}
-                className="bg-[#181818] border border-[#333] text-[#888] px-6 py-2.5 rounded-xl text-sm hover:border-[#444] transition-colors disabled:opacity-50"
+                className="bg-[hsl(var(--terex-dark))] border border-[hsl(var(--terex-gray))] text-[hsl(var(--muted-foreground))] px-6 py-2.5 rounded-xl text-sm hover:border-[#444] transition-colors disabled:opacity-50"
               >
                 Retour
               </button>

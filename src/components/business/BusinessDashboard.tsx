@@ -69,10 +69,10 @@ function getNavSections(lang: 'fr' | 'en') {
 }
 
 const C = {
-  bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030',
-  bds: '#252525', bd: '#383838',
+  bg: 'hsl(var(--terex-dark))', l1: 'hsl(var(--terex-darker))', l2: 'hsl(var(--terex-gray))', l3: 'hsl(var(--terex-gray))',
+  bds: 'hsl(var(--terex-darker))', bd: 'hsl(var(--terex-gray))',
   teal: '#ffffff',
-  t1: '#f0f0f0', t2: '#a0a0a0', t3: '#606060',
+  t1: '#f0f0f0', t2: 'hsl(var(--muted-foreground))', t3: '#606060',
 };
 const FONT = "'Inter', sans-serif";
 
@@ -123,10 +123,10 @@ function NavItem({
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         transition: 'all 0.12s',
       }}>
-        <Icon style={{ width: 14, height: 14, color: '#fff' }} />
+        <Icon style={{ width: 14, height: 14, color: 'hsl(var(--foreground))' }} />
       </div>
       <span style={{
-        color: isActive ? '#fff' : '#cccccc', fontSize: 13,
+        color: isActive ? 'hsl(var(--foreground))' : '#cccccc', fontSize: 13,
         fontWeight: isActive ? 500 : 400, flex: 1,
         transition: 'color 0.12s',
       }}>

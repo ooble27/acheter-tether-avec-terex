@@ -1,5 +1,5 @@
-const BG = '#1a1a1a';
-const CARD = '#1e1e1e';
+const BG = 'hsl(var(--terex-dark))';
+const CARD = 'hsl(var(--terex-darker))';
 const BORDER = 'rgba(255,255,255,0.08)';
 const ACCENT = '#2dd4a7';
 
@@ -10,7 +10,7 @@ const ACCENT = '#2dd4a7';
 export function MaintenancePage() {
   return (
     <div style={{
-      minHeight: '100vh', background: BG, color: '#fff',
+      minHeight: '100vh', background: BG, color: 'hsl(var(--foreground))',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       padding: '24px', fontFamily: "system-ui,-apple-system,'Segoe UI',Roboto,sans-serif",
       textAlign: 'center',
@@ -36,13 +36,13 @@ export function MaintenancePage() {
           <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.15, margin: '0 0 14px' }}>
             Nous améliorons la plateforme
           </h1>
-          <p style={{ fontSize: 15, color: '#9ca3af', lineHeight: 1.65, margin: '0 0 26px' }}>
+          <p style={{ fontSize: 15, color: 'hsl(var(--muted-foreground))', lineHeight: 1.65, margin: '0 0 26px' }}>
             Terex est momentanément en maintenance pour vous offrir un service encore plus rapide et sécurisé.
             Nous revenons très vite. Merci de votre confiance.
           </p>
 
           <div style={{ borderTop: `1px solid ${BORDER}`, paddingTop: 22 }}>
-            <p style={{ fontSize: 12.5, color: '#6b7280', margin: '0 0 12px' }}>Une question ? Écrivez-nous :</p>
+            <p style={{ fontSize: 12.5, color: 'hsl(var(--muted-foreground))', margin: '0 0 12px' }}>Une question ? Écrivez-nous :</p>
             <a href="mailto:terangaexchange@gmail.com"
               style={{ display: 'inline-block', background: '#fff', color: '#141414', textDecoration: 'none', fontSize: 14, fontWeight: 700, padding: '12px 24px', borderRadius: 12 }}>
               terangaexchange@gmail.com
@@ -50,7 +50,7 @@ export function MaintenancePage() {
           </div>
         </div>
 
-        <p style={{ fontSize: 11.5, color: '#4b5563', margin: '22px 0 0' }}>
+        <p style={{ fontSize: 11.5, color: 'hsl(var(--muted-foreground))', margin: '22px 0 0' }}>
           © {new Date().getFullYear()} Teranga Exchange — Achat &amp; vente d'USDT en CFA
         </p>
       </div>

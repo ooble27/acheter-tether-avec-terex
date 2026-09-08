@@ -15,16 +15,16 @@ export function CTASection({ user, onGetStarted }: CTASectionProps) {
   if (isMobile) return null;
 
   return (
-    <section className="py-24 sm:py-28" style={{ backgroundColor: '#1a1a1a' }}>
+    <section className="py-24 sm:py-28" style={{ backgroundColor: 'hsl(var(--terex-dark))' }}>
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
           className="rounded-3xl px-8 py-16 sm:px-16 sm:py-20 text-center"
           style={{
-            backgroundColor: '#1e1e1e',
+            backgroundColor: 'hsl(var(--terex-darker))',
             border: '1px solid rgba(255,255,255,0.07)',
           }}
         >
-          <h2 className="text-4xl lg:text-5xl font-semibold tracking-tight mb-6" style={{ color: '#fff' }}>
+          <h2 className="text-4xl lg:text-5xl font-semibold tracking-tight mb-6" style={{ color: 'hsl(var(--foreground))' }}>
             {user ? 'Continuez avec Terex' : 'Prêt à commencer avec Terex ?'}
           </h2>
           <p

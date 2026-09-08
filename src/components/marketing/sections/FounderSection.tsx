@@ -27,13 +27,13 @@ export function FounderSection() {
   ];
 
   return (
-    <section className="py-20 sm:py-28" style={{ backgroundColor: "#1a1a1a" }}>
+    <section className="py-20 sm:py-28" style={{ backgroundColor: "hsl(var(--terex-dark))" }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Card */}
         <div
           className="rounded-2xl overflow-hidden"
           style={{
-            backgroundColor: "#1e1e1e",
+            backgroundColor: "hsl(var(--terex-darker))",
             border: "1px solid rgba(255,255,255,0.07)",
           }}
         >
@@ -41,7 +41,7 @@ export function FounderSection() {
             {/* Left Side - Image */}
             <div
               className="lg:w-2/5 relative"
-              style={{ backgroundColor: "#2d2d2d" }}
+              style={{ backgroundColor: "hsl(var(--terex-gray))" }}
             >
               <div className="aspect-square lg:aspect-auto lg:h-full">
                 <img

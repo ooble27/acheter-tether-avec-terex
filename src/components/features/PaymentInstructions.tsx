@@ -32,7 +32,7 @@ interface PaymentInstructionsProps {
   onPaymentConfirmed: () => void;
 }
 
-const CARD_BG = '#1e1e1e';
+const CARD_BG = 'hsl(var(--terex-darker))';
 const BORDER = 'rgba(255,255,255,0.07)';
 
 export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfirmed }: PaymentInstructionsProps) {
@@ -115,7 +115,7 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 16px', borderBottom: `1px solid rgba(255,255,255,0.06)` }}>
       <div>
         <div style={{ color: 'rgba(255,255,255,0.45)', fontSize: '11px', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</div>
-        <div style={{ color: '#fff', fontSize: '15px', fontWeight: 600, fontFamily: field === 'number' ? 'monospace' : undefined }}>{value}</div>
+        <div style={{ color: 'hsl(var(--foreground))', fontSize: '15px', fontWeight: 600, fontFamily: field === 'number' ? 'monospace' : undefined }}>{value}</div>
       </div>
       <button
         onClick={() => copyToClipboard(value, field)}
@@ -130,14 +130,14 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
   if (orderData.paymentMethod === 'card') {
     const securityAnswer = orderId.slice(-8).toUpperCase();
     return (
-      <div style={{ minHeight: '100vh', background: '#1a1a1a' }}>
+      <div style={{ minHeight: '100vh', background: 'hsl(var(--terex-dark))' }}>
         <div style={{ maxWidth: '520px', margin: '0 auto', padding: '20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
             <button onClick={onBack} style={{ background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: '50%', width: '38px', height: '38px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <ArrowLeft size={18} color="#fff" />
+              <ArrowLeft size={18} color="hsl(var(--foreground))" />
             </button>
             <div>
-              <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 700, margin: 0 }}>Virement Interac</h2>
+              <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 700, margin: 0 }}>Virement Interac</h2>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px' }}>
                 <Clock size={13} color="#f97316" />
                 <span style={{ color: '#f97316', fontSize: '13px', fontWeight: 500 }}>{formatTime(timeLeft)}</span>
@@ -155,11 +155,11 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
           <div style={{ background: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '16px', marginBottom: '16px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
               <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Vous recevez</span>
-              <span style={{ color: '#fff', fontSize: '13px', fontWeight: 600 }}>{orderData.usdtAmount} USDT</span>
+              <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 600 }}>{orderData.usdtAmount} USDT</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Réseau</span>
-              <span style={{ color: '#fff', fontSize: '13px' }}>{orderData.network}</span>
+              <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px' }}>{orderData.network}</span>
             </div>
           </div>
 
@@ -176,15 +176,15 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
 
   // ── Mobile Money (Wave) — realtime payment link flow ──
   return (
-    <div style={{ minHeight: '100vh', background: '#1a1a1a' }}>
+    <div style={{ minHeight: '100vh', background: 'hsl(var(--terex-dark))' }}>
       <div style={{ maxWidth: '520px', margin: '0 auto', padding: '20px' }}>
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
           <button onClick={onBack} style={{ background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: '50%', width: '38px', height: '38px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <ArrowLeft size={18} color="#fff" />
+            <ArrowLeft size={18} color="hsl(var(--foreground))" />
           </button>
           <div>
-            <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 700, margin: 0 }}>Paiement Wave</h2>
+            <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 700, margin: 0 }}>Paiement Wave</h2>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px' }}>
               <Clock size={13} color="#f97316" />
               <span style={{ color: '#f97316', fontSize: '13px', fontWeight: 500 }}>{formatTime(timeLeft)}</span>
@@ -196,15 +196,15 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
         <div style={{ background: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '16px', marginBottom: '16px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
             <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Montant</span>
-            <span style={{ color: '#fff', fontSize: '13px', fontWeight: 600 }}>{baseAmount.toLocaleString('fr-FR')} {orderData.currency}</span>
+            <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 600 }}>{baseAmount.toLocaleString('fr-FR')} {orderData.currency}</span>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
             <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Vous recevez</span>
-            <span style={{ color: '#fff', fontSize: '13px', fontWeight: 600 }}>{orderData.usdtAmount} USDT</span>
+            <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 600 }}>{orderData.usdtAmount} USDT</span>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Réseau</span>
-            <span style={{ color: '#fff', fontSize: '13px' }}>{orderData.network}</span>
+            <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px' }}>{orderData.network}</span>
           </div>
         </div>
 
@@ -223,7 +223,7 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
             rel="noopener noreferrer"
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
-              width: '100%', background: '#1B6EF3', color: '#fff', border: 'none',
+              width: '100%', background: '#1B6EF3', color: 'hsl(var(--foreground))', border: 'none',
               borderRadius: '14px', padding: '15px', fontSize: '15px', fontWeight: 700,
               cursor: 'pointer', textDecoration: 'none', textAlign: 'center',
             }}

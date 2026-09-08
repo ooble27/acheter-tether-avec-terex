@@ -27,7 +27,7 @@ export function AnnouncementBanner() {
       style={{
         position: 'relative',
         background: 'transparent',
-        color: '#ffffff',
+        color: 'hsl(var(--foreground))',
         fontSize: '12.5px',
         fontWeight: 400,
         letterSpacing: '0.02em',

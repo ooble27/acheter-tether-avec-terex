@@ -25,7 +25,7 @@ interface TransactionHistoryProps {
   transactions: Transaction[];
 }
 
-const CARD = '#1e1e1e';
+const CARD = 'hsl(var(--terex-darker))';
 const BORDER = 'rgba(255,255,255,0.07)';
 const ICON_BG = 'rgba(255,255,255,0.06)';
 
@@ -74,15 +74,15 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
     return (
       <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', overflow: 'hidden' }}>
         <div style={{ padding: '20px 24px 12px' }}>
-          <p style={{ color: '#fff', fontSize: '15px', fontWeight: 600, margin: '0 0 4px' }}>Historique des transactions</p>
-          <p style={{ color: '#6b7280', fontSize: '13px', margin: 0 }}>Consultez toutes vos transactions passées</p>
+          <p style={{ color: 'hsl(var(--foreground))', fontSize: '15px', fontWeight: 600, margin: '0 0 4px' }}>Historique des transactions</p>
+          <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px', margin: 0 }}>Consultez toutes vos transactions passées</p>
         </div>
         <div style={{ padding: '48px 24px', textAlign: 'center' }}>
           <div style={{ width: '48px', height: '48px', borderRadius: '16px', background: ICON_BG, margin: '0 auto 12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Coins size={20} color="#4b5563" />
+            <Coins size={20} color="hsl(var(--muted-foreground))" />
           </div>
-          <p style={{ color: '#6b7280', fontSize: '13px', margin: '0 0 4px', fontWeight: 500 }}>Aucune transaction</p>
-          <p style={{ color: '#374151', fontSize: '12px', margin: 0 }}>Vos opérations apparaîtront ici</p>
+          <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px', margin: '0 0 4px', fontWeight: 500 }}>Aucune transaction</p>
+          <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px', margin: 0 }}>Vos opérations apparaîtront ici</p>
         </div>
       </div>
     );
@@ -94,8 +94,8 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
       <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', overflow: 'hidden' }}>
         {/* Header */}
         <div style={{ padding: '16px 20px 12px' }}>
-          <p style={{ color: '#fff', fontSize: '15px', fontWeight: 600, margin: '0 0 3px' }}>Historique des transactions</p>
-          <p style={{ color: '#6b7280', fontSize: '13px', margin: 0 }}>Consultez toutes vos transactions passées</p>
+          <p style={{ color: 'hsl(var(--foreground))', fontSize: '15px', fontWeight: 600, margin: '0 0 3px' }}>Historique des transactions</p>
+          <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px', margin: 0 }}>Consultez toutes vos transactions passées</p>
         </div>
 
         {transactions.map((tx) => {
@@ -119,23 +119,23 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                 {/* Label + status */}
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '7px', marginBottom: '3px' }}>
-                    <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>{label}</span>
+                    <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 500 }}>{label}</span>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '10px', fontWeight: 600, padding: '2px 7px', borderRadius: '999px', background: st.bg, color: st.color }}>
                       <StatusIcon size={10} />
                       {st.label}
                     </span>
                   </div>
-                  <p style={{ color: '#4b5563', fontSize: '11px', margin: 0 }}>{formatDate(tx.date)}</p>
+                  <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', margin: 0 }}>{formatDate(tx.date)}</p>
                 </div>
 
                 {/* Amount */}
                 <div style={{ textAlign: 'right', flexShrink: 0, marginRight: '4px' }}>
-                  <span style={{ color: '#fff', fontSize: '13px', fontWeight: 600 }}>
+                  <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 600 }}>
                     {tx.type === 'buy' && tx.usdtAmount ? `${tx.usdtAmount} USDT` : `${tx.amount} ${tx.currency}`}
                   </span>
                 </div>
 
-                <ChevronDown size={14} color="#4b5563" style={{ flexShrink: 0, transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                <ChevronDown size={14} color="hsl(var(--muted-foreground))" style={{ flexShrink: 0, transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
               </button>
 
               {/* Expanded details */}
@@ -149,8 +149,8 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                     tx.type === 'transfer' && tx.recipient_name ? { label: 'Destinataire', value: tx.recipient_name } : null,
                   ].filter(Boolean).map((item: any) => (
                     <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ color: '#6b7280', fontSize: '12px' }}>{item.label}</span>
-                      <span style={{ color: '#fff', fontSize: '12px', fontWeight: 500 }}>{item.value}</span>
+                      <span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px' }}>{item.label}</span>
+                      <span style={{ color: 'hsl(var(--foreground))', fontSize: '12px', fontWeight: 500 }}>{item.value}</span>
                     </div>
                   ))}
                   <div style={{ marginTop: '2px' }}>
@@ -169,14 +169,14 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
   return (
     <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', overflow: 'hidden' }}>
       <div style={{ padding: '20px 24px 16px' }}>
-        <p style={{ color: '#fff', fontSize: '15px', fontWeight: 600, margin: '0 0 3px' }}>Historique des transactions</p>
-        <p style={{ color: '#6b7280', fontSize: '13px', margin: 0 }}>Consultez toutes vos transactions passées</p>
+        <p style={{ color: 'hsl(var(--foreground))', fontSize: '15px', fontWeight: 600, margin: '0 0 3px' }}>Historique des transactions</p>
+        <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px', margin: 0 }}>Consultez toutes vos transactions passées</p>
       </div>
 
       {/* Table header */}
       <div style={{ display: 'grid', gridTemplateColumns: '180px 1fr 1fr 120px 140px 160px 60px', padding: '8px 20px', borderTop: `1px solid ${BORDER}` }}>
         {['Type', 'Montant envoyé', 'Reçu', 'Réseau', 'Statut', 'Date', ''].map(h => (
-          <span key={h} style={{ color: '#6b7280', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{h}</span>
+          <span key={h} style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{h}</span>
         ))}
       </div>
 
@@ -192,24 +192,24 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
               <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <Icon size={15} color={color} strokeWidth={2} />
               </div>
-              <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>{label}</span>
+              <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 500 }}>{label}</span>
             </div>
 
             {/* Sent */}
-            <span style={{ color: '#fff', fontSize: '13px' }}>{tx.amount} {tx.currency}</span>
+            <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px' }}>{tx.amount} {tx.currency}</span>
 
             {/* Received */}
-            <span style={{ color: '#fff', fontSize: '13px' }}>
+            <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px' }}>
               {tx.type === 'buy' && tx.usdtAmount
                 ? tx.usdtAmount
                 : tx.fiatAmount
                   ? `${tx.fiatAmount}${tx.receiveCurrency ? ` ${tx.receiveCurrency}` : ''}`
-                  : <span style={{ color: '#4b5563' }}>—</span>
+                  : <span style={{ color: 'hsl(var(--muted-foreground))' }}>—</span>
               }
             </span>
 
             {/* Network / Recipient */}
-            <span style={{ color: '#9ca3af', fontSize: '13px' }}>
+            <span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px' }}>
               {tx.type === 'transfer' ? (tx.recipient_name || 'Transfert') : tx.network}
             </span>
 
@@ -220,7 +220,7 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
             </span>
 
             {/* Date */}
-            <span style={{ color: '#6b7280', fontSize: '12px' }}>{formatDate(tx.date)}</span>
+            <span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px' }}>{formatDate(tx.date)}</span>
 
             {/* Actions */}
             <TransactionDetails transaction={tx} />

@@ -14,9 +14,9 @@ interface HeaderSectionProps {
   onLogout: () => void;
 }
 
-const BG = '#1a1a1a';
-const CARD = '#1e1e1e';
-const ROW = '#242424';
+const BG = 'hsl(var(--terex-dark))';
+const CARD = 'hsl(var(--terex-darker))';
+const ROW = 'hsl(var(--terex-darker))';
 const BORDER = 'rgba(255,255,255,0.07)';
 const ICON_BG = 'rgba(255,255,255,0.06)';
 const MUTED = 'rgba(255,255,255,0.55)';
@@ -113,7 +113,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
           {/* Logo */}
           <button onClick={() => go('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 7, flexShrink: 0 }}>
             <img src="/terex-logo.png" alt="Terex" style={{ width: 40, height: 40, objectFit: 'contain' }} />
-            <span style={{ color: '#fff', fontSize: 20, fontWeight: 700, letterSpacing: '-0.03em' }}>Terex</span>
+            <span style={{ color: 'hsl(var(--foreground))', fontSize: 20, fontWeight: 700, letterSpacing: '-0.03em' }}>Terex</span>
           </button>
 
           {/* Desktop : menus déroulants façon Attio */}
@@ -124,7 +124,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                   <button
                     className="hs-trig"
                     onClick={() => setOpen(open === g.label ? null : g.label)}
-                    style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'none', border: 'none', cursor: 'pointer', color: open === g.label ? '#fff' : MUTED, fontSize: 14.5, fontWeight: 500, padding: '8px 12px', borderRadius: 9 }}
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'none', border: 'none', cursor: 'pointer', color: open === g.label ? 'hsl(var(--foreground))' : MUTED, fontSize: 14.5, fontWeight: 500, padding: '8px 12px', borderRadius: 9 }}
                   >
                     {g.label}
                     <ChevronDown size={15} style={{ transform: open === g.label ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease', opacity: 0.7 }} />
@@ -148,7 +148,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                           <Icon size={18} strokeWidth={1.7} color="rgba(255,255,255,0.9)" />
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
-                          <p style={{ margin: 0, fontSize: 14, fontWeight: 650, color: '#fff', letterSpacing: '-0.01em' }}>{it.title}</p>
+                          <p style={{ margin: 0, fontSize: 14, fontWeight: 650, color: 'hsl(var(--foreground))', letterSpacing: '-0.01em' }}>{it.title}</p>
                           <p style={{ margin: '2px 0 0', fontSize: 12, color: MUTED2 }}>{it.desc}</p>
                         </div>
                         <ArrowRight className="hs-chev" size={15} style={{ color: MUTED2, opacity: 0, transition: 'transform 0.15s ease, opacity 0.15s ease', flexShrink: 0 }} />
@@ -166,7 +166,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
               <>
                 {!isCompact && (
                   <button onClick={handleLogout}
-                    style={{ background: '#2d2d2d', color: '#fff', border: `1px solid ${BORDER}`, borderRadius: 11, height: 40, padding: '0 16px', fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                    style={{ background: 'hsl(var(--terex-gray))', color: 'hsl(var(--foreground))', border: `1px solid ${BORDER}`, borderRadius: 11, height: 40, padding: '0 16px', fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                     <LogOut size={15} /> Déconnexion
                   </button>
                 )}
@@ -179,7 +179,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
               <>
                 {!isCompact && (
                   <button onClick={() => navigate('/auth')}
-                    style={{ background: '#2d2d2d', color: '#fff', border: `1px solid ${BORDER}`, borderRadius: 11, height: 40, padding: '0 16px', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+                    style={{ background: 'hsl(var(--terex-gray))', color: 'hsl(var(--foreground))', border: `1px solid ${BORDER}`, borderRadius: 11, height: 40, padding: '0 16px', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
                     Connexion
                   </button>
                 )}

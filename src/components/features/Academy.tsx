@@ -271,10 +271,10 @@ function CourseCover({ url, tone }: { url: string | null; tone: number }) {
   }
   // Themed monochrome gradient fallback — offsets each card slightly by tone
   const grads = [
-    'linear-gradient(135deg, #262626 0%, #1a1a1a 55%, #1e1e1e 100%)',
-    'linear-gradient(135deg, #2a2a2a 0%, #1c1c1c 55%, #212121 100%)',
-    'linear-gradient(135deg, #232323 0%, #1a1a1a 50%, #262626 100%)',
-    'linear-gradient(135deg, #202020 0%, #1a1a1a 50%, #2a2a2a 100%)',
+    'linear-gradient(135deg, #262626 0%, hsl(var(--terex-dark)) 55%, hsl(var(--terex-darker)) 100%)',
+    'linear-gradient(135deg, hsl(var(--terex-gray)) 0%, hsl(var(--terex-darker)) 55%, hsl(var(--terex-darker)) 100%)',
+    'linear-gradient(135deg, hsl(var(--terex-darker)) 0%, hsl(var(--terex-dark)) 50%, #262626 100%)',
+    'linear-gradient(135deg, hsl(var(--terex-darker)) 0%, hsl(var(--terex-dark)) 50%, hsl(var(--terex-gray)) 100%)',
   ];
   return (
     <div style={{
@@ -552,7 +552,7 @@ function CourseHero({ course, pct, enrolled, isMobile }: {
       aspectRatio: isMobile ? '16/10' as any : '21/9' as any,
       background: course.cover_url
         ? `url(${course.cover_url}) center/cover no-repeat`
-        : 'linear-gradient(135deg, #262626 0%, #1a1a1a 45%, #222 100%)',
+        : 'linear-gradient(135deg, #262626 0%, hsl(var(--terex-dark)) 45%, #222 100%)',
       borderBottom: `1px solid ${C.bds}`, overflow: 'hidden',
     }}>
       {/* Decorative rings when no cover */}
@@ -570,7 +570,7 @@ function CourseHero({ course, pct, enrolled, isMobile }: {
             position: 'absolute', top: '50%', right: '18%', transform: 'translateY(-50%)',
             opacity: 0.05,
           }}>
-            <GraduationCap size={140} color="#fff" strokeWidth={0.6} />
+            <GraduationCap size={140} color="hsl(var(--foreground))" strokeWidth={0.6} />
           </div>
         </>
       )}
@@ -599,7 +599,7 @@ function CourseHero({ course, pct, enrolled, isMobile }: {
         <h1 style={{
           fontFamily: FONT, fontWeight: 300, letterSpacing: '-0.02em',
           fontSize: isMobile ? 24 : 32, lineHeight: 1.15,
-          color: '#fff', margin: 0, textWrap: 'balance' as any,
+          color: 'hsl(var(--foreground))', margin: 0, textWrap: 'balance' as any,
           maxWidth: 680,
           textShadow: course.cover_url ? '0 1px 20px rgba(0,0,0,0.4)' : 'none',
         }}>

@@ -48,10 +48,10 @@ export function PaymentPending({ orderData, orderId, onBackToHome }: PaymentPend
   const shortAddr = `${orderData.walletAddress.substring(0, 6)}...${orderData.walletAddress.substring(orderData.walletAddress.length - 4)}`;
 
   return (
-    <div style={{ minHeight: '100vh', background: '#1a1a1a' }}>
+    <div style={{ minHeight: '100vh', background: 'hsl(var(--terex-dark))' }}>
       <div style={{ maxWidth: '520px', margin: '0 auto', padding: '20px' }}>
 
-        <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 700, margin: '0 0 6px 0' }}>
+        <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 700, margin: '0 0 6px 0' }}>
           Traitement en cours{dots}
         </h2>
         <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px', margin: '0 0 20px 0' }}>
@@ -78,12 +78,12 @@ export function PaymentPending({ orderData, orderId, onBackToHome }: PaymentPend
               >
                 <div style={{
                   display: 'flex', justifyContent: 'center', marginBottom: '6px',
-                  color: active ? '#fff' : 'rgba(255,255,255,0.3)',
+                  color: active ? 'hsl(var(--foreground))' : 'rgba(255,255,255,0.3)',
                   animation: current ? 'pulse 2s infinite' : undefined,
                 }}>
                   {s.icon}
                 </div>
-                <div style={{ color: active ? '#fff' : 'rgba(255,255,255,0.3)', fontSize: '11px', fontWeight: 600 }}>
+                <div style={{ color: active ? 'hsl(var(--foreground))' : 'rgba(255,255,255,0.3)', fontSize: '11px', fontWeight: 600 }}>
                   {s.label}
                 </div>
               </div>
@@ -92,7 +92,7 @@ export function PaymentPending({ orderData, orderId, onBackToHome }: PaymentPend
         </div>
 
         {/* Recap */}
-        <div style={{ background: '#1e1e1e', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', overflow: 'hidden', marginBottom: '16px' }}>
+        <div style={{ background: 'hsl(var(--terex-darker))', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', overflow: 'hidden', marginBottom: '16px' }}>
           <Row label="Montant payé" value={`${orderData.amount} ${orderData.currency}`} />
           <Row label="Vous recevez" value={`${orderData.usdtAmount} USDT`} highlight />
           <Row label="Réseau" value={orderData.network} />

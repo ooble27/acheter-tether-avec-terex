@@ -75,7 +75,7 @@ export function AddressBook({
             <img src={logo} alt="" style={{ width: '30px', height: '30px', borderRadius: '50%', flexShrink: 0 }} />
             <div style={{ minWidth: 0, flex: 1 }}>
               {selected?.label && (
-                <div style={{ color: '#fff', fontSize: '13px', fontWeight: 600, marginBottom: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <div style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 600, marginBottom: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {selected.label}
                 </div>
               )}
@@ -141,7 +141,7 @@ export function AddressBook({
                       <img src={logo} alt="" style={{ width: '24px', height: '24px', borderRadius: '50%', flexShrink: 0 }} />
                       <div style={{ minWidth: 0, flex: 1 }}>
                         {w.label && (
-                          <div style={{ color: '#fff', fontSize: '12px', fontWeight: 600, marginBottom: '1px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          <div style={{ color: 'hsl(var(--foreground))', fontSize: '12px', fontWeight: 600, marginBottom: '1px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {w.label}
                           </div>
                         )}
@@ -154,7 +154,7 @@ export function AddressBook({
                         </div>
                       </div>
                       {sel && (
-                        <Check size={14} color="#fff" strokeWidth={3} style={{ flexShrink: 0 }} />
+                        <Check size={14} color="hsl(var(--foreground))" strokeWidth={3} style={{ flexShrink: 0 }} />
                       )}
                     </button>
                     <button
@@ -216,7 +216,7 @@ export function AddressBook({
               placeholder={placeholder || `Votre adresse ${network}`}
               value={value}
               onChange={e => onChange(e.target.value.trim())}
-              style={{ width: '100%', background: 'transparent', border: 'none', padding: '16px', color: '#fff', fontSize: '15px', outline: 'none', boxSizing: 'border-box', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}
+              style={{ width: '100%', background: 'transparent', border: 'none', padding: '16px', color: 'hsl(var(--foreground))', fontSize: '15px', outline: 'none', boxSizing: 'border-box', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}
             />
           </div>
 
@@ -237,7 +237,7 @@ export function AddressBook({
                 placeholder="Nom (optionnel) — ex : Trust Wallet"
                 value={label}
                 onChange={e => onLabelChange(e.target.value)}
-                style={{ width: '100%', background: 'transparent', border: 'none', padding: '14px 16px', color: '#fff', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }}
+                style={{ width: '100%', background: 'transparent', border: 'none', padding: '14px 16px', color: 'hsl(var(--foreground))', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }}
               />
             </div>
           )}

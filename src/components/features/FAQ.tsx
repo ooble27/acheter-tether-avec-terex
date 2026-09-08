@@ -5,7 +5,7 @@ interface FAQProps {
   onNavigate?: (section: string) => void;
 }
 
-const CARD = '#1e1e1e';
+const CARD = 'hsl(var(--terex-darker))';
 const BORDER = 'rgba(255,255,255,0.07)';
 const ACCENT = '#ffffff';
 const ICON_BG = 'rgba(255,255,255,0.06)';
@@ -74,15 +74,15 @@ function FAQItem({ q, a }: { q: string; a: string }) {
         onClick={() => setOpen(o => !o)}
         style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', padding: '18px 0', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' }}
       >
-        <span style={{ color: '#fff', fontSize: '14px', fontWeight: 500, lineHeight: 1.4 }}>{q}</span>
+        <span style={{ color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 500, lineHeight: 1.4 }}>{q}</span>
         <ChevronDown
           size={16}
-          color="#6b7280"
+          color="hsl(var(--muted-foreground))"
           style={{ flexShrink: 0, transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.22s ease' }}
         />
       </button>
       <div style={{ maxHeight: open ? '300px' : '0', overflow: 'hidden', transition: 'max-height 0.28s ease' }}>
-        <p style={{ color: '#9ca3af', fontSize: '13px', lineHeight: 1.6, paddingBottom: '16px', margin: 0 }}>{a}</p>
+        <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px', lineHeight: 1.6, paddingBottom: '16px', margin: 0 }}>{a}</p>
       </div>
     </div>
   );
@@ -94,8 +94,8 @@ export function FAQ({ onNavigate }: FAQProps) {
 
       {/* Header */}
       <div style={{ marginBottom: '28px' }}>
-        <p style={{ color: '#6b7280', fontSize: '12px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 4px' }}>Aide</p>
-        <h1 style={{ color: '#fff', fontSize: '26px', fontWeight: 700, margin: 0, letterSpacing: '-0.4px' }}>Questions fréquentes</h1>
+        <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 4px' }}>Aide</p>
+        <h1 style={{ color: 'hsl(var(--foreground))', fontSize: '26px', fontWeight: 700, margin: 0, letterSpacing: '-0.4px' }}>Questions fréquentes</h1>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px' }}>
@@ -112,7 +112,7 @@ export function FAQ({ onNavigate }: FAQProps) {
 
           {/* Support */}
           <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '20px' }}>
-            <p style={{ color: '#fff', fontSize: '15px', fontWeight: 600, margin: '0 0 16px' }}>Support client</p>
+            <p style={{ color: 'hsl(var(--foreground))', fontSize: '15px', fontWeight: 600, margin: '0 0 16px' }}>Support client</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {supportItems.map(({ Icon, label, value }) => (
                 <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -120,8 +120,8 @@ export function FAQ({ onNavigate }: FAQProps) {
                     <Icon size={16} color="rgba(255,255,255,0.75)" strokeWidth={1.8} />
                   </div>
                   <div>
-                    <p style={{ color: '#6b7280', fontSize: '11px', margin: '0 0 1px', fontWeight: 500 }}>{label}</p>
-                    <p style={{ color: '#fff', fontSize: '13px', margin: 0, fontWeight: 500 }}>{value}</p>
+                    <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', margin: '0 0 1px', fontWeight: 500 }}>{label}</p>
+                    <p style={{ color: 'hsl(var(--foreground))', fontSize: '13px', margin: 0, fontWeight: 500 }}>{value}</p>
                   </div>
                 </div>
               ))}
@@ -130,8 +130,8 @@ export function FAQ({ onNavigate }: FAQProps) {
                   <Clock size={16} color="rgba(255,255,255,0.75)" strokeWidth={1.8} />
                 </div>
                 <div>
-                  <p style={{ color: '#6b7280', fontSize: '11px', margin: '0 0 1px', fontWeight: 500 }}>Disponibilité</p>
-                  <p style={{ color: '#fff', fontSize: '13px', margin: 0, fontWeight: 500 }}>24h/24 · 7j/7</p>
+                  <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', margin: '0 0 1px', fontWeight: 500 }}>Disponibilité</p>
+                  <p style={{ color: 'hsl(var(--foreground))', fontSize: '13px', margin: 0, fontWeight: 500 }}>24h/24 · 7j/7</p>
                 </div>
               </div>
             </div>
@@ -139,7 +139,7 @@ export function FAQ({ onNavigate }: FAQProps) {
 
           {/* Resources */}
           <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '20px' }}>
-            <p style={{ color: '#fff', fontSize: '15px', fontWeight: 600, margin: '0 0 16px' }}>Ressources</p>
+            <p style={{ color: 'hsl(var(--foreground))', fontSize: '15px', fontWeight: 600, margin: '0 0 16px' }}>Ressources</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
               {resources.map(({ Icon, label, id }) => (
                 <button

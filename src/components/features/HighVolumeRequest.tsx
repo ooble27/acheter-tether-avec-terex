@@ -10,18 +10,18 @@ interface HighVolumeRequestProps {
   currency?: string;
 }
 
-const BG = '#1a1a1a';
-const CARD = '#1e1e1e';
+const BG = 'hsl(var(--terex-dark))';
+const CARD = 'hsl(var(--terex-darker))';
 const BORDER = 'rgba(255,255,255,0.07)';
 const MIN_AMOUNT = 2000001;
 
 const inputStyle: React.CSSProperties = {
   width: '100%', background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`,
-  borderRadius: '12px', padding: '12px 14px', color: '#fff', fontSize: '15px',
+  borderRadius: '12px', padding: '12px 14px', color: 'hsl(var(--foreground))', fontSize: '15px',
   outline: 'none', boxSizing: 'border-box',
 };
 const labelStyle: React.CSSProperties = {
-  display: 'block', fontSize: '11px', color: '#6b7280', fontWeight: 500,
+  display: 'block', fontSize: '11px', color: 'hsl(var(--muted-foreground))', fontWeight: 500,
   textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '7px',
 };
 const boxStyle: React.CSSProperties = {
@@ -68,11 +68,11 @@ export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequest
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: 'calc(env(safe-area-inset-top, 0px) + 14px) 0 18px' }}>
           <button onClick={onBack}
             style={{ width: '38px', height: '38px', borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
-            <ArrowLeft size={17} color="#fff" />
+            <ArrowLeft size={17} color="hsl(var(--foreground))" />
           </button>
           <div>
-            <h1 style={{ color: '#fff', fontSize: '22px', fontWeight: 700, margin: 0, letterSpacing: '-0.4px' }}>OTC · Gros volumes</h1>
-            <p style={{ color: '#6b7280', fontSize: '12px', margin: '2px 0 0' }}>Au-delà de 2 000 000 CFA, accompagnement personnalisé</p>
+            <h1 style={{ color: 'hsl(var(--foreground))', fontSize: '22px', fontWeight: 700, margin: 0, letterSpacing: '-0.4px' }}>OTC · Gros volumes</h1>
+            <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px', margin: '2px 0 0' }}>Au-delà de 2 000 000 CFA, accompagnement personnalisé</p>
           </div>
         </div>
 
@@ -82,8 +82,8 @@ export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequest
             <Handshake size={24} color="rgba(255,255,255,0.85)" strokeWidth={1.8} />
           </div>
           <div>
-            <p style={{ color: '#fff', fontSize: '16px', fontWeight: 600, margin: '0 0 3px' }}>Service OTC dédié</p>
-            <p style={{ color: '#9ca3af', fontSize: '13px', margin: 0, lineHeight: 1.5 }}>Taux préférentiels et support VIP pour vos transactions de gros volume.</p>
+            <p style={{ color: 'hsl(var(--foreground))', fontSize: '16px', fontWeight: 600, margin: '0 0 3px' }}>Service OTC dédié</p>
+            <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px', margin: 0, lineHeight: 1.5 }}>Taux préférentiels et support VIP pour vos transactions de gros volume.</p>
           </div>
         </div>
 
@@ -93,7 +93,7 @@ export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequest
 
             {/* Informations personnelles */}
             <div style={boxStyle}>
-              <p style={{ color: '#fff', fontSize: '14px', fontWeight: 600, margin: '0 0 16px' }}>Informations personnelles</p>
+              <p style={{ color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600, margin: '0 0 16px' }}>Informations personnelles</p>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(0, 1fr))', gap: '14px' }}>
                 <div style={{ minWidth: 0 }}><label style={labelStyle}>Prénom *</label>
                   <input value={formData.firstName} onChange={e => set({ firstName: e.target.value })} placeholder="Votre prénom" style={inputStyle} required /></div>
@@ -108,10 +108,10 @@ export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequest
 
             {/* Détails de la demande */}
             <div style={boxStyle}>
-              <p style={{ color: '#fff', fontSize: '14px', fontWeight: 600, margin: '0 0 16px' }}>Détails de votre demande</p>
+              <p style={{ color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600, margin: '0 0 16px' }}>Détails de votre demande</p>
               <div><label style={labelStyle}>Montant souhaité (CFA) *</label>
                 <input type="number" value={formData.amount} onChange={e => set({ amount: e.target.value })} placeholder="3 000 000" min={MIN_AMOUNT} style={inputStyle} required />
-                <p style={{ color: '#4b5563', fontSize: '11px', margin: '6px 0 0' }}>Minimum : {MIN_AMOUNT.toLocaleString('fr-FR')} CFA</p>
+                <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', margin: '6px 0 0' }}>Minimum : {MIN_AMOUNT.toLocaleString('fr-FR')} CFA</p>
               </div>
               <div style={{ marginTop: '14px' }}><label style={labelStyle}>Objectif de la transaction *</label>
                 <input value={formData.purpose} onChange={e => set({ purpose: e.target.value })} placeholder="Ex : Investissement, commerce international…" style={inputStyle} required /></div>
@@ -121,7 +121,7 @@ export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequest
 
             {/* Ce qui va se passer */}
             <div style={{ ...boxStyle, background: 'rgba(255,255,255,0.03)' }}>
-              <p style={{ color: '#fff', fontSize: '14px', fontWeight: 600, margin: '0 0 14px' }}>Ce qui va se passer ensuite</p>
+              <p style={{ color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600, margin: '0 0 14px' }}>Ce qui va se passer ensuite</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {[
                   { Icon: Clock, text: 'Notre équipe analyse votre demande sous 24h' },
@@ -141,15 +141,15 @@ export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequest
 
             {/* Contact direct */}
             <div style={boxStyle}>
-              <p style={{ color: '#fff', fontSize: '14px', fontWeight: 600, margin: '0 0 14px' }}>Besoin d'aide immédiate ?</p>
+              <p style={{ color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600, margin: '0 0 14px' }}>Besoin d'aide immédiate ?</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 <a href="mailto:terangaexchange@gmail.com" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none', minWidth: 0 }}>
                   <div style={{ width: '38px', height: '38px', borderRadius: '11px', background: 'rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                     <Mail size={16} color="rgba(255,255,255,0.7)" />
                   </div>
                   <div style={{ minWidth: 0 }}>
-                    <p style={{ color: '#6b7280', fontSize: '11px', margin: '0 0 1px' }}>Email</p>
-                    <p style={{ color: '#fff', fontSize: '13px', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>terangaexchange@gmail.com</p>
+                    <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', margin: '0 0 1px' }}>Email</p>
+                    <p style={{ color: 'hsl(var(--foreground))', fontSize: '13px', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>terangaexchange@gmail.com</p>
                   </div>
                 </a>
                 <a href="https://wa.me/+14182619091" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none', minWidth: 0 }}>
@@ -157,8 +157,8 @@ export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequest
                     <MessageCircle size={16} color="rgba(255,255,255,0.7)" />
                   </div>
                   <div style={{ minWidth: 0 }}>
-                    <p style={{ color: '#6b7280', fontSize: '11px', margin: '0 0 1px' }}>WhatsApp</p>
-                    <p style={{ color: '#fff', fontSize: '13px', margin: 0 }}>+1 418-261-9091</p>
+                    <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', margin: '0 0 1px' }}>WhatsApp</p>
+                    <p style={{ color: 'hsl(var(--foreground))', fontSize: '13px', margin: 0 }}>+1 418-261-9091</p>
                   </div>
                 </a>
               </div>
@@ -171,7 +171,7 @@ export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequest
               style={{
                 padding: '12px 28px', borderRadius: '12px', border: 'none',
                 background: (loading || !canSubmit) ? 'rgba(255,255,255,0.08)' : '#ffffff',
-                color: (loading || !canSubmit) ? '#6b7280' : '#141414',
+                color: (loading || !canSubmit) ? 'hsl(var(--muted-foreground))' : '#141414',
                 fontSize: '14px', fontWeight: 700, cursor: (loading || !canSubmit) ? 'not-allowed' : 'pointer',
               }}>
               {loading ? 'Envoi en cours…' : 'Envoyer ma demande'}

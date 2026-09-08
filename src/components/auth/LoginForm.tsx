@@ -109,18 +109,18 @@ export function LoginForm() {
   };
 
   const inputClass =
-    "h-10 bg-[#1a1a1a] border border-[#2e2e2e] text-white placeholder:text-[#3a3a3a] rounded-md focus:border-[rgba(255,255,255,0.25)] focus:ring-1 focus:ring-[rgba(255,255,255,0.10)] transition-colors text-sm px-3";
+    "h-10 bg-[hsl(var(--terex-dark))] border border-[hsl(var(--terex-gray))] text-white placeholder:text-[hsl(var(--terex-gray))] rounded-md focus:border-[rgba(255,255,255,0.25)] focus:ring-1 focus:ring-[rgba(255,255,255,0.10)] transition-colors text-sm px-3";
 
   return (
     <div className="min-h-screen w-full flex">
 
       {/* ── LEFT — Formulaire ──────────────────────────────────────────── */}
-      <div className="flex-1 lg:w-[38%] flex flex-col min-h-screen" style={{ background: '#1a1a1a' }}>
+      <div className="flex-1 lg:w-[38%] flex flex-col min-h-screen" style={{ background: 'hsl(var(--terex-dark))' }}>
 
         {/* Logo tablette uniquement (masqué sur mobile et desktop) */}
         <div className="hidden md:flex lg:hidden items-center gap-3 p-6 border-b" style={{ borderColor: '#1f1f1f' }}>
           <img src="/terex-logo.png" alt="Terex" className="w-8 h-8" />
-          <span className="text-lg font-black" style={{ color: '#fff' }}>TEREX</span>
+          <span className="text-lg font-black" style={{ color: 'hsl(var(--foreground))' }}>TEREX</span>
         </div>
 
         {/* Formulaire centré */}
@@ -131,20 +131,20 @@ export function LoginForm() {
             <div className="hidden lg:flex items-center gap-3 mb-10">
               <img src="/terex-logo.png" alt="Terex" className="w-9 h-9" />
               <div>
-                <span className="text-xl font-black" style={{ color: '#fff' }}>TEREX</span>
+                <span className="text-xl font-black" style={{ color: 'hsl(var(--foreground))' }}>TEREX</span>
                 <p className="text-[10px] uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.4)' }}>Teranga Exchange</p>
               </div>
             </div>
 
             {/* Toggle onglets */}
-            <div className="flex mb-8 rounded-lg p-1" style={{ background: '#1a1a1a', border: '1px solid #2e2e2e' }}>
+            <div className="flex mb-8 rounded-lg p-1" style={{ background: 'hsl(var(--terex-dark))', border: '1px solid hsl(var(--terex-gray))' }}>
               {(['login', 'register'] as const).map(tab => (
                 <button
                   key={tab}
                   onClick={() => { setActiveTab(tab); setMode('default'); setResetSent(false); }}
                   className="flex-1 py-2 text-sm font-medium rounded-md transition-all duration-200"
                   style={{
-                    background: activeTab === tab ? '#ffffff' : 'transparent',
+                    background: activeTab === tab ? 'hsl(var(--foreground))' : 'transparent',
                     color: activeTab === tab ? '#141414' : '#6b6b6b',
                   }}
                 >
@@ -214,7 +214,7 @@ export function LoginForm() {
                       setResetSent(false);
                     }}
                     className="underline"
-                    style={{ color: '#fff' }}
+                    style={{ color: 'hsl(var(--foreground))' }}
                   >
                     Retour à la connexion
                   </button>
@@ -294,7 +294,7 @@ export function LoginForm() {
                 <p className="text-center text-xs text-gray-500">
                   Pas encore de compte ?{' '}
                   <button type="button" onClick={() => setActiveTab('register')}
-                    className="underline" style={{ color: '#fff' }}>
+                    className="underline" style={{ color: 'hsl(var(--foreground))' }}>
                     Créer un compte
                   </button>
                 </p>
@@ -371,7 +371,7 @@ export function LoginForm() {
                           return (
                             <div key={key} className="flex items-center gap-1.5">
                               {ok
-                                ? <Check className="w-3 h-3 shrink-0" style={{ color: '#fff' }} />
+                                ? <Check className="w-3 h-3 shrink-0" style={{ color: 'hsl(var(--foreground))' }} />
                                 : <X className="w-3 h-3 shrink-0 text-gray-600" />}
                               <span className={`text-xs ${ok ? 'text-gray-300' : 'text-gray-600'}`}>{label}</span>
                             </div>
@@ -399,9 +399,9 @@ export function LoginForm() {
 
                 <p className="text-xs text-gray-600 leading-relaxed">
                   En continuant, vous acceptez nos{' '}
-                  <a href="/terms" style={{ color: '#fff' }} className="hover:underline">Conditions d'utilisation</a>
+                  <a href="/terms" style={{ color: 'hsl(var(--foreground))' }} className="hover:underline">Conditions d'utilisation</a>
                   {' '}et notre{' '}
-                  <a href="/privacy" style={{ color: '#fff' }} className="hover:underline">Politique de confidentialité</a>.
+                  <a href="/privacy" style={{ color: 'hsl(var(--foreground))' }} className="hover:underline">Politique de confidentialité</a>.
                 </p>
 
                 <Button
@@ -421,7 +421,7 @@ export function LoginForm() {
                 <p className="text-center text-xs text-gray-500">
                   Déjà un compte ?{' '}
                   <button type="button" onClick={() => setActiveTab('login')}
-                    className="underline" style={{ color: '#fff' }}>
+                    className="underline" style={{ color: 'hsl(var(--foreground))' }}>
                     Se connecter
                   </button>
                 </p>
@@ -438,7 +438,7 @@ export function LoginForm() {
 
       {/* ── RIGHT — Citation ───────────────────────────────────────────── */}
       <div className="hidden lg:flex relative lg:w-[62%] flex-col overflow-hidden"
-        style={{ background: '#1a1a1a' }}>
+        style={{ background: 'hsl(var(--terex-dark))' }}>
 
         {/* Contenu centré */}
         <div className="relative z-10 flex-1 flex flex-col justify-center px-20">

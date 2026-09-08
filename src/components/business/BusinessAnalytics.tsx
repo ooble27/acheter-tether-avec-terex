@@ -9,10 +9,10 @@ import {
 } from 'recharts';
 
 const C = {
-  bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030', l4: '#383838',
-  bd: '#383838', bds: '#2a2a2a', bdh: '#484848',
+  bg: 'hsl(var(--terex-dark))', l1: 'hsl(var(--terex-darker))', l2: 'hsl(var(--terex-gray))', l3: 'hsl(var(--terex-gray))', l4: 'hsl(var(--terex-gray))',
+  bd: 'hsl(var(--terex-gray))', bds: 'hsl(var(--terex-gray))', bdh: '#484848',
   teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.08)', tealB: 'rgba(255, 255, 255,0.20)',
-  t1: '#f0f0f0', t2: '#999999', t3: '#686868',
+  t1: '#f0f0f0', t2: 'hsl(var(--muted-foreground))', t3: '#686868',
   red: '#ef4444', redT: 'rgba(239,68,68,0.08)', redB: 'rgba(239,68,68,0.16)',
   amber: '#C9A227', amberT: 'rgba(201,162,39,0.10)',
   gray2: '#9E9E9E',
@@ -295,7 +295,7 @@ export const BusinessAnalytics = React.memo(function BusinessAnalytics({ user }:
                   borderRadius: 6, border: 'none', cursor: 'pointer',
                   fontSize: 12, fontWeight: 500, fontFamily: FONT,
                   background: period === p.id ? C.teal : 'transparent',
-                  color: period === p.id ? '#fff' : C.t3,
+                  color: period === p.id ? 'hsl(var(--foreground))' : C.t3,
                   transition: 'all 0.15s',
                 }}
               >

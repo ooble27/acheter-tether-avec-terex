@@ -15,11 +15,11 @@ import { BusinessTeam } from '@/components/business/BusinessTeam';
 import { BusinessOverview } from '@/components/business/BusinessOverview';
 
 const C = {
-  // Fond aligné sur le design système normal (#1a1a1a), en gardant la hiérarchie d'élévation.
-  bg: '#1a1a1a', l1: '#1e1e1e', l2: '#232323', l3: '#2d2d2d',
-  bds: '#2a2a2a', bd: '#363636',
+  // Fond aligné sur le design système normal (hsl(var(--terex-dark))), en gardant la hiérarchie d'élévation.
+  bg: 'hsl(var(--terex-dark))', l1: 'hsl(var(--terex-darker))', l2: 'hsl(var(--terex-darker))', l3: 'hsl(var(--terex-gray))',
+  bds: 'hsl(var(--terex-gray))', bd: 'hsl(var(--terex-gray))',
   teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.08)', tealB: 'rgba(255, 255, 255,0.22)',
-  t1: '#f0f0f0', t2: '#888888', t3: '#555555',
+  t1: '#f0f0f0', t2: 'hsl(var(--muted-foreground))', t3: 'hsl(var(--muted-foreground))',
 };
 const FONT = "'Inter', sans-serif";
 const MONO = '"JetBrains Mono", Consolas, monospace';
@@ -396,7 +396,7 @@ export function BusinessLanding() {
               borderBottom: 'none',
               boxShadow: '0 20px 80px rgba(0,0,0,0.6)',
             }}>
-              <div className="biz-no-anim" style={{ width: HERO_VW, height: HERO_VH, overflow: 'hidden', background: '#1a1a1a' }}>
+              <div className="biz-no-anim" style={{ width: HERO_VW, height: HERO_VH, overflow: 'hidden', background: 'hsl(var(--terex-dark))' }}>
                 <div style={{ transform: `scale(${HERO_SCALE})`, transformOrigin: 'top left', width: HERO_INNER_W, height: HERO_INNER_H, overflow: 'hidden', pointerEvents: 'none', userSelect: 'none', willChange: 'transform' }}>
                   <div style={{ padding: '20px 28px' }}>
                     <BusinessOverview user={DEMO_USER} onNavigate={() => {}} />
