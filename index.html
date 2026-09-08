@@ -20,12 +20,15 @@
     <script>
       (function () {
         try {
-          if (localStorage.getItem('terex-theme') === 'light') {
+          var light = localStorage.getItem('terex-theme') === 'light';
+          var bg = light ? '#f5f6f8' : '#1a1a1a';
+          if (light) {
             document.documentElement.classList.add('light');
             document.documentElement.style.colorScheme = 'light';
             var m = document.getElementById('theme-color-meta');
             if (m) m.setAttribute('content', '#f5f6f8');
           }
+          document.documentElement.style.backgroundColor = bg;
         } catch (e) {}
       })();
     </script>
@@ -106,8 +109,8 @@
     <meta name="twitter:image" content="https://terangaexchange.com/terex-og.jpg?v=10">
     <meta name="twitter:image:alt" content="Terex — Plateforme d'achat et vente de USDT en Afrique de l'Ouest">
   </head>
-  <body style="background-color: #1a1a1a;">
-    <div id="root" style="background-color: #1a1a1a; min-height: 100vh;"></div>
+  <body>
+    <div id="root" style="min-height: 100vh;"></div>
     <script type="module" src="/src/main.tsx"></script>
     
     <!-- Service Worker Registration -->

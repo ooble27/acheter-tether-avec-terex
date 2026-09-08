@@ -105,10 +105,10 @@ export function PhoneBook({
               bottom: 'calc(100% + 6px)', right: 0,
               minWidth: '240px', maxWidth: 'calc(100vw - 40px)',
               zIndex: 30,
-              background: '#1f1f1f',
+              background: 'hsl(var(--card))',
               border: `1px solid ${CARD_BORDER}`,
               borderRadius: '12px', overflow: 'hidden',
-              boxShadow: '0 -8px 24px rgba(0,0,0,0.45)',
+              boxShadow: '0 -8px 24px hsl(var(--terex-accent) / 0.25)',
               maxHeight: '260px', overflowY: 'auto',
             }}>
               {phones.map(ph => {
