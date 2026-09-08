@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ShoppingCart, FileCheck, UserCheck, ArrowLeft, Calculator, Mail, Sparkles, Shield, Inbox, Trophy, Users, Clock, BookOpen, PenTool, MessageSquare, FlaskConical, Brain, Palette, GraduationCap,
@@ -22,7 +22,10 @@ import { NeobankVision } from '@/components/admin/neobank/NeobankVision';
 import { LaboAdmin } from '@/components/admin/labo/LaboAdmin';
 import { AIKnowledgeEditor } from '@/components/admin/AIKnowledgeEditor';
 import { MailStudioAdmin } from '@/components/admin/MailStudioAdmin';
-import { AcademyAdmin } from '@/components/admin/AcademyAdmin';
+// Lazy-load AcademyAdmin — heavy editor, only opened when tab is selected.
+const AcademyAdmin = lazy(() =>
+  import('@/components/admin/AcademyAdmin').then(m => ({ default: m.AcademyAdmin }))
+);
 import { useUserRole } from '@/hooks/useUserRole';
 
 const BG = '#1a1a1a';
@@ -163,7 +166,11 @@ export function AdminPortal() {
           {currentTab === 'mail-studio' && <MailStudioAdmin />}
           {currentTab === 'applications' && <JobApplicationsAdmin />}
           {currentTab === 'team' && <TeamAdmin />}
-          {currentTab === 'academy' && <AcademyAdmin />}
+          {currentTab === 'academy' && (
+            <Suspense fallback={<div style={{ minHeight: '40vh' }} />}>
+              <AcademyAdmin />
+            </Suspense>
+          )}
           {currentTab === 'neobank' && <NeobankVision />}
           {currentTab === 'labo' && <LaboAdmin />}
           {currentTab === 'ai-knowledge' && <AIKnowledgeEditor />}
