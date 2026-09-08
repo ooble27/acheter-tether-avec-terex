@@ -162,6 +162,9 @@
    directement, bord à bord. Suit le thème via la variable de marque. */
 html, body {
   background-color: hsl(var(--terex-dark));
+  /* Empêche le « rebond » de scroll (iOS/Android) de révéler une zone d'une
+     autre couleur (fond noir) en haut/bas quand on tire la page. */
+  overscroll-behavior: none;
 }
 
 /* Déclarer le schéma de couleur au navigateur : en sombre (défaut), ça empêche

@@ -197,29 +197,6 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
               va DIRECTEMENT à la page Profil (qui contient tout le menu). Pas de
               menu déroulant ni de hamburger. Masqué lorsqu'on est déjà sur le profil,
               ou en mode immersif (Academy — plein écran d'apprentissage). */}
-          {/* Bascule clair/sombre globale — masquée dans l'Academy, qui a la sienne.
-              Décalée à gauche du bouton profil quand celui-ci est visible. */}
-          {activeSection !== 'academy' && <ThemeToggle offset={activeSection !== 'profile'} />}
-
-          {activeSection !== 'profile' && activeSection !== 'academy' && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => handleNavigate('profile')}
-              aria-label="Mon profil"
-              className="fixed z-50 bg-terex-darker/95 backdrop-blur-sm border border-terex-gray/50 text-foreground hover:bg-terex-gray/80 rounded-xl w-12 h-12"
-              style={{
-                top: 'calc(env(safe-area-inset-top, 0px) + 16px)',
-                // Sur desktop, on colle le bouton juste à droite du bloc de contenu
-                // (max-width 1000px) au lieu du bord de l'écran. Sur mobile, offset
-                // habituel de 16px du bord droit.
-                right: 'max(16px, calc((100vw - 1000px) / 2 + 8px))',
-              }}
-            >
-              <User className="h-5 w-5" />
-            </Button>
-          )}
-
           <main
             className={`flex-1 ${isMobile
               ? (activeSection === 'academy' ? 'px-0 pb-0' : 'px-4 pb-20')
@@ -230,6 +207,33 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                 : (isMobile ? { paddingTop: 'calc(env(safe-area-inset-top, 0px) + 16px)' } : undefined)
             }
           >
+            {/* Contrôles (thème + profil) — DANS le flux de la page : pas de position
+                fixe, pas d'ombre. Ils défilent avec le contenu (comme sur l'accueil). */}
+            {activeSection !== 'academy' && (
+              <div style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'flex-end',
+                gap: 12, maxWidth: 1000, margin: '0 auto',
+                padding: isMobile ? '0 0 14px' : '0 0 16px',
+              }}>
+                <ThemeToggle />
+                {activeSection !== 'profile' && (
+                  <button
+                    onClick={() => handleNavigate('profile')}
+                    aria-label="Mon profil"
+                    style={{
+                      width: 38, height: 38, borderRadius: 12,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      background: 'transparent', border: 'none', cursor: 'pointer',
+                      color: 'hsl(var(--foreground))', outline: 'none',
+                      WebkitTapHighlightColor: 'transparent', flexShrink: 0,
+                    }}
+                  >
+                    <User style={{ width: 22, height: 22 }} />
+                  </button>
+                )}
+              </div>
+            )}
+
             {/* key = fondu doux à chaque changement de section (transitions fluides) */}
             <div key={activeSection} className={activeSection === 'academy' ? '' : 'section-fade'}>
               {renderContent()}

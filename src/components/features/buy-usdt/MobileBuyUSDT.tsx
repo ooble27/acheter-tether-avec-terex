@@ -261,8 +261,8 @@ export function MobileBuyUSDT() {
                     {(['XOF', 'USDT'] as const).map(c => (
                       <button key={c} onClick={() => { setInputCurrency(c); setRawAmount(''); }}
                         style={{ padding: '5px 12px', borderRadius: '7px', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: 600, outline: 'none',
-                          background: inputCurrency === c ? BTN : 'transparent',
-                          color: inputCurrency === c ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))', transition: 'all 0.15s' }}>
+                          background: inputCurrency === c ? 'hsl(var(--terex-accent))' : 'transparent',
+                          color: inputCurrency === c ? 'hsl(var(--terex-accent-fg))' : 'hsl(var(--muted-foreground))', transition: 'all 0.15s' }}>
                         {c === 'XOF' ? 'CFA' : 'USDT'}
                       </button>
                     ))}
