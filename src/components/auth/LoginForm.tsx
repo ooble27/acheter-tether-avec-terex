@@ -109,7 +109,7 @@ export function LoginForm() {
   };
 
   const inputClass =
-    "h-10 bg-[hsl(var(--terex-dark))] border border-[hsl(var(--terex-gray))] text-white placeholder:text-[hsl(var(--terex-gray))] rounded-md focus:border-[rgba(255,255,255,0.25)] focus:ring-1 focus:ring-[rgba(255,255,255,0.10)] transition-colors text-sm px-3";
+    "h-10 bg-[hsl(var(--terex-dark))] border border-[hsl(var(--terex-gray))] text-white placeholder:text-[hsl(var(--terex-gray))] rounded-md focus:border-[hsl(var(--terex-accent) / 0.25)] focus:ring-1 focus:ring-[hsl(var(--terex-accent) / 0.10)] transition-colors text-sm px-3";
 
   return (
     <div className="min-h-screen w-full flex">
@@ -132,7 +132,7 @@ export function LoginForm() {
               <img src="/terex-logo.png" alt="Terex" className="w-9 h-9" />
               <div>
                 <span className="text-xl font-black" style={{ color: 'hsl(var(--foreground))' }}>TEREX</span>
-                <p className="text-[10px] uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.4)' }}>Teranga Exchange</p>
+                <p className="text-[10px] uppercase tracking-widest" style={{ color: 'hsl(var(--terex-accent) / 0.4)' }}>Teranga Exchange</p>
               </div>
             </div>
 
@@ -145,7 +145,7 @@ export function LoginForm() {
                   className="flex-1 py-2 text-sm font-medium rounded-md transition-all duration-200"
                   style={{
                     background: activeTab === tab ? 'hsl(var(--foreground))' : 'transparent',
-                    color: activeTab === tab ? '#141414' : '#6b6b6b',
+                    color: activeTab === tab ? 'hsl(var(--terex-accent-fg))' : '#6b6b6b',
                   }}
                 >
                   {tab === 'login' ? 'Se connecter' : "S'inscrire"}
@@ -167,9 +167,9 @@ export function LoginForm() {
                   <div
                     className="rounded-md p-4 text-sm"
                     style={{
-                      background: 'rgba(255,255,255,0.04)',
-                      border: '1px solid rgba(255,255,255,0.10)',
-                      color: 'rgba(255,255,255,0.85)',
+                      background: 'hsl(var(--terex-accent) / 0.04)',
+                      border: '1px solid hsl(var(--terex-accent) / 0.10)',
+                      color: 'hsl(var(--terex-accent) / 0.85)',
                     }}
                   >
                     <p className="mb-2 font-medium">Email envoyé à {resetEmail}</p>
@@ -200,7 +200,7 @@ export function LoginForm() {
                     type="submit"
                     disabled={isLoading}
                     className="w-full h-10 font-medium rounded-md text-sm transition-all"
-                    style={{ background: '#ffffff', color: '#141414', border: 'none' }}
+                    style={{ background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', border: 'none' }}
                   >
                     {isLoading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Envoi…</> : 'Envoyer le lien'}
                   </Button>
@@ -255,7 +255,7 @@ export function LoginForm() {
                           setMode('forgot');
                         }}
                         className="text-xs underline"
-                        style={{ color: 'rgba(255,255,255,0.7)' }}
+                        style={{ color: 'hsl(var(--terex-accent) / 0.7)' }}
                         disabled={isLoading}
                       >
                         Mot de passe oublié ?
@@ -286,7 +286,7 @@ export function LoginForm() {
                   type="submit"
                   disabled={isLoading}
                   className="w-full h-10 font-medium rounded-md text-sm transition-all"
-                  style={{ background: '#ffffff', color: '#141414', border: 'none' }}
+                  style={{ background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', border: 'none' }}
                 >
                   {isLoading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Connexion…</> : 'Se connecter'}
                 </Button>
@@ -409,8 +409,8 @@ export function LoginForm() {
                   disabled={isLoading || !isPasswordValid}
                   className="w-full h-10 font-medium rounded-md text-sm transition-all"
                   style={{
-                    background: '#ffffff',
-                    color: '#141414',
+                    background: 'hsl(var(--terex-accent))',
+                    color: 'hsl(var(--terex-accent-fg))',
                     border: 'none',
                     opacity: !isPasswordValid && !isLoading ? 0.45 : 1,
                   }}
@@ -445,7 +445,7 @@ export function LoginForm() {
 
           {/* Icône guillemet */}
           <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-10"
-            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+            style={{ background: 'hsl(var(--terex-accent) / 0.04)', border: '1px solid hsl(var(--terex-accent) / 0.08)' }}>
             <Quote className="w-5 h-5 text-white opacity-60" />
           </div>
 
@@ -458,15 +458,15 @@ export function LoginForm() {
           <div className="flex items-center gap-4">
             <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 font-semibold text-sm"
               style={{
-                background: 'rgba(255,255,255,0.06)',
-                border: '1px solid rgba(255,255,255,0.12)',
-                color: 'rgba(255,255,255,0.7)',
+                background: 'hsl(var(--terex-accent) / 0.06)',
+                border: '1px solid hsl(var(--terex-accent) / 0.12)',
+                color: 'hsl(var(--terex-accent) / 0.7)',
               }}>
               SN
             </div>
             <div>
               <p className="text-sm font-semibold text-white">Satoshi Nakamoto</p>
-              <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>Créateur du Bitcoin</p>
+              <p className="text-xs mt-0.5" style={{ color: 'hsl(var(--terex-accent) / 0.35)' }}>Créateur du Bitcoin</p>
             </div>
           </div>
         </div>

@@ -33,7 +33,7 @@ interface PaymentInstructionsProps {
 }
 
 const CARD_BG = 'hsl(var(--terex-darker))';
-const BORDER = 'rgba(255,255,255,0.07)';
+const BORDER = 'hsl(var(--terex-accent) / 0.07)';
 
 export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfirmed }: PaymentInstructionsProps) {
   const [copiedField, setCopiedField] = useState<string | null>(null);
@@ -112,14 +112,14 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
   };
 
   const CopyRow = ({ label, value, field }: { label: string; value: string; field: string }) => (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 16px', borderBottom: `1px solid rgba(255,255,255,0.06)` }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 16px', borderBottom: `1px solid hsl(var(--terex-accent) / 0.06)` }}>
       <div>
-        <div style={{ color: 'rgba(255,255,255,0.45)', fontSize: '11px', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</div>
+        <div style={{ color: 'hsl(var(--terex-accent) / 0.45)', fontSize: '11px', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</div>
         <div style={{ color: 'hsl(var(--foreground))', fontSize: '15px', fontWeight: 600, fontFamily: field === 'number' ? 'monospace' : undefined }}>{value}</div>
       </div>
       <button
         onClick={() => copyToClipboard(value, field)}
-        style={{ background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: '10px', padding: '8px 12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', color: copiedField === field ? '#4ade80' : 'rgba(255,255,255,0.6)', fontSize: '12px', fontWeight: 500, transition: 'all 0.15s' }}
+        style={{ background: 'hsl(var(--terex-accent) / 0.06)', border: 'none', borderRadius: '10px', padding: '8px 12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', color: copiedField === field ? '#4ade80' : 'hsl(var(--terex-accent) / 0.6)', fontSize: '12px', fontWeight: 500, transition: 'all 0.15s' }}
       >
         {copiedField === field ? <CheckCircle size={14} /> : <Copy size={14} />} Copier
       </button>
@@ -133,7 +133,7 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
       <div style={{ minHeight: '100vh', background: 'hsl(var(--terex-dark))' }}>
         <div style={{ maxWidth: '520px', margin: '0 auto', padding: '20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
-            <button onClick={onBack} style={{ background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: '50%', width: '38px', height: '38px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <button onClick={onBack} style={{ background: 'hsl(var(--terex-accent) / 0.06)', border: 'none', borderRadius: '50%', width: '38px', height: '38px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <ArrowLeft size={18} color="hsl(var(--foreground))" />
             </button>
             <div>
@@ -154,18 +154,18 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
 
           <div style={{ background: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '16px', marginBottom: '16px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-              <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Vous recevez</span>
+              <span style={{ color: 'hsl(var(--terex-accent) / 0.45)', fontSize: '13px' }}>Vous recevez</span>
               <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 600 }}>{orderData.usdtAmount} USDT</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Réseau</span>
+              <span style={{ color: 'hsl(var(--terex-accent) / 0.45)', fontSize: '13px' }}>Réseau</span>
               <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px' }}>{orderData.network}</span>
             </div>
           </div>
 
           <button
             onClick={onPaymentConfirmed}
-            style={{ width: '100%', background: '#fff', color: '#141414', border: 'none', borderRadius: '14px', padding: '15px', fontSize: '15px', fontWeight: 700, cursor: 'pointer' }}
+            style={{ width: '100%', background: '#fff', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: '14px', padding: '15px', fontSize: '15px', fontWeight: 700, cursor: 'pointer' }}
           >
             J'ai effectué le virement
           </button>
@@ -180,7 +180,7 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
       <div style={{ maxWidth: '520px', margin: '0 auto', padding: '20px' }}>
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
-          <button onClick={onBack} style={{ background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: '50%', width: '38px', height: '38px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <button onClick={onBack} style={{ background: 'hsl(var(--terex-accent) / 0.06)', border: 'none', borderRadius: '50%', width: '38px', height: '38px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <ArrowLeft size={18} color="hsl(var(--foreground))" />
           </button>
           <div>
@@ -195,15 +195,15 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
         {/* Order recap — affichage épuré, frais Wave silencieusement inclus dans le lien */}
         <div style={{ background: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '16px', marginBottom: '16px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-            <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Montant</span>
+            <span style={{ color: 'hsl(var(--terex-accent) / 0.45)', fontSize: '13px' }}>Montant</span>
             <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 600 }}>{baseAmount.toLocaleString('fr-FR')} {orderData.currency}</span>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-            <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Vous recevez</span>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', paddingTop: '8px', borderTop: '1px solid hsl(var(--terex-accent) / 0.06)' }}>
+            <span style={{ color: 'hsl(var(--terex-accent) / 0.45)', fontSize: '13px' }}>Vous recevez</span>
             <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 600 }}>{orderData.usdtAmount} USDT</span>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Réseau</span>
+            <span style={{ color: 'hsl(var(--terex-accent) / 0.45)', fontSize: '13px' }}>Réseau</span>
             <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px' }}>{orderData.network}</span>
           </div>
         </div>
@@ -214,7 +214,7 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
             <CheckCircle size={18} color="#4ade80" />
             <p style={{ color: '#4ade80', fontSize: '14px', fontWeight: 600, margin: 0 }}>Prêt à payer</p>
           </div>
-          <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '13px', margin: '0 0 16px', lineHeight: 1.5 }}>
+          <p style={{ color: 'hsl(var(--terex-accent) / 0.55)', fontSize: '13px', margin: '0 0 16px', lineHeight: 1.5 }}>
             Cliquez ci-dessous pour ouvrir Wave et effectuer le paiement.
           </p>
           <a
@@ -235,7 +235,7 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
 
         <button
           onClick={onPaymentConfirmed}
-          style={{ width: '100%', background: '#fff', color: '#141414', border: 'none', borderRadius: '14px', padding: '15px', fontSize: '15px', fontWeight: 700, cursor: 'pointer' }}
+          style={{ width: '100%', background: '#fff', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: '14px', padding: '15px', fontSize: '15px', fontWeight: 700, cursor: 'pointer' }}
         >
           J'ai payé
         </button>

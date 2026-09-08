@@ -54,6 +54,7 @@
     --terex-dark: 0 0% 10%;          /* #1a1a1a  main ground */
     --terex-darker: 0 0% 12%;        /* #1e1e1e  raised cards */
     --terex-accent: 0 0% 100%;       /* #ffffff  accent / primary text-on-dark */
+    --terex-accent-fg: 0 0% 7%;      /* text ON the accent (dark on white button) */
     --terex-accent-light: 0 0% 90%;  /* #e5e5e5 */
     --terex-gray: 0 0% 16%;          /* #2a2a2a  borders / muted surfaces */
     --terex-gray-light: 0 0% 23%;    /* #3a3a3a */
@@ -104,6 +105,7 @@
     --terex-dark: 220 20% 97%;       /* light ground */
     --terex-darker: 0 0% 100%;       /* white cards */
     --terex-accent: 213 12% 12%;     /* accent flips to near-black */
+    --terex-accent-fg: 0 0% 100%;    /* white text on the near-black accent */
     --terex-accent-light: 213 10% 25%;
     --terex-gray: 220 13% 90%;       /* light borders / surfaces */
     --terex-gray-light: 214 12% 84%;
@@ -284,13 +286,13 @@ html, body {
 }
 
 .gradient-button {
-  background: #ffffff;
-  color: #141414 !important;
+  background: hsl(var(--terex-accent));
+  color: hsl(var(--terex-accent-fg)) !important;
   transition: all 0.2s ease;
 }
 
 .gradient-button:hover {
-  background: #e9e9e9;
+  background: hsl(var(--terex-accent-hover, var(--terex-accent)));
   transform: translateY(-1px);
 }
 

@@ -9,7 +9,7 @@ import {
 const C = {
   bg: 'hsl(var(--terex-dark))', l1: 'hsl(var(--terex-darker))', l2: 'hsl(var(--terex-gray))', l3: 'hsl(var(--terex-gray))',
   bd: 'hsl(var(--terex-gray))', bds: 'hsl(var(--terex-gray))',
-  teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.08)', tealB: 'rgba(255, 255, 255,0.22)',
+  teal: '#ffffff', tealH: '#2d7870', tealT: 'hsl(var(--terex-accent) / 0.08)', tealB: 'hsl(var(--terex-accent) / 0.22)',
   t1: '#f0f0f0', t2: 'hsl(var(--muted-foreground))', t3: '#686868',
   red: '#ef4444', redT: 'rgba(239,68,68,0.08)', redB: 'rgba(239,68,68,0.22)',
 };
@@ -59,7 +59,7 @@ function GhostBtn({ children, onClick, style }: {
   const [hov, setHov] = useState(false);
   return (
     <button onClick={onClick}
-      style={{ background: hov ? C.l3 : 'rgba(255,255,255,0.04)', color: C.t2, border: `1px solid ${C.bds}`, borderRadius: 9, padding: '9px 18px', fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: FONT, transition: 'all 0.12s', ...style }}
+      style={{ background: hov ? C.l3 : 'hsl(var(--terex-accent) / 0.04)', color: C.t2, border: `1px solid ${C.bds}`, borderRadius: 9, padding: '9px 18px', fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: FONT, transition: 'all 0.12s', ...style }}
       onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
       {children}
     </button>
@@ -72,9 +72,9 @@ function DocItem({ doc, onSubmit }: { doc: Doc; onSubmit: (id: string) => void }
   const [modal, setModal] = useState(false);
 
   const ST: Record<DocStatus, { label: string; color: string; bg: string; border: string }> = {
-    required:  { label: 'Requis',          color: C.t3,  bg: 'rgba(255,255,255,0.04)', border: C.bds },
-    submitted: { label: 'En vérification', color: C.t2,  bg: 'rgba(255,255,255,0.06)', border: C.bd  },
-    verified:  { label: 'Approuvé',        color: C.t2,  bg: 'rgba(255,255,255,0.06)', border: C.bd  },
+    required:  { label: 'Requis',          color: C.t3,  bg: 'hsl(var(--terex-accent) / 0.04)', border: C.bds },
+    submitted: { label: 'En vérification', color: C.t2,  bg: 'hsl(var(--terex-accent) / 0.06)', border: C.bd  },
+    verified:  { label: 'Approuvé',        color: C.t2,  bg: 'hsl(var(--terex-accent) / 0.06)', border: C.bd  },
     expired:   { label: 'Expiré',          color: C.red, bg: C.redT,                   border: C.redB },
   };
   const s = ST[doc.status];
@@ -153,7 +153,7 @@ function VerifyNextPage({ onBack, docs, onSubmit }: {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <button onClick={onBack}
-            style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.04)', border: `1px solid ${C.bds}`, cursor: 'pointer', color: C.t3, fontSize: 12, padding: '7px 12px', borderRadius: 9, fontFamily: FONT, transition: 'all 0.13s' }}
+            style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'hsl(var(--terex-accent) / 0.04)', border: `1px solid ${C.bds}`, cursor: 'pointer', color: C.t3, fontSize: 12, padding: '7px 12px', borderRadius: 9, fontFamily: FONT, transition: 'all 0.13s' }}
             onMouseEnter={e => { e.currentTarget.style.color = C.t1; e.currentTarget.style.borderColor = C.bd; }}
             onMouseLeave={e => { e.currentTarget.style.color = C.t3; e.currentTarget.style.borderColor = C.bds; }}>
             <ArrowLeft size={13} /> Conformité
@@ -258,7 +258,7 @@ function LimitRequestPage({ onBack }: { onBack: () => void }) {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <button onClick={onBack}
-            style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.04)', border: `1px solid ${C.bds}`, cursor: 'pointer', color: C.t3, fontSize: 12, padding: '7px 12px', borderRadius: 9, fontFamily: FONT, transition: 'all 0.13s' }}
+            style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'hsl(var(--terex-accent) / 0.04)', border: `1px solid ${C.bds}`, cursor: 'pointer', color: C.t3, fontSize: 12, padding: '7px 12px', borderRadius: 9, fontFamily: FONT, transition: 'all 0.13s' }}
             onMouseEnter={e => { e.currentTarget.style.color = C.t1; e.currentTarget.style.borderColor = C.bd; }}
             onMouseLeave={e => { e.currentTarget.style.color = C.t3; e.currentTarget.style.borderColor = C.bds; }}>
             <ArrowLeft size={13} /> Conformité
@@ -279,7 +279,7 @@ function LimitRequestPage({ onBack }: { onBack: () => void }) {
 
       {sent ? (
         <div style={{ ...card, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '56px 32px', gap: 16 }}>
-          <div style={{ width: 52, height: 52, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: `1px solid ${C.bd}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ width: 52, height: 52, borderRadius: '50%', background: 'hsl(var(--terex-accent) / 0.06)', border: `1px solid ${C.bd}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Check size={22} color={C.t2} strokeWidth={2.5} />
           </div>
           <h3 style={{ color: C.t1, fontSize: 18, fontWeight: 700, margin: 0 }}>Demande envoyée</h3>
@@ -459,7 +459,7 @@ function CompliancePolicyPage({ onBack }: { onBack: () => void }) {
       {/* En-tête */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
         <button onClick={onBack}
-          style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.04)', border: `1px solid ${C.bds}`, cursor: 'pointer', color: C.t3, fontSize: 12, padding: '7px 12px', borderRadius: 9, fontFamily: FONT, transition: 'all 0.13s' }}
+          style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'hsl(var(--terex-accent) / 0.04)', border: `1px solid ${C.bds}`, cursor: 'pointer', color: C.t3, fontSize: 12, padding: '7px 12px', borderRadius: 9, fontFamily: FONT, transition: 'all 0.13s' }}
           onMouseEnter={e => { e.currentTarget.style.color = C.t1; e.currentTarget.style.borderColor = C.bd; }}
           onMouseLeave={e => { e.currentTarget.style.color = C.t3; e.currentTarget.style.borderColor = C.bds; }}>
           <ArrowLeft size={13} /> Conformité
@@ -629,7 +629,7 @@ export function BusinessCompliance({ user: _user }: { user: { email: string; nam
 
           {/* Niveau 1 — collapsé */}
           <div style={{ ...cardSt, padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 14 }}>
-            <div style={{ width: 30, height: 30, borderRadius: 8, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', border: `1px solid ${C.bd}` }}>
+            <div style={{ width: 30, height: 30, borderRadius: 8, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'hsl(var(--terex-accent) / 0.05)', border: `1px solid ${C.bd}` }}>
               <Check size={13} color={C.t2} strokeWidth={2.5} />
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
@@ -683,7 +683,7 @@ export function BusinessCompliance({ user: _user }: { user: { email: string; nam
                 const locked = lv.state === 'locked';
                 return (
                   <div key={lv.n} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '11px 20px', borderBottom: i < LEVEL_INFO.length - 1 ? `1px solid ${C.bds}` : 'none', opacity: locked ? 0.38 : 1 }}>
-                    <div style={{ width: 28, height: 28, borderRadius: 8, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: active ? 'rgba(255,255,255,0.07)' : C.l2, border: `1px solid ${active ? C.bd : C.bds}` }}>
+                    <div style={{ width: 28, height: 28, borderRadius: 8, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: active ? 'hsl(var(--terex-accent) / 0.07)' : C.l2, border: `1px solid ${active ? C.bd : C.bds}` }}>
                       {done   && <Check size={12} color={C.t2} strokeWidth={2.5} />}
                       {!done  && <span style={{ fontSize: 11, fontWeight: 700, color: active ? C.t2 : C.t3, fontFamily: MONO }}>{lv.n}</span>}
                     </div>
@@ -734,7 +734,7 @@ export function BusinessCompliance({ user: _user }: { user: { email: string; nam
                 return (
                   <button key={a.label} onClick={a.action}
                     style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 13, padding: '12px 20px', borderBottom: i < arr.length - 1 ? `1px solid ${C.bds}` : 'none', background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: FONT, textAlign: 'left', transition: 'background 0.12s' }}
-                    onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.03)')}
+                    onMouseEnter={e => (e.currentTarget.style.background = 'hsl(var(--terex-accent) / 0.03)')}
                     onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
                     <div style={{ width: 30, height: 30, borderRadius: 8, background: C.l2, border: `1px solid ${C.bds}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                       <Icon size={13} color={C.t3} />

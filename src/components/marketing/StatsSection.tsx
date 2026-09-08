@@ -20,7 +20,7 @@ export function StatsSection() {
           </h2>
           <p
             className="text-base sm:text-lg max-w-2xl mt-5"
-            style={{ color: 'rgba(255,255,255,0.55)' }}
+            style={{ color: 'hsl(var(--terex-accent) / 0.55)' }}
           >
             Une infrastructure simple et fiable pour acheter, vendre et
             transférer des USDT partout en Afrique de l'Ouest.
@@ -28,7 +28,7 @@ export function StatsSection() {
         </AnimatedSection>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-px mt-16 sm:mt-20 rounded-2xl overflow-hidden"
-          style={{ border: '1px solid rgba(255,255,255,0.07)', backgroundColor: 'rgba(255,255,255,0.07)' }}
+          style={{ border: '1px solid hsl(var(--terex-accent) / 0.07)', backgroundColor: 'hsl(var(--terex-accent) / 0.07)' }}
         >
           {stats.map((stat) => (
             <div
@@ -41,7 +41,7 @@ export function StatsSection() {
               </div>
               <div
                 className="text-sm"
-                style={{ color: 'rgba(255,255,255,0.45)' }}
+                style={{ color: 'hsl(var(--terex-accent) / 0.45)' }}
               >
                 {stat.label}
               </div>

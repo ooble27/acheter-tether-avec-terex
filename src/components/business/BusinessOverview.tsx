@@ -13,7 +13,7 @@ interface Props {
 const C = {
   bg: 'hsl(var(--terex-dark))', l1: 'hsl(var(--terex-darker))', l2: 'hsl(var(--terex-gray))', l3: 'hsl(var(--terex-gray))', l4: 'hsl(var(--terex-gray))',
   bd: 'hsl(var(--terex-gray))', bds: 'hsl(var(--terex-gray))', bdh: '#484848',
-  teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.08)', tealB: 'rgba(255, 255, 255,0.20)',
+  teal: '#ffffff', tealH: '#2d7870', tealT: 'hsl(var(--terex-accent) / 0.08)', tealB: 'hsl(var(--terex-accent) / 0.20)',
   t1: '#f0f0f0', t2: 'hsl(var(--muted-foreground))', t3: 'hsl(var(--muted-foreground))',
 };
 const FONT = "'Inter', sans-serif";
@@ -32,7 +32,7 @@ function Avatar({ name, size = 34 }: { name: string; size?: number }) {
   return (
     <div style={{
       width: size, height: size, borderRadius: 9,
-      background: 'rgba(255, 255, 255,0.12)', color: C.teal,
+      background: 'hsl(var(--terex-accent) / 0.12)', color: C.teal,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       fontSize: size * 0.36, fontWeight: 600, flexShrink: 0,
     }}>{s}</div>
@@ -160,7 +160,7 @@ export function BusinessOverview({ user, onNavigate }: Props) {
               <div style={{ marginBottom: 28 }}>
                 <p style={{ fontSize: 12, color: C.t3, margin: '0 0 4px', textTransform: 'capitalize' }}>{today}</p>
                 <p style={{ fontSize: 16, fontWeight: 600, color: C.t1, margin: '0 0 20px' }}>Bonjour, {firstName}</p>
-                <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${C.bds}`, borderRadius: 12, padding: '20px 22px', marginBottom: 4 }}>
+                <div style={{ background: 'hsl(var(--terex-accent) / 0.03)', border: `1px solid ${C.bds}`, borderRadius: 12, padding: '20px 22px', marginBottom: 4 }}>
                   <p style={{ fontSize: 13, fontWeight: 500, color: C.t2, margin: '0 0 6px' }}>Votre activité apparaîtra ici</p>
                   <p style={{ fontSize: 12, color: C.t3, margin: 0, lineHeight: 1.6 }}>
                     Envoyez votre premier paiement USDT pour commencer à suivre votre volume mensuel.
@@ -214,7 +214,7 @@ export function BusinessOverview({ user, onNavigate }: Props) {
                       <stop offset="100%" stopColor={C.teal} stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--terex-accent) / 0.04)" vertical={false} />
                   <XAxis dataKey="j" tick={{ fill: C.t3, fontSize: 10 }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fill: C.t3, fontSize: 10 }} axisLine={false} tickLine={false}
                     tickFormatter={v => v >= 1000 ? `${(v/1000).toFixed(0)}k` : String(v)} />
@@ -312,7 +312,7 @@ export function BusinessOverview({ user, onNavigate }: Props) {
               recent.map((tx, i) => (
                 <div key={tx.id}
                   style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 20px', borderBottom: i < recent.length - 1 ? `1px solid ${C.bds}` : 'none', transition: 'background .1s' }}
-                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'hsl(var(--terex-accent) / 0.02)'; }}
                   onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
                 >
                   <Avatar name={tx.supplierName || '?'} size={30} />
@@ -350,7 +350,7 @@ export function BusinessOverview({ user, onNavigate }: Props) {
                   borderBottom: i < arr.length - 1 ? `1px solid ${C.bds}` : 'none',
                   cursor: 'pointer', fontFamily: FONT, transition: 'background .1s', textAlign: 'left',
                 }}
-                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.025)'; }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'hsl(var(--terex-accent) / 0.025)'; }}
                   onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
                 >
                   <div style={{

@@ -25,8 +25,8 @@ export function BlockchainMetrics() {
       {/* Grid pattern overlay */}
       <div className="absolute inset-0" style={{
         backgroundImage: `
-          linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px)
+          linear-gradient(hsl(var(--terex-accent) / 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, hsl(var(--terex-accent) / 0.05) 1px, transparent 1px)
         `,
         backgroundSize: '20px 20px'
       }}></div>

@@ -19,7 +19,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
     <section className="relative" style={{ background: 'hsl(var(--terex-dark))' }}>
       {/* Halo doux, centré, très subtil */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[520px]" style={{
-        background: 'radial-gradient(50% 60% at 50% 0%, rgba(255,255,255,0.045) 0%, transparent 75%)',
+        background: 'radial-gradient(50% 60% at 50% 0%, hsl(var(--terex-accent) / 0.045) 0%, transparent 75%)',
       }} />
 
       <div className="relative max-w-5xl mx-auto px-5 sm:px-6 pt-16 pb-20 lg:pt-24 lg:pb-28 text-center">
@@ -27,12 +27,12 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
         {/* Badge */}
         <AnimatedSection delay={60}>
           <div className="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 mb-7"
-            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+            style={{ background: 'hsl(var(--terex-accent) / 0.04)', border: '1px solid hsl(var(--terex-accent) / 0.08)' }}>
             <span className="relative flex h-1.5 w-1.5">
               <span className="absolute inline-flex h-full w-full rounded-full opacity-60 animate-ping" style={{ background: '#fff' }} />
               <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ background: '#fff' }} />
             </span>
-            <span className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.7)' }}>Teranga Exchange</span>
+            <span className="text-xs font-medium" style={{ color: 'hsl(var(--terex-accent) / 0.7)' }}>Teranga Exchange</span>
           </div>
         </AnimatedSection>
 
@@ -49,7 +49,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
 
         {/* Sous-titre */}
         <AnimatedSection delay={180}>
-          <p className="mt-6 mx-auto text-base lg:text-lg" style={{ color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, maxWidth: '46ch' }}>
+          <p className="mt-6 mx-auto text-base lg:text-lg" style={{ color: 'hsl(var(--terex-accent) / 0.55)', lineHeight: 1.6, maxWidth: '46ch' }}>
             Achetez, vendez et transférez de l'argent vers l'Afrique en quelques minutes. Rapide, sécurisé, au meilleur taux CFA.
           </p>
         </AnimatedSection>
@@ -59,13 +59,13 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
           <div className="mt-9 flex flex-col sm:flex-row gap-3 justify-center">
             <button onClick={user ? handleDashboard : handleGetStarted}
               className="group inline-flex items-center justify-center gap-2 rounded-xl px-7 h-12 text-[15px] font-bold transition-transform hover:scale-[1.02]"
-              style={{ background: '#ffffff', color: '#141414' }}>
+              style={{ background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))' }}>
               {user ? 'Tableau de bord' : 'Commencer gratuitement'}
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
             </button>
             <button onClick={handleHowItWorks}
               className="inline-flex items-center justify-center rounded-xl px-7 h-12 text-[15px] font-semibold transition-colors"
-              style={{ background: 'hsl(var(--terex-gray))', border: '1px solid rgba(255,255,255,0.08)', color: 'hsl(var(--foreground))' }}>
+              style={{ background: 'hsl(var(--terex-gray))', border: '1px solid hsl(var(--terex-accent) / 0.08)', color: 'hsl(var(--foreground))' }}>
               Comment ça marche
             </button>
           </div>
@@ -76,8 +76,8 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
           <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 justify-center">
             {[{ Icon: Shield, text: 'Sécurisé · KYC' }, { Icon: Zap, text: 'En moins de 5 min' }, { Icon: Globe, text: '6 pays d\'Afrique' }].map(({ Icon, text }) => (
               <div key={text} className="flex items-center gap-2">
-                <Icon className="w-4 h-4" style={{ color: 'rgba(255,255,255,0.45)' }} />
-                <span className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>{text}</span>
+                <Icon className="w-4 h-4" style={{ color: 'hsl(var(--terex-accent) / 0.45)' }} />
+                <span className="text-xs font-medium" style={{ color: 'hsl(var(--terex-accent) / 0.5)' }}>{text}</span>
               </div>
             ))}
           </div>
@@ -103,23 +103,23 @@ function ProductPreview() {
   ];
   return (
     <div className="mx-auto text-left" style={{
-      maxWidth: '780px', background: 'hsl(var(--terex-darker))', border: '1px solid rgba(255,255,255,0.08)',
+      maxWidth: '780px', background: 'hsl(var(--terex-darker))', border: '1px solid hsl(var(--terex-accent) / 0.08)',
       borderRadius: '24px', padding: '10px', boxShadow: '0 40px 120px rgba(0,0,0,0.6)',
     }}>
       {/* Barre fenêtre */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 10px 14px' }}>
-        {['rgba(255,255,255,0.18)', 'rgba(255,255,255,0.12)', 'rgba(255,255,255,0.08)'].map((c, i) => (
+        {['hsl(var(--terex-accent) / 0.18)', 'hsl(var(--terex-accent) / 0.12)', 'hsl(var(--terex-accent) / 0.08)'].map((c, i) => (
           <span key={i} style={{ width: 10, height: 10, borderRadius: '50%', background: c }} />
         ))}
       </div>
-      <div style={{ background: 'hsl(var(--terex-dark))', borderRadius: '16px', padding: '22px', border: '1px solid rgba(255,255,255,0.05)' }}>
+      <div style={{ background: 'hsl(var(--terex-dark))', borderRadius: '16px', padding: '22px', border: '1px solid hsl(var(--terex-accent) / 0.05)' }}>
         {/* Rate card */}
-        <div style={{ background: 'hsl(var(--terex-darker))', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '18px', padding: '18px', marginBottom: '14px' }}>
+        <div style={{ background: 'hsl(var(--terex-darker))', border: '1px solid hsl(var(--terex-accent) / 0.07)', borderRadius: '18px', padding: '18px', marginBottom: '14px' }}>
           <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 8px' }}>Taux USDT / CFA</p>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
               <span style={{ color: 'hsl(var(--foreground))', fontSize: 34, fontWeight: 700, letterSpacing: '-1px', lineHeight: 1 }}>660</span>
-              <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: 14, fontWeight: 600 }}>CFA</span>
+              <span style={{ color: 'hsl(var(--terex-accent) / 0.45)', fontSize: 14, fontWeight: 600 }}>CFA</span>
             </div>
             <img src={TETHER} alt="USDT" style={{ width: 38, height: 38, opacity: 0.9 }} />
           </div>
@@ -127,12 +127,12 @@ function ProductPreview() {
         {/* Quick actions */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
           {actions.map(({ Icon, label, sub }) => (
-            <div key={label} style={{ background: 'hsl(var(--terex-darker))', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', padding: '14px' }}>
-              <div style={{ width: 38, height: 38, borderRadius: 11, background: 'rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 10 }}>
-                <Icon className="w-[18px] h-[18px]" style={{ color: 'rgba(255,255,255,0.85)' }} />
+            <div key={label} style={{ background: 'hsl(var(--terex-darker))', border: '1px solid hsl(var(--terex-accent) / 0.07)', borderRadius: '16px', padding: '14px' }}>
+              <div style={{ width: 38, height: 38, borderRadius: 11, background: 'hsl(var(--terex-accent) / 0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 10 }}>
+                <Icon className="w-[18px] h-[18px]" style={{ color: 'hsl(var(--terex-accent) / 0.85)' }} />
               </div>
               <p style={{ color: 'hsl(var(--foreground))', fontSize: 13, fontWeight: 600, margin: '0 0 1px' }}>{label}</p>
-              <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 11, margin: 0 }}>{sub}</p>
+              <p style={{ color: 'hsl(var(--terex-accent) / 0.3)', fontSize: 11, margin: 0 }}>{sub}</p>
             </div>
           ))}
         </div>

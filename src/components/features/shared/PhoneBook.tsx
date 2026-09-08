@@ -13,7 +13,7 @@ interface PhoneBookProps {
   onLabelChange: (v: string) => void;
 }
 
-const CARD_BORDER = 'rgba(255,255,255,0.10)';
+const CARD_BORDER = 'hsl(var(--terex-accent) / 0.10)';
 
 /**
  * Sélecteur de numéro Mobile Money — même style que AddressBook :
@@ -65,7 +65,7 @@ export function PhoneBook({
             display: 'flex', alignItems: 'center', gap: '10px',
             padding: '12px 8px 12px 14px', borderRadius: '14px',
             border: `1px solid ${CARD_BORDER}`,
-            background: 'rgba(255,255,255,0.03)',
+            background: 'hsl(var(--terex-accent) / 0.03)',
           }}>
             <img src={p.logo} alt="" style={{ width: '30px', height: '30px', borderRadius: '50%', objectFit: 'contain', background: '#fff', flexShrink: 0 }} />
             <div style={{ minWidth: 0, flex: 1 }}>
@@ -75,7 +75,7 @@ export function PhoneBook({
                 </div>
               )}
               <div style={{
-                color: selected?.label ? 'rgba(255,255,255,0.65)' : '#fff',
+                color: selected?.label ? 'hsl(var(--terex-accent) / 0.65)' : '#fff',
                 fontSize: '13px',
                 fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
               }}>
@@ -89,10 +89,10 @@ export function PhoneBook({
               style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 width: '32px', height: '32px', borderRadius: '8px',
-                background: open ? 'rgba(255,255,255,0.10)' : 'transparent',
+                background: open ? 'hsl(var(--terex-accent) / 0.10)' : 'transparent',
                 border: 'none', cursor: 'pointer', outline: 'none',
                 WebkitTapHighlightColor: 'transparent', transition: 'background 0.15s',
-                flexShrink: 0, color: 'rgba(255,255,255,0.75)',
+                flexShrink: 0, color: 'hsl(var(--terex-accent) / 0.75)',
               }}
             >
               <ChevronDown size={16} strokeWidth={2} style={{ transition: 'transform 0.15s', transform: open ? 'rotate(180deg)' : 'none' }} />
@@ -117,7 +117,7 @@ export function PhoneBook({
                   <div key={ph.id} style={{
                     display: 'flex', alignItems: 'center', gap: '10px',
                     padding: '10px 12px',
-                    background: sel ? 'rgba(255,255,255,0.08)' : 'transparent',
+                    background: sel ? 'hsl(var(--terex-accent) / 0.08)' : 'transparent',
                     borderBottom: `1px solid ${CARD_BORDER}`,
                   }}>
                     <button
@@ -136,7 +136,7 @@ export function PhoneBook({
                             {ph.label}
                           </div>
                         )}
-                        <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: '12px', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>
+                        <div style={{ color: 'hsl(var(--terex-accent) / 0.7)', fontSize: '12px', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>
                           {ph.phone}
                         </div>
                       </div>
@@ -148,7 +148,7 @@ export function PhoneBook({
                       type="button"
                       onClick={(e) => { e.stopPropagation(); if (confirm('Supprimer ce numéro ?')) remove(ph.id); }}
                       title="Supprimer"
-                      style={{ background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', padding: '4px', flexShrink: 0 }}
+                      style={{ background: 'transparent', border: 'none', color: 'hsl(var(--terex-accent) / 0.4)', cursor: 'pointer', padding: '4px', flexShrink: 0 }}
                     >
                       <Trash2 size={12} />
                     </button>
@@ -165,7 +165,7 @@ export function PhoneBook({
               alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: '6px',
               padding: '8px 12px', borderRadius: '10px',
               border: `1px dashed ${CARD_BORDER}`, background: 'transparent',
-              color: 'rgba(255,255,255,0.75)', fontSize: '13px', fontWeight: 500,
+              color: 'hsl(var(--terex-accent) / 0.75)', fontSize: '13px', fontWeight: 500,
               cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent',
             }}
           >
@@ -182,7 +182,7 @@ export function PhoneBook({
               onClick={() => setMode('saved')}
               style={{
                 alignSelf: 'flex-start', background: 'transparent', border: 'none',
-                color: 'rgba(255,255,255,0.55)', fontSize: '12px', cursor: 'pointer',
+                color: 'hsl(var(--terex-accent) / 0.55)', fontSize: '12px', cursor: 'pointer',
                 padding: '2px 0', textDecoration: 'underline',
               }}
             >
@@ -190,10 +190,10 @@ export function PhoneBook({
             </button>
           )}
 
-          <div style={{ overflow: 'hidden', borderRadius: '14px', border: `1px solid ${CARD_BORDER}`, background: 'rgba(255,255,255,0.03)' }}>
+          <div style={{ overflow: 'hidden', borderRadius: '14px', border: `1px solid ${CARD_BORDER}`, background: 'hsl(var(--terex-accent) / 0.03)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', borderBottom: `1px solid ${CARD_BORDER}`, padding: '10px 16px' }}>
               <img src={p.logo} alt="" style={{ width: '22px', height: '22px', borderRadius: '50%', objectFit: 'contain', background: '#fff' }} />
-              <span style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)' }}>{p.label}</span>
+              <span style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'hsl(var(--terex-accent) / 0.55)' }}>{p.label}</span>
             </div>
             <input
               type="tel"
@@ -204,7 +204,7 @@ export function PhoneBook({
             />
           </div>
 
-          <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', color: 'rgba(255,255,255,0.75)', fontSize: '13px', userSelect: 'none', padding: '2px' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', color: 'hsl(var(--terex-accent) / 0.75)', fontSize: '13px', userSelect: 'none', padding: '2px' }}>
             <input
               type="checkbox"
               checked={saveToBook}
@@ -215,7 +215,7 @@ export function PhoneBook({
           </label>
 
           {saveToBook && (
-            <div style={{ overflow: 'hidden', borderRadius: '14px', border: `1px solid ${CARD_BORDER}`, background: 'rgba(255,255,255,0.03)' }}>
+            <div style={{ overflow: 'hidden', borderRadius: '14px', border: `1px solid ${CARD_BORDER}`, background: 'hsl(var(--terex-accent) / 0.03)' }}>
               <input
                 type="text"
                 placeholder="Nom (optionnel) — ex : Mon perso"

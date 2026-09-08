@@ -54,7 +54,7 @@ export function PaymentPending({ orderData, orderId, onBackToHome }: PaymentPend
         <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 700, margin: '0 0 6px 0' }}>
           Traitement en cours{dots}
         </h2>
-        <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px', margin: '0 0 20px 0' }}>
+        <p style={{ color: 'hsl(var(--terex-accent) / 0.45)', fontSize: '13px', margin: '0 0 20px 0' }}>
           Commande #{orderId.slice(-8).toUpperCase()}
         </p>
 
@@ -68,8 +68,8 @@ export function PaymentPending({ orderData, orderId, onBackToHome }: PaymentPend
                 key={s.id}
                 style={{
                   flex: 1,
-                  background: active ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.03)',
-                  border: current ? '1px solid rgba(255,255,255,0.2)' : '1px solid rgba(255,255,255,0.06)',
+                  background: active ? 'hsl(var(--terex-accent) / 0.08)' : 'hsl(var(--terex-accent) / 0.03)',
+                  border: current ? '1px solid hsl(var(--terex-accent) / 0.2)' : '1px solid hsl(var(--terex-accent) / 0.06)',
                   borderRadius: '12px',
                   padding: '12px',
                   textAlign: 'center',
@@ -78,12 +78,12 @@ export function PaymentPending({ orderData, orderId, onBackToHome }: PaymentPend
               >
                 <div style={{
                   display: 'flex', justifyContent: 'center', marginBottom: '6px',
-                  color: active ? 'hsl(var(--foreground))' : 'rgba(255,255,255,0.3)',
+                  color: active ? 'hsl(var(--foreground))' : 'hsl(var(--terex-accent) / 0.3)',
                   animation: current ? 'pulse 2s infinite' : undefined,
                 }}>
                   {s.icon}
                 </div>
-                <div style={{ color: active ? 'hsl(var(--foreground))' : 'rgba(255,255,255,0.3)', fontSize: '11px', fontWeight: 600 }}>
+                <div style={{ color: active ? 'hsl(var(--foreground))' : 'hsl(var(--terex-accent) / 0.3)', fontSize: '11px', fontWeight: 600 }}>
                   {s.label}
                 </div>
               </div>
@@ -92,7 +92,7 @@ export function PaymentPending({ orderData, orderId, onBackToHome }: PaymentPend
         </div>
 
         {/* Recap */}
-        <div style={{ background: 'hsl(var(--terex-darker))', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', overflow: 'hidden', marginBottom: '16px' }}>
+        <div style={{ background: 'hsl(var(--terex-darker))', border: '1px solid hsl(var(--terex-accent) / 0.07)', borderRadius: '16px', overflow: 'hidden', marginBottom: '16px' }}>
           <Row label="Montant payé" value={`${orderData.amount} ${orderData.currency}`} />
           <Row label="Vous recevez" value={`${orderData.usdtAmount} USDT`} highlight />
           <Row label="Réseau" value={orderData.network} />
@@ -103,7 +103,7 @@ export function PaymentPending({ orderData, orderId, onBackToHome }: PaymentPend
         <button
           onClick={onBackToHome}
           style={{
-            width: '100%', background: '#fff', color: '#141414', border: 'none',
+            width: '100%', background: '#fff', color: 'hsl(var(--terex-accent-fg))', border: 'none',
             borderRadius: '14px', padding: '15px', fontSize: '15px', fontWeight: 700, cursor: 'pointer',
           }}
         >
@@ -119,9 +119,9 @@ function Row({ label, value, highlight, mono, last }: { label: string; value: st
     <div style={{
       display: 'flex', justifyContent: 'space-between', alignItems: 'center',
       padding: '13px 16px',
-      borderBottom: last ? 'none' : '1px solid rgba(255,255,255,0.06)',
+      borderBottom: last ? 'none' : '1px solid hsl(var(--terex-accent) / 0.06)',
     }}>
-      <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>{label}</span>
+      <span style={{ color: 'hsl(var(--terex-accent) / 0.45)', fontSize: '13px' }}>{label}</span>
       <span style={{
         color: highlight ? '#4ade80' : '#fff',
         fontSize: '13px',

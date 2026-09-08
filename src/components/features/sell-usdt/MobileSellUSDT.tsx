@@ -14,11 +14,11 @@ import { ProviderPill } from '../shared/ProviderPill';
 import { PhoneBook } from '../shared/PhoneBook';
 import { useSavedPhones } from '@/hooks/useSavedPhones';
 
-const CARD = 'rgba(255,255,255,0.03)';
-const BORDER = 'rgba(255,255,255,0.07)';
+const CARD = 'hsl(var(--terex-accent) / 0.03)';
+const BORDER = 'hsl(var(--terex-accent) / 0.07)';
 const BTN = 'hsl(var(--terex-gray))';
-const SEL_BG = 'rgba(255,255,255,0.06)';
-const SEL_BORDER = 'rgba(255,255,255,0.18)';
+const SEL_BG = 'hsl(var(--terex-accent) / 0.06)';
+const SEL_BORDER = 'hsl(var(--terex-accent) / 0.18)';
 
 const NETWORK_LOGOS: Record<string, string> = {
   TRC20:  'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png',
@@ -33,7 +33,7 @@ const MIN_SELL_USDT = 50;
 const circleBackBtn: React.CSSProperties = {
   display: 'flex', alignItems: 'center', justifyContent: 'center',
   width: '38px', height: '38px', flexShrink: 0,
-  background: 'rgba(255,255,255,0.06)', borderRadius: '50%', border: 'none', cursor: 'pointer',
+  background: 'hsl(var(--terex-accent) / 0.06)', borderRadius: '50%', border: 'none', cursor: 'pointer',
   outline: 'none', WebkitTapHighlightColor: 'transparent',
 };
 
@@ -63,9 +63,9 @@ function ContinueBtn({ onClick, disabled, children }: { onClick: () => void; dis
         disabled={disabled}
         style={{
           display: 'flex', alignItems: 'center', gap: '8px',
-          background: disabled ? 'rgba(255,255,255,0.04)' : BTN,
-          borderRadius: '16px', border: '1px solid rgba(255,255,255,0.10)',
-          padding: '13px 22px', color: disabled ? 'hsl(var(--muted-foreground))' : '#fff',
+          background: disabled ? 'hsl(var(--terex-accent) / 0.04)' : BTN,
+          borderRadius: '16px', border: '1px solid hsl(var(--terex-accent) / 0.10)',
+          padding: '13px 22px', color: disabled ? 'hsl(var(--muted-foreground))' : 'hsl(var(--terex-accent))',
           fontSize: '14px', fontWeight: 600, cursor: disabled ? 'not-allowed' : 'pointer',
           outline: 'none', WebkitTapHighlightColor: 'transparent', transition: 'background 0.15s',
         }}
@@ -182,7 +182,7 @@ export function MobileSellUSDT() {
             <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '20px' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
                 <span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Montant</span>
-                <div style={{ display: 'inline-flex', background: 'rgba(255,255,255,0.04)', borderRadius: '10px', padding: '3px', gap: '2px' }}>
+                <div style={{ display: 'inline-flex', background: 'hsl(var(--terex-accent) / 0.04)', borderRadius: '10px', padding: '3px', gap: '2px' }}>
                   {(['USDT', 'XOF'] as const).map(c => (
                     <button key={c} onClick={() => { setInputCurrency(c); setRawAmount(''); }}
                       style={{ padding: '5px 12px', borderRadius: '7px', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: 600, outline: 'none',
@@ -197,7 +197,7 @@ export function MobileSellUSDT() {
               <div style={{ position: 'relative' }}>
                 <input type="number" placeholder="0" value={rawAmount}
                   onChange={e => setRawAmount(e.target.value)}
-                  style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '18px 84px 18px 20px', color: 'hsl(var(--foreground))', fontSize: '34px', fontWeight: 700, outline: 'none', letterSpacing: '-1px', boxSizing: 'border-box', fontFamily: 'inherit' }}
+                  style={{ width: '100%', background: 'hsl(var(--terex-accent) / 0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '18px 84px 18px 20px', color: 'hsl(var(--foreground))', fontSize: '34px', fontWeight: 700, outline: 'none', letterSpacing: '-1px', boxSizing: 'border-box', fontFamily: 'inherit' }}
                 />
                 <span style={{ position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                   {inputCurrency === 'USDT' ? (
@@ -234,7 +234,7 @@ export function MobileSellUSDT() {
             {/* Continue — RIGHT */}
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <button onClick={handleContinueToNetwork}
-                style={{ display: 'flex', alignItems: 'center', gap: '8px', background: BTN, borderRadius: '16px', border: '1px solid rgba(255,255,255,0.10)', padding: '13px 22px', color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600, cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent' }}>
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', background: BTN, borderRadius: '16px', border: '1px solid hsl(var(--terex-accent) / 0.10)', padding: '13px 22px', color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600, cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent' }}>
                 <HandCoins size={17} strokeWidth={2} /> Continuer
               </button>
             </div>
@@ -264,7 +264,7 @@ export function MobileSellUSDT() {
                   <Switch checked={useBinancePay} onCheckedChange={setUseBinancePay} className="data-[state=checked]:bg-[hsl(var(--terex-gray))]" />
                 </div>
                 {useBinancePay && (
-                  <div style={{ marginTop: '12px', padding: '10px 14px', background: 'rgba(255,255,255,0.04)', borderRadius: '10px', border: `1px solid ${BORDER}` }}>
+                  <div style={{ marginTop: '12px', padding: '10px 14px', background: 'hsl(var(--terex-accent) / 0.04)', borderRadius: '10px', border: `1px solid ${BORDER}` }}>
                     <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px', margin: 0 }}>Vous enverrez vos USDT via Binance Pay à notre ID Binance</p>
                   </div>
                 )}
@@ -322,7 +322,7 @@ export function MobileSellUSDT() {
                       <button onClick={() => copyToClipboard(value, label)}
                         style={{ display: 'flex', alignItems: 'center', justifyContent: 'center',
                           width: 26, height: 26,
-                          background: copiedField === label ? 'rgba(74,222,128,0.15)' : 'rgba(255,255,255,0.06)',
+                          background: copiedField === label ? 'rgba(74,222,128,0.15)' : 'hsl(var(--terex-accent) / 0.06)',
                           border: 'none', borderRadius: '6px', cursor: 'pointer',
                           color: copiedField === label ? '#4ade80' : 'hsl(var(--muted-foreground))',
                           transition: 'all 0.15s' }}>
@@ -412,7 +412,7 @@ export function MobileSellUSDT() {
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '16px 20px 28px' }}>
               <button onClick={handleConfirm} disabled={loading}
-                style={{ display: 'flex', alignItems: 'center', gap: '8px', background: loading ? 'rgba(255,255,255,0.04)' : '#ffffff', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.15)', padding: '13px 22px', color: loading ? 'hsl(var(--muted-foreground))' : '#141414', fontSize: '14px', fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', outline: 'none' }}>
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', background: loading ? 'hsl(var(--terex-accent) / 0.04)' : 'hsl(var(--terex-accent))', borderRadius: '16px', border: '1px solid hsl(var(--terex-accent) / 0.15)', padding: '13px 22px', color: loading ? 'hsl(var(--muted-foreground))' : 'hsl(var(--terex-accent-fg))', fontSize: '14px', fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', outline: 'none' }}>
                 <HandCoins size={17} strokeWidth={2} />
                 {loading ? 'Traitement…' : 'Confirmer la vente'}
               </button>
@@ -455,7 +455,7 @@ export function MobileSellUSDT() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                           <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 500 }}>{value}</span>
                           <button onClick={() => copyToClipboard(value, label)}
-                            style={{ padding: '4px', background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>
+                            style={{ padding: '4px', background: 'hsl(var(--terex-accent) / 0.06)', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>
                             <Copy size={13} color="hsl(var(--muted-foreground))" />
                           </button>
                         </div>
@@ -482,22 +482,22 @@ export function MobileSellUSDT() {
                     <span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px' }}>ou copiez l'adresse</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '14px' }}>
-                    <div style={{ position: 'relative', background: '#fff', padding: '14px', borderRadius: '14px', lineHeight: 0 }}>
+                    <div style={{ position: 'relative', background: 'hsl(var(--terex-accent))', padding: '14px', borderRadius: '14px', lineHeight: 0 }}>
                       <QRCodeSVG value={WALLET_ADDRESSES[network]} size={180} level="M" />
                       {network && NETWORK_LOGOS[network] && (
                         <img src={NETWORK_LOGOS[network]} alt={network}
-                          style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '36px', height: '36px', borderRadius: '50%', border: '3px solid #fff', background: '#fff' }} />
+                          style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '36px', height: '36px', borderRadius: '50%', border: '3px solid #fff', background: 'hsl(var(--terex-accent))' }} />
                       )}
                     </div>
                   </div>
-                  <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '10px 12px' }}>
+                  <div style={{ background: 'hsl(var(--terex-accent) / 0.03)', border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '10px 12px' }}>
                     <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '10px', margin: '0 0 6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Adresse {network}</p>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                       <p style={{ color: 'hsl(var(--foreground))', fontSize: '11px', wordBreak: 'break-all', fontFamily: 'monospace', flex: 1, margin: 0, lineHeight: 1.5 }}>
                         {WALLET_ADDRESSES[network]}
                       </p>
                       <button onClick={() => copyToClipboard(WALLET_ADDRESSES[network], 'address')}
-                        style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 12px', background: copiedField === 'address' ? 'rgba(74,222,128,0.15)' : 'rgba(255,255,255,0.08)', border: 'none', borderRadius: '10px', cursor: 'pointer', flexShrink: 0, color: copiedField === 'address' ? '#4ade80' : '#fff', fontSize: '12px', fontWeight: 600, transition: 'all 0.15s' }}>
+                        style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 12px', background: copiedField === 'address' ? 'rgba(74,222,128,0.15)' : 'hsl(var(--terex-accent) / 0.08)', border: 'none', borderRadius: '10px', cursor: 'pointer', flexShrink: 0, color: copiedField === 'address' ? '#4ade80' : 'hsl(var(--terex-accent))', fontSize: '12px', fontWeight: 600, transition: 'all 0.15s' }}>
                         {copiedField === 'address' ? <CheckCircle size={13} /> : <Copy size={13} />} Copier
                       </button>
                     </div>
@@ -514,7 +514,7 @@ export function MobileSellUSDT() {
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '16px 20px 28px' }}>
               <button onClick={handleBackToDashboard}
-                style={{ display: 'flex', alignItems: 'center', gap: '8px', background: BTN, borderRadius: '16px', border: '1px solid rgba(255,255,255,0.10)', padding: '13px 22px', color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600, cursor: 'pointer', outline: 'none' }}>
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', background: BTN, borderRadius: '16px', border: '1px solid hsl(var(--terex-accent) / 0.10)', padding: '13px 22px', color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600, cursor: 'pointer', outline: 'none' }}>
                 <HandCoins size={17} strokeWidth={2} /> Compris
               </button>
             </div>

@@ -377,12 +377,12 @@ export function MobileMenu({
             background: 'rgba(22,22,22,0.82)',
             backdropFilter: 'blur(24px)',
             WebkitBackdropFilter: 'blur(24px)',
-            borderLeft: '1px solid rgba(255,255,255,0.08)',
+            borderLeft: '1px solid hsl(var(--terex-accent) / 0.08)',
             boxShadow: '-30px 0 80px rgba(0,0,0,0.5)',
           }}
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-5" style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 18px)', paddingBottom: 16, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+          <div className="flex items-center justify-between px-5" style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 18px)', paddingBottom: 16, borderBottom: '1px solid hsl(var(--terex-accent) / 0.06)' }}>
             <div className="flex items-center gap-2.5">
               <img src="/terex-logo.png" alt="Terex" className="w-8 h-8 rounded-lg object-cover" />
               <span className="text-white font-bold text-[16px] tracking-tight">Terex</span>

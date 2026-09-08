@@ -3,10 +3,10 @@ import { Twitter, Facebook, Linkedin, Instagram, Youtube } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const SURFACE = 'hsl(var(--terex-darker))';
-const BORDER = 'rgba(255,255,255,0.07)';
-const MUTED = 'rgba(255,255,255,0.55)';
-const MUTED_SOFT = 'rgba(255,255,255,0.45)';
-const ICON_MUTED = 'rgba(255,255,255,0.5)';
+const BORDER = 'hsl(var(--terex-accent) / 0.07)';
+const MUTED = 'hsl(var(--terex-accent) / 0.55)';
+const MUTED_SOFT = 'hsl(var(--terex-accent) / 0.45)';
+const ICON_MUTED = 'hsl(var(--terex-accent) / 0.5)';
 
 export function FooterSection() {
   const navigate = useNavigate();

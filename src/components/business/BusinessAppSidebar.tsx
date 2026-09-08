@@ -62,7 +62,7 @@ function InitialAvatar({ name, size = 28 }: { name: string; size?: number }) {
   return (
     <div style={{
       width: size, height: size, borderRadius: 7,
-      background: 'rgba(255, 255, 255,0.22)', color: 'hsl(var(--foreground))',
+      background: 'hsl(var(--terex-accent) / 0.22)', color: 'hsl(var(--foreground))',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       fontSize: size * 0.38, fontWeight: 600, flexShrink: 0, fontFamily: FONT,
     }}>

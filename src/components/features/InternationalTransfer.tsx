@@ -299,8 +299,8 @@ export function InternationalTransfer() {
                     disabled={!sendAmount || !paymentMethod || !receiveMethod || !recipientCountry || !recipientFirstName || !recipientLastName || (receiveMethod !== 'mobile' && !recipientPhone) || loading || (receiveMethod === 'mobile' && !provider)}
                     style={{
                       display: 'flex', alignItems: 'center', gap: '8px',
-                      background: (!sendAmount || !paymentMethod || !receiveMethod || !recipientCountry || !recipientFirstName || !recipientLastName) ? 'rgba(255,255,255,0.04)' : 'hsl(var(--terex-gray))',
-                      borderRadius: '16px', border: '1px solid rgba(255,255,255,0.10)',
+                      background: (!sendAmount || !paymentMethod || !receiveMethod || !recipientCountry || !recipientFirstName || !recipientLastName) ? 'hsl(var(--terex-accent) / 0.04)' : 'hsl(var(--terex-gray))',
+                      borderRadius: '16px', border: '1px solid hsl(var(--terex-accent) / 0.10)',
                       padding: '13px 22px', color: (!sendAmount || !paymentMethod || !receiveMethod || !recipientCountry || !recipientFirstName || !recipientLastName) ? 'hsl(var(--muted-foreground))' : '#fff',
                       fontSize: '14px', fontWeight: 600, cursor: 'pointer',
                     }}

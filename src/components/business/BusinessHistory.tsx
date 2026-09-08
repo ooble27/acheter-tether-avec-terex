@@ -7,7 +7,7 @@ interface Props { user: { email: string; name: string } | null; }
 const C = {
   bg: 'hsl(var(--terex-dark))', l1: 'hsl(var(--terex-darker))', l2: 'hsl(var(--terex-gray))', l3: 'hsl(var(--terex-gray))',
   bd: 'hsl(var(--terex-gray))', bds: 'hsl(var(--terex-gray))', bdh: '#484848',
-  teal: '#ffffff', tealT: 'rgba(255, 255, 255,0.08)', tealB: 'rgba(255, 255, 255,0.20)',
+  teal: '#ffffff', tealT: 'hsl(var(--terex-accent) / 0.08)', tealB: 'hsl(var(--terex-accent) / 0.20)',
   t1: '#f0f0f0', t2: 'hsl(var(--muted-foreground))', t3: '#686868', t4: 'hsl(var(--terex-gray))',
   red: '#ef4444',
 };
@@ -161,7 +161,7 @@ function TransactionDrawer({ tx, onClose }: { tx: any; onClose: () => void }) {
             </button>
           )}
           <button style={{ flex: 1, height: 36, borderRadius: 8, fontSize: 12, fontWeight: 500, background: C.tealT, border: `1px solid ${C.tealB}`, color: C.teal, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, fontFamily: FONT }}
-            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255, 255, 255,0.14)'; }}
+            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'hsl(var(--terex-accent) / 0.14)'; }}
             onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = C.tealT; }}>
             <ExternalLink style={{ width: 13, height: 13 }} /> Blockchain
           </button>
@@ -272,7 +272,7 @@ export function BusinessHistory({ user }: Props) {
               {isDemo && <span style={{ color: C.t3 }}> · Données de démonstration</span>}
             </p>
           </div>
-          <button onClick={exportCSV} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12, color: C.t3, background: 'rgba(255,255,255,0.05)', border: `1px solid ${C.bds}`, borderRadius: 9, padding: '8px 16px', cursor: 'pointer', fontFamily: FONT, transition: 'all 0.1s', flexShrink: 0 }}
+          <button onClick={exportCSV} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12, color: C.t3, background: 'hsl(var(--terex-accent) / 0.05)', border: `1px solid ${C.bds}`, borderRadius: 9, padding: '8px 16px', cursor: 'pointer', fontFamily: FONT, transition: 'all 0.1s', flexShrink: 0 }}
             onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = C.t1; (e.currentTarget as HTMLButtonElement).style.borderColor = C.bdh; }}
             onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = C.t3; (e.currentTarget as HTMLButtonElement).style.borderColor = C.bds; }}>
             <Download style={{ width: 13, height: 13 }} /> Exporter CSV
@@ -293,7 +293,7 @@ export function BusinessHistory({ user }: Props) {
                 <Search style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', width: 13, height: 13, color: C.t3, pointerEvents: 'none' }} />
                 <input type="text" value={search} onChange={e => setSearch(e.target.value)} onFocus={() => setSearchFocused(true)} onBlur={() => setSearchFocused(false)}
                   placeholder="Rechercher…"
-                  style={{ width: '100%', background: C.l2, border: `1px solid ${searchFocused ? 'rgba(255,255,255,0.18)' : C.bds}`, borderRadius: 8, paddingLeft: 30, paddingRight: 10, paddingTop: 7, paddingBottom: 7, color: C.t1, fontSize: 12, outline: 'none', fontFamily: FONT, boxSizing: 'border-box', transition: 'border-color 0.15s' }} />
+                  style={{ width: '100%', background: C.l2, border: `1px solid ${searchFocused ? 'hsl(var(--terex-accent) / 0.18)' : C.bds}`, borderRadius: 8, paddingLeft: 30, paddingRight: 10, paddingTop: 7, paddingBottom: 7, color: C.t1, fontSize: 12, outline: 'none', fontFamily: FONT, boxSizing: 'border-box', transition: 'border-color 0.15s' }} />
               </div>
             </div>
 
@@ -317,8 +317,8 @@ export function BusinessHistory({ user }: Props) {
                   const isActive = statusFilter === f.value;
                   return (
                     <button key={f.value} onClick={() => setStatusFilter(f.value)}
-                      style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '7px 10px', borderRadius: 8, border: 'none', background: isActive ? 'rgba(255,255,255,0.07)' : 'transparent', cursor: 'pointer', fontFamily: FONT, textAlign: 'left', width: '100%', transition: 'background 0.1s' }}
-                      onMouseEnter={e => { if (!isActive) (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.04)'; }}
+                      style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '7px 10px', borderRadius: 8, border: 'none', background: isActive ? 'hsl(var(--terex-accent) / 0.07)' : 'transparent', cursor: 'pointer', fontFamily: FONT, textAlign: 'left', width: '100%', transition: 'background 0.1s' }}
+                      onMouseEnter={e => { if (!isActive) (e.currentTarget as HTMLButtonElement).style.background = 'hsl(var(--terex-accent) / 0.04)'; }}
                       onMouseLeave={e => { if (!isActive) (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}>
                       <span style={{ width: 8, height: 8, borderRadius: '50%', border: `1.5px solid ${isActive ? C.t1 : C.t3}`, background: isActive ? C.t1 : 'transparent', flexShrink: 0, transition: 'all 0.1s' }} />
                       <span style={{ fontSize: 12, color: isActive ? C.t1 : C.t3, fontWeight: isActive ? 500 : 400, transition: 'color 0.1s' }}>{f.label}</span>
@@ -336,7 +336,7 @@ export function BusinessHistory({ user }: Props) {
                   const isActive = periodFilter === f.value;
                   return (
                     <button key={f.value} onClick={() => setPeriodFilter(f.value)}
-                      style={{ flex: 1, padding: '6px 0', borderRadius: 8, fontSize: 12, fontWeight: isActive ? 600 : 400, border: `1px solid ${isActive ? 'rgba(255,255,255,0.18)' : C.bds}`, background: isActive ? 'rgba(255,255,255,0.08)' : 'transparent', color: isActive ? C.t1 : C.t3, cursor: 'pointer', fontFamily: FONT, transition: 'all 0.1s' }}
+                      style={{ flex: 1, padding: '6px 0', borderRadius: 8, fontSize: 12, fontWeight: isActive ? 600 : 400, border: `1px solid ${isActive ? 'hsl(var(--terex-accent) / 0.18)' : C.bds}`, background: isActive ? 'hsl(var(--terex-accent) / 0.08)' : 'transparent', color: isActive ? C.t1 : C.t3, cursor: 'pointer', fontFamily: FONT, transition: 'all 0.1s' }}
                       onMouseEnter={e => { if (!isActive) (e.currentTarget as HTMLButtonElement).style.color = C.t2; }}
                       onMouseLeave={e => { if (!isActive) (e.currentTarget as HTMLButtonElement).style.color = C.t3; }}>
                       {f.label}
@@ -362,10 +362,10 @@ export function BusinessHistory({ user }: Props) {
           {groups.length === 0 ? (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '80px 20px', background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 14, gap: 10 }}>
               <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
-                <circle cx="22" cy="22" r="19" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.07)" strokeWidth="1.5" />
-                <circle cx="22" cy="22" r="10" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5" />
-                <line x1="22" y1="14" x2="22" y2="22" stroke="rgba(255,255,255,0.25)" strokeWidth="1.5" strokeLinecap="round" />
-                <line x1="22" y1="22" x2="27" y2="25" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" strokeLinecap="round" />
+                <circle cx="22" cy="22" r="19" fill="hsl(var(--terex-accent) / 0.03)" stroke="hsl(var(--terex-accent) / 0.07)" strokeWidth="1.5" />
+                <circle cx="22" cy="22" r="10" stroke="hsl(var(--terex-accent) / 0.12)" strokeWidth="1.5" />
+                <line x1="22" y1="14" x2="22" y2="22" stroke="hsl(var(--terex-accent) / 0.25)" strokeWidth="1.5" strokeLinecap="round" />
+                <line x1="22" y1="22" x2="27" y2="25" stroke="hsl(var(--terex-accent) / 0.15)" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
               <p style={{ color: C.t2, fontSize: 13, fontWeight: 500, margin: 0 }}>Aucune transaction trouvée</p>
               <p style={{ color: C.t3, fontSize: 12, margin: 0 }}>Modifiez vos filtres</p>
@@ -407,7 +407,7 @@ export function BusinessHistory({ user }: Props) {
                       const p = totalPages <= 5 ? i + 1 : page <= 3 ? i + 1 : page >= totalPages - 2 ? totalPages - 4 + i : page - 2 + i;
                       return (
                         <button key={p} onClick={() => setPage(p)}
-                          style={{ width: 32, height: 32, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${page === p ? 'rgba(255,255,255,0.18)' : C.bds}`, background: page === p ? 'rgba(255,255,255,0.08)' : 'transparent', color: page === p ? C.t1 : C.t3, cursor: 'pointer', fontSize: 12, fontFamily: FONT, fontWeight: page === p ? 600 : 400, transition: 'all 0.1s' }}
+                          style={{ width: 32, height: 32, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${page === p ? 'hsl(var(--terex-accent) / 0.18)' : C.bds}`, background: page === p ? 'hsl(var(--terex-accent) / 0.08)' : 'transparent', color: page === p ? C.t1 : C.t3, cursor: 'pointer', fontSize: 12, fontFamily: FONT, fontWeight: page === p ? 600 : 400, transition: 'all 0.1s' }}
                           onMouseEnter={e => { if (page !== p) (e.currentTarget as HTMLButtonElement).style.color = C.t2; }}
                           onMouseLeave={e => { if (page !== p) (e.currentTarget as HTMLButtonElement).style.color = C.t3; }}
                         >{p}</button>

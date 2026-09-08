@@ -12,7 +12,7 @@ import {
 const C = {
   bg: 'hsl(var(--terex-dark))', l1: 'hsl(var(--terex-darker))', l2: 'hsl(var(--terex-gray))', l3: 'hsl(var(--terex-gray))',
   bd: 'hsl(var(--terex-gray))', bds: 'hsl(var(--terex-gray))',
-  teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.08)', tealB: 'rgba(255, 255, 255,0.22)',
+  teal: '#ffffff', tealH: '#2d7870', tealT: 'hsl(var(--terex-accent) / 0.08)', tealB: 'hsl(var(--terex-accent) / 0.22)',
   t1: '#f0f0f0', t2: 'hsl(var(--muted-foreground))', t3: '#686868',
   red: '#ef4444', redT: 'rgba(239,68,68,0.08)', redB: 'rgba(239,68,68,0.22)',
 };
@@ -116,7 +116,7 @@ function GhostBtn({ children, onClick, style }: {
   const [h, setH] = useState(false);
   return (
     <button onClick={onClick}
-      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, height: 38, paddingLeft: 16, paddingRight: 16, background: h ? C.l3 : 'rgba(255,255,255,0.04)', color: C.t2, border: `1px solid ${C.bds}`, borderRadius: 9, fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: FONT, transition: 'all 0.12s', flexShrink: 0, ...style }}
+      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, height: 38, paddingLeft: 16, paddingRight: 16, background: h ? C.l3 : 'hsl(var(--terex-accent) / 0.04)', color: C.t2, border: `1px solid ${C.bds}`, borderRadius: 9, fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: FONT, transition: 'all 0.12s', flexShrink: 0, ...style }}
       onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}>
       {children}
     </button>
@@ -145,7 +145,7 @@ function Inp({ value, onChange, placeholder, type = 'text', disabled, mono }: {
     <input value={value} onChange={e => onChange(e.target.value)} type={type}
       placeholder={placeholder} disabled={disabled}
       onFocus={() => setF(true)} onBlur={() => setF(false)}
-      style={{ width: '100%', background: disabled ? 'hsl(var(--terex-darker))' : C.l2, border: `1px solid ${f ? 'rgba(255, 255, 255,0.4)' : C.bd}`, borderRadius: 9, padding: '10px 14px', color: disabled ? C.t3 : C.t1, fontSize: 13, outline: 'none', fontFamily: mono ? MONO : FONT, boxSizing: 'border-box', opacity: disabled ? 0.55 : 1, transition: 'border-color 0.15s' }} />
+      style={{ width: '100%', background: disabled ? 'hsl(var(--terex-darker))' : C.l2, border: `1px solid ${f ? 'hsl(var(--terex-accent) / 0.4)' : C.bd}`, borderRadius: 9, padding: '10px 14px', color: disabled ? C.t3 : C.t1, fontSize: 13, outline: 'none', fontFamily: mono ? MONO : FONT, boxSizing: 'border-box', opacity: disabled ? 0.55 : 1, transition: 'border-color 0.15s' }} />
   );
 }
 
@@ -156,7 +156,7 @@ function Textarea({ value, onChange, placeholder, rows = 4 }: {
   return (
     <textarea value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} rows={rows}
       onFocus={() => setF(true)} onBlur={() => setF(false)}
-      style={{ width: '100%', background: C.l2, border: `1px solid ${f ? 'rgba(255, 255, 255,0.4)' : C.bd}`, borderRadius: 9, padding: '10px 14px', color: C.t1, fontSize: 13, outline: 'none', fontFamily: FONT, boxSizing: 'border-box', resize: 'none', lineHeight: 1.65, transition: 'border-color 0.15s' }} />
+      style={{ width: '100%', background: C.l2, border: `1px solid ${f ? 'hsl(var(--terex-accent) / 0.4)' : C.bd}`, borderRadius: 9, padding: '10px 14px', color: C.t1, fontSize: 13, outline: 'none', fontFamily: FONT, boxSizing: 'border-box', resize: 'none', lineHeight: 1.65, transition: 'border-color 0.15s' }} />
   );
 }
 
@@ -219,7 +219,7 @@ function BreadCrumb({ onBack, backLabel, label }: { onBack: () => void; backLabe
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 24 }}>
       <button onClick={onBack}
-        style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.04)', border: `1px solid ${C.bds}`, cursor: 'pointer', color: C.t3, fontSize: 12, padding: '7px 13px', borderRadius: 9, fontFamily: FONT, transition: 'all 0.13s' }}
+        style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'hsl(var(--terex-accent) / 0.04)', border: `1px solid ${C.bds}`, cursor: 'pointer', color: C.t3, fontSize: 12, padding: '7px 13px', borderRadius: 9, fontFamily: FONT, transition: 'all 0.13s' }}
         onMouseEnter={e => { e.currentTarget.style.color = C.t1; e.currentTarget.style.borderColor = C.bd; }}
         onMouseLeave={e => { e.currentTarget.style.color = C.t3; e.currentTarget.style.borderColor = C.bds; }}>
         <ArrowLeft size={13} /> {backLabel}
@@ -256,7 +256,7 @@ function RowItem({ icon, label, sub, val, isLast, onClick }: {
   const [h, setH] = useState(false);
   return (
     <div onClick={onClick} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
-      style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '15px 22px', borderBottom: isLast ? 'none' : `1px solid ${C.bds}`, cursor: 'pointer', background: h ? 'rgba(255,255,255,0.025)' : 'transparent', transition: 'background 0.12s' }}>
+      style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '15px 22px', borderBottom: isLast ? 'none' : `1px solid ${C.bds}`, cursor: 'pointer', background: h ? 'hsl(var(--terex-accent) / 0.025)' : 'transparent', transition: 'background 0.12s' }}>
       <span style={{ color: C.t3, flexShrink: 0, display: 'flex' }}>{icon}</span>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontSize: 13, fontWeight: 500, color: C.t1 }}>{label}</div>
@@ -322,7 +322,7 @@ function ProfileMain({ form, setPage, flash, lang }: {
   return (
     <div style={{ fontFamily: FONT, color: C.t1 }}>
       {flash && (
-        <div style={{ marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px', background: 'rgba(255, 255, 255,0.07)', border: `1px solid rgba(255, 255, 255,0.2)`, borderRadius: 10, fontSize: 13, color: C.t2 }}>
+        <div style={{ marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px', background: 'hsl(var(--terex-accent) / 0.07)', border: `1px solid hsl(var(--terex-accent) / 0.2)`, borderRadius: 10, fontSize: 13, color: C.t2 }}>
           <Check size={13} color={C.teal} /> {T.saved}
         </div>
       )}
@@ -424,7 +424,7 @@ function ProfileMain({ form, setPage, flash, lang }: {
             </div>
             {kycLevels.map((lv, i, arr) => (
               <div key={lv.n} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', borderBottom: i < arr.length - 1 ? `1px solid ${C.bds}` : 'none', opacity: lv.state === 'locked' ? 0.4 : 1 }}>
-                <div style={{ width: 28, height: 28, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', background: lv.state === 'done' ? 'rgba(255,255,255,0.06)' : lv.state === 'active' ? C.tealT : C.l2, border: `1px solid ${lv.state === 'done' ? C.bd : lv.state === 'active' ? C.tealB : C.bds}`, flexShrink: 0 }}>
+                <div style={{ width: 28, height: 28, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', background: lv.state === 'done' ? 'hsl(var(--terex-accent) / 0.06)' : lv.state === 'active' ? C.tealT : C.l2, border: `1px solid ${lv.state === 'done' ? C.bd : lv.state === 'active' ? C.tealB : C.bds}`, flexShrink: 0 }}>
                   {lv.state === 'done'   && <Check size={12} color={C.t2} strokeWidth={2.5} />}
                   {lv.state === 'active' && <span style={{ fontSize: 10, fontWeight: 700, color: C.teal, fontFamily: MONO }}>{lv.n}</span>}
                   {lv.state === 'locked' && <Lock size={11} color={C.t3} />}
@@ -813,7 +813,7 @@ function SecurityPage({ onBack, lang }: { onBack: () => void; lang: Lang }) {
             </div>
           </div>
           {pwdOk ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px', background: 'rgba(255, 255, 255,0.07)', borderRadius: 9, border: `1px solid rgba(255, 255, 255,0.2)` }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px', background: 'hsl(var(--terex-accent) / 0.07)', borderRadius: 9, border: `1px solid hsl(var(--terex-accent) / 0.2)` }}>
               <Check size={13} color={C.teal} />
               <span style={{ fontSize: 13, color: C.t2 }}>{fr ? 'Mot de passe mis à jour' : 'Password updated'}</span>
             </div>
@@ -1040,7 +1040,7 @@ function BillingPage({ onBack, lang }: { onBack: () => void; lang: Lang }) {
           <div key={p.name} style={{ background: p.current ? HERO_BG : C.l1, border: `1px solid ${p.current ? C.bd : C.bds}`, borderRadius: 14, padding: '22px 22px', display: 'flex', flexDirection: 'column' }}>
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 16 }}>
               <span style={{ fontSize: 14, fontWeight: 700, color: C.t1 }}>{p.name}</span>
-              {p.current && <span style={{ fontSize: 10, color: C.t2, background: 'rgba(255,255,255,0.06)', border: `1px solid ${C.bds}`, padding: '3px 8px', borderRadius: 6 }}>{fr ? 'Actuel' : 'Current'}</span>}
+              {p.current && <span style={{ fontSize: 10, color: C.t2, background: 'hsl(var(--terex-accent) / 0.06)', border: `1px solid ${C.bds}`, padding: '3px 8px', borderRadius: 6 }}>{fr ? 'Actuel' : 'Current'}</span>}
             </div>
             <div style={{ fontSize: 14, fontWeight: 700, color: p.current ? C.t1 : C.t2, fontFamily: MONO, marginBottom: 3 }}>{p.price}</div>
             <div style={{ fontSize: 11, color: C.t3, marginBottom: 20 }}>{p.limit}</div>
@@ -1080,7 +1080,7 @@ function BillingPage({ onBack, lang }: { onBack: () => void; lang: Lang }) {
               <div style={{ fontSize: 11, color: C.t3, marginTop: 2, fontFamily: MONO }}>{inv.ref}</div>
             </div>
             <span style={{ fontSize: 13, fontFamily: MONO, color: C.t2 }}>{inv.amount}</span>
-            <span style={{ fontSize: 11, color: C.t3, background: 'rgba(255,255,255,0.04)', border: `1px solid ${C.bds}`, borderRadius: 5, padding: '2px 8px' }}>{inv.status}</span>
+            <span style={{ fontSize: 11, color: C.t3, background: 'hsl(var(--terex-accent) / 0.04)', border: `1px solid ${C.bds}`, borderRadius: 5, padding: '2px 8px' }}>{inv.status}</span>
             <button style={{ display: 'flex', alignItems: 'center', color: C.t3, background: 'none', border: 'none', cursor: 'pointer', transition: 'color 0.12s' }}
               onMouseEnter={e => (e.currentTarget.style.color = C.t2)}
               onMouseLeave={e => (e.currentTarget.style.color = C.t3)}>

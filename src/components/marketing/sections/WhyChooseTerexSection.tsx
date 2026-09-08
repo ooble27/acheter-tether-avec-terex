@@ -31,7 +31,7 @@ export function WhyChooseTerexSection() {
         <AnimatedSection className="mb-14 sm:mb-20">
           <span
             className="block text-xs tracking-[0.25em] uppercase mb-5"
-            style={{ color: 'rgba(255,255,255,0.45)' }}
+            style={{ color: 'hsl(var(--terex-accent) / 0.45)' }}
           >
             Nos avantages
           </span>
@@ -44,7 +44,7 @@ export function WhyChooseTerexSection() {
           </h2>
           <p
             className="text-base sm:text-lg max-w-2xl mt-5"
-            style={{ color: 'rgba(255,255,255,0.55)' }}
+            style={{ color: 'hsl(var(--terex-accent) / 0.55)' }}
           >
             Tout ce qu'il faut pour transférer de la valeur rapidement, à moindre
             coût et en toute confiance.
@@ -58,13 +58,13 @@ export function WhyChooseTerexSection() {
                 className="group rounded-2xl h-full p-8 transition-colors duration-300"
                 style={{
                   backgroundColor: 'hsl(var(--terex-darker))',
-                  border: '1px solid rgba(255,255,255,0.07)',
+                  border: '1px solid hsl(var(--terex-accent) / 0.07)',
                 }}
                 onMouseEnter={(e) =>
-                  (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)')
+                  (e.currentTarget.style.borderColor = 'hsl(var(--terex-accent) / 0.16)')
                 }
                 onMouseLeave={(e) =>
-                  (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)')
+                  (e.currentTarget.style.borderColor = 'hsl(var(--terex-accent) / 0.07)')
                 }
               >
                 <div className="mb-8">
@@ -73,7 +73,7 @@ export function WhyChooseTerexSection() {
                   </div>
                   <div
                     className="text-sm"
-                    style={{ color: 'rgba(255,255,255,0.45)' }}
+                    style={{ color: 'hsl(var(--terex-accent) / 0.45)' }}
                   >
                     {item.statLabel}
                   </div>
@@ -83,7 +83,7 @@ export function WhyChooseTerexSection() {
                 </h3>
                 <p
                   className="text-sm leading-relaxed"
-                  style={{ color: 'rgba(255,255,255,0.55)' }}
+                  style={{ color: 'hsl(var(--terex-accent) / 0.55)' }}
                 >
                   {item.description}
                 </p>

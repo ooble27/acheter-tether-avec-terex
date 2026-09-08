@@ -4,14 +4,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Save, Plus, Trash2, Edit3, Wallet, Check } from 'lucide-react';
 import { useUserWallets } from '@/hooks/useUserWallets';
 
-const BORDER = 'rgba(255,255,255,0.09)';
-const SEL_BG = 'rgba(255,255,255,0.06)';
-const SEL_BORDER = 'rgba(255,255,255,0.20)';
+const BORDER = 'hsl(var(--terex-accent) / 0.09)';
+const SEL_BG = 'hsl(var(--terex-accent) / 0.06)';
+const SEL_BORDER = 'hsl(var(--terex-accent) / 0.20)';
 const BTN = 'hsl(var(--terex-gray))';
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
-  background: 'rgba(255,255,255,0.04)',
+  background: 'hsl(var(--terex-accent) / 0.04)',
   border: `1px solid ${BORDER}`,
   borderRadius: '12px',
   padding: '12px 14px',
@@ -24,7 +24,7 @@ const inputStyle: React.CSSProperties = {
 const labelStyle: React.CSSProperties = {
   display: 'block',
   fontSize: '11px',
-  color: 'rgba(255,255,255,0.4)',
+  color: 'hsl(var(--terex-accent) / 0.4)',
   marginBottom: '6px',
   letterSpacing: '0.04em',
 };
@@ -103,11 +103,11 @@ export function BinanceEmailInput({
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       {/* Section wallets sauvegardés */}
       {binanceWallets.length > 0 && (
-        <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '14px 16px' }}>
+        <div style={{ background: 'hsl(var(--terex-accent) / 0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '14px 16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Wallet size={15} color="rgba(255,255,255,0.5)" />
-              <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px', fontWeight: 500 }}>Wallets ({binanceWallets.length})</span>
+              <Wallet size={15} color="hsl(var(--terex-accent) / 0.5)" />
+              <span style={{ color: 'hsl(var(--terex-accent) / 0.7)', fontSize: '13px', fontWeight: 500 }}>Wallets ({binanceWallets.length})</span>
             </div>
             {!showInputFields && (
               <button
@@ -122,7 +122,7 @@ export function BinanceEmailInput({
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {binanceWallets.map((wallet) => (
               <div key={wallet.id}
-                style={{ borderRadius: '12px', border: `1px solid ${selectedWalletId === wallet.id ? SEL_BORDER : BORDER}`, background: selectedWalletId === wallet.id ? SEL_BG : 'rgba(255,255,255,0.02)', overflow: 'hidden' }}
+                style={{ borderRadius: '12px', border: `1px solid ${selectedWalletId === wallet.id ? SEL_BORDER : BORDER}`, background: selectedWalletId === wallet.id ? SEL_BG : 'hsl(var(--terex-accent) / 0.02)', overflow: 'hidden' }}
               >
                 {editingWallet === wallet.id ? (
                   <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -141,7 +141,7 @@ export function BinanceEmailInput({
                         <Save size={12} /> Sauvegarder
                       </button>
                       <button onClick={() => setEditingWallet(null)}
-                        style={{ background: 'transparent', border: `1px solid ${BORDER}`, borderRadius: '8px', padding: '7px 14px', color: 'rgba(255,255,255,0.5)', fontSize: '12px', cursor: 'pointer' }}>
+                        style={{ background: 'transparent', border: `1px solid ${BORDER}`, borderRadius: '8px', padding: '7px 14px', color: 'hsl(var(--terex-accent) / 0.5)', fontSize: '12px', cursor: 'pointer' }}>
                         Annuler
                       </button>
                     </div>
@@ -154,19 +154,19 @@ export function BinanceEmailInput({
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
                         <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 500 }}>{wallet.wallet_name}</span>
                         {wallet.is_default && (
-                          <span style={{ fontSize: '10px', background: 'rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.6)', padding: '2px 7px', borderRadius: '6px', letterSpacing: '0.03em' }}>
+                          <span style={{ fontSize: '10px', background: 'hsl(var(--terex-accent) / 0.10)', color: 'hsl(var(--terex-accent) / 0.6)', padding: '2px 7px', borderRadius: '6px', letterSpacing: '0.03em' }}>
                             Défaut
                           </span>
                         )}
                       </div>
-                      <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px' }}>{wallet.email}</div>
-                      <div style={{ color: 'rgba(255,255,255,0.3)', fontSize: '11px' }}>ID: {wallet.wallet_id}</div>
+                      <div style={{ color: 'hsl(var(--terex-accent) / 0.4)', fontSize: '12px' }}>{wallet.email}</div>
+                      <div style={{ color: 'hsl(var(--terex-accent) / 0.3)', fontSize: '11px' }}>ID: {wallet.wallet_id}</div>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0, marginLeft: '8px' }}>
-                      {selectedWalletId === wallet.id && <Check size={14} color="rgba(255,255,255,0.7)" />}
+                      {selectedWalletId === wallet.id && <Check size={14} color="hsl(var(--terex-accent) / 0.7)" />}
                       {!showInputFields && (
                         <button onClick={(e) => { e.stopPropagation(); setEditingWallet(wallet.id); setEditWalletName(wallet.wallet_name); setEditWalletEmail(wallet.email || ''); setEditWalletUsername(wallet.username || ''); setEditWalletId(wallet.wallet_id || ''); }}
-                          style={{ padding: '5px', background: 'transparent', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.4)', display: 'flex' }}>
+                          style={{ padding: '5px', background: 'transparent', border: 'none', cursor: 'pointer', color: 'hsl(var(--terex-accent) / 0.4)', display: 'flex' }}>
                           <Edit3 size={13} />
                         </button>
                       )}
@@ -177,7 +177,7 @@ export function BinanceEmailInput({
                             <Trash2 size={13} />
                           </button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent className="bg-[hsl(var(--terex-darker))] border-[rgba(255,255,255,0.09)]">
+                        <AlertDialogContent className="bg-[hsl(var(--terex-darker))] border-[hsl(var(--terex-accent) / 0.09)]">
                           <AlertDialogHeader>
                             <AlertDialogTitle className="text-white">Supprimer le wallet Binance</AlertDialogTitle>
                             <AlertDialogDescription className="text-gray-400">
@@ -185,7 +185,7 @@ export function BinanceEmailInput({
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
-                            <AlertDialogCancel className="text-white border-[rgba(255,255,255,0.12)]">Annuler</AlertDialogCancel>
+                            <AlertDialogCancel className="text-white border-[hsl(var(--terex-accent) / 0.12)]">Annuler</AlertDialogCancel>
                             <AlertDialogAction onClick={() => handleDeleteWallet(wallet.id)} className="bg-red-500 hover:bg-red-600 text-white">
                               Supprimer
                             </AlertDialogAction>
@@ -210,7 +210,7 @@ export function BinanceEmailInput({
                 {editingMode ? 'Modifier le compte' : 'Nouveau compte Binance'}
               </span>
               <button onClick={handleCancelInputEdit}
-                style={{ background: 'transparent', border: `1px solid ${BORDER}`, borderRadius: '8px', padding: '5px 12px', color: 'rgba(255,255,255,0.5)', fontSize: '12px', cursor: 'pointer' }}>
+                style={{ background: 'transparent', border: `1px solid ${BORDER}`, borderRadius: '8px', padding: '5px 12px', color: 'hsl(var(--terex-accent) / 0.5)', fontSize: '12px', cursor: 'pointer' }}>
                 Annuler
               </button>
             </div>
@@ -233,12 +233,12 @@ export function BinanceEmailInput({
 
       {/* Save prompt */}
       {canSave && shouldShowInputFields && (
-        <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
+        <div style={{ background: 'hsl(var(--terex-accent) / 0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
           <div>
             <div style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 500, marginBottom: '2px' }}>
               {editingMode ? 'Mettre à jour ce compte' : 'Sauvegarder ce compte'}
             </div>
-            <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: '11px' }}>Pour ne plus retaper ces infos</div>
+            <div style={{ color: 'hsl(var(--terex-accent) / 0.4)', fontSize: '11px' }}>Pour ne plus retaper ces infos</div>
           </div>
           <Dialog open={showSaveDialog} onOpenChange={setShowSaveDialog}>
             <DialogTrigger asChild>
@@ -246,24 +246,24 @@ export function BinanceEmailInput({
                 <Save size={13} /> {editingMode ? 'Mettre à jour' : 'Enregistrer'}
               </button>
             </DialogTrigger>
-            <DialogContent className="bg-[hsl(var(--terex-darker))] border-[rgba(255,255,255,0.09)]">
+            <DialogContent className="bg-[hsl(var(--terex-darker))] border-[hsl(var(--terex-accent) / 0.09)]">
               <DialogHeader>
                 <DialogTitle className="text-white">{editingMode ? 'Mettre à jour le compte' : 'Sauvegarder le compte Binance'}</DialogTitle>
               </DialogHeader>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', paddingTop: '4px' }}>
                 <div>
-                  <label style={{ ...labelStyle, color: 'rgba(255,255,255,0.5)' }}>NOM DU COMPTE</label>
+                  <label style={{ ...labelStyle, color: 'hsl(var(--terex-accent) / 0.5)' }}>NOM DU COMPTE</label>
                   <input placeholder="Ex: Mon compte principal" value={walletName} onChange={(e) => setWalletName(e.target.value)}
-                    style={{ ...inputStyle, background: 'rgba(255,255,255,0.06)' }} />
-                  <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '11px', marginTop: '4px' }}>Un nom pour reconnaître ce compte facilement</p>
+                    style={{ ...inputStyle, background: 'hsl(var(--terex-accent) / 0.06)' }} />
+                  <p style={{ color: 'hsl(var(--terex-accent) / 0.3)', fontSize: '11px', marginTop: '4px' }}>Un nom pour reconnaître ce compte facilement</p>
                 </div>
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <button onClick={handleSaveWallet} disabled={!walletName || loading}
-                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', background: !walletName || loading ? 'rgba(255,255,255,0.05)' : '#fff', border: 'none', borderRadius: '12px', padding: '11px', color: !walletName || loading ? 'hsl(var(--muted-foreground))' : '#141414', fontSize: '13px', fontWeight: 600, cursor: !walletName || loading ? 'not-allowed' : 'pointer' }}>
+                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', background: !walletName || loading ? 'hsl(var(--terex-accent) / 0.05)' : 'hsl(var(--terex-accent))', border: 'none', borderRadius: '12px', padding: '11px', color: !walletName || loading ? 'hsl(var(--muted-foreground))' : 'hsl(var(--terex-accent-fg))', fontSize: '13px', fontWeight: 600, cursor: !walletName || loading ? 'not-allowed' : 'pointer' }}>
                     <Save size={14} /> {loading ? 'Sauvegarde...' : editingMode ? 'Mettre à jour' : 'Sauvegarder'}
                   </button>
                   <button onClick={() => setShowSaveDialog(false)}
-                    style={{ background: 'transparent', border: `1px solid ${BORDER}`, borderRadius: '12px', padding: '11px 16px', color: 'rgba(255,255,255,0.6)', fontSize: '13px', cursor: 'pointer' }}>
+                    style={{ background: 'transparent', border: `1px solid ${BORDER}`, borderRadius: '12px', padding: '11px 16px', color: 'hsl(var(--terex-accent) / 0.6)', fontSize: '13px', cursor: 'pointer' }}>
                     Annuler
                   </button>
                 </div>
@@ -274,13 +274,13 @@ export function BinanceEmailInput({
       )}
 
       {!shouldShowInputFields && binanceWallets.length > 0 && (
-        <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '12px' }}>
+        <p style={{ color: 'hsl(var(--terex-accent) / 0.3)', fontSize: '12px' }}>
           Sélectionnez un compte Binance ou créez-en un nouveau
         </p>
       )}
 
       {shouldShowInputFields && (
-        <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '12px' }}>
+        <p style={{ color: 'hsl(var(--terex-accent) / 0.3)', fontSize: '12px' }}>
           Entrez les informations de votre compte Binance pour recevoir vos USDT directement
         </p>
       )}

@@ -25,20 +25,20 @@ const NETWORK_LOGOS = {
 const MIN_SELL_USDT = 50;
 
 const CARD: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.03)',
-  border: '1px solid rgba(255,255,255,0.07)',
+  background: 'hsl(var(--terex-accent) / 0.03)',
+  border: '1px solid hsl(var(--terex-accent) / 0.07)',
   borderRadius: '20px',
   overflow: 'hidden',
 };
-const BORDER = 'rgba(255,255,255,0.07)';
+const BORDER = 'hsl(var(--terex-accent) / 0.07)';
 const BTN = 'hsl(var(--terex-gray))';
-const SEL_BG = 'rgba(255,255,255,0.06)';
-const SEL_BORDER = 'rgba(255,255,255,0.18)';
+const SEL_BG = 'hsl(var(--terex-accent) / 0.06)';
+const SEL_BORDER = 'hsl(var(--terex-accent) / 0.18)';
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
-  background: 'rgba(255,255,255,0.04)',
-  border: `1px solid rgba(255,255,255,0.07)`,
+  background: 'hsl(var(--terex-accent) / 0.04)',
+  border: `1px solid hsl(var(--terex-accent) / 0.07)`,
   borderRadius: '12px',
   padding: '13px 16px',
   color: 'hsl(var(--foreground))',
@@ -50,7 +50,7 @@ const inputStyle: React.CSSProperties = {
 const labelStyle: React.CSSProperties = {
   display: 'block',
   fontSize: '12px',
-  color: 'rgba(255,255,255,0.45)',
+  color: 'hsl(var(--terex-accent) / 0.45)',
   marginBottom: '8px',
   letterSpacing: '0.04em',
 };
@@ -62,9 +62,9 @@ function ContinueBtn({ onClick, disabled, children }: { onClick: () => void; dis
         onClick={onClick} disabled={disabled}
         style={{
           display: 'flex', alignItems: 'center', gap: '8px',
-          background: disabled ? 'rgba(255,255,255,0.04)' : BTN,
-          borderRadius: '16px', border: `1px solid rgba(255,255,255,${disabled ? '0.05' : '0.10'})`,
-          padding: '13px 22px', color: disabled ? 'hsl(var(--muted-foreground))' : '#fff',
+          background: disabled ? 'hsl(var(--terex-accent) / 0.04)' : BTN,
+          borderRadius: '16px', border: `1px solid hsl(var(--terex-accent) / ${disabled ? '0.05' : '0.10'})`,
+          padding: '13px 22px', color: disabled ? 'hsl(var(--muted-foreground))' : 'hsl(var(--terex-accent))',
           fontSize: '14px', fontWeight: 600, cursor: disabled ? 'not-allowed' : 'pointer',
         }}
       >
@@ -81,9 +81,9 @@ function ConfirmBtn({ onClick, disabled, loading }: { onClick: () => void; disab
         onClick={onClick} disabled={disabled || loading}
         style={{
           display: 'flex', alignItems: 'center', gap: '8px',
-          background: disabled || loading ? 'rgba(255,255,255,0.08)' : '#ffffff',
+          background: disabled || loading ? 'hsl(var(--terex-accent) / 0.08)' : 'hsl(var(--terex-accent))',
           borderRadius: '16px', border: 'none',
-          padding: '13px 22px', color: disabled || loading ? 'hsl(var(--muted-foreground))' : '#141414',
+          padding: '13px 22px', color: disabled || loading ? 'hsl(var(--muted-foreground))' : 'hsl(var(--terex-accent-fg))',
           fontSize: '14px', fontWeight: 700, cursor: disabled || loading ? 'not-allowed' : 'pointer',
         }}
       >
@@ -210,7 +210,7 @@ export function DesktopSellUSDT() {
 
   const rowItem = (label: string, value: string) => (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: `1px solid ${BORDER}` }}>
-      <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>{label}</span>
+      <span style={{ color: 'hsl(var(--terex-accent) / 0.45)', fontSize: '13px' }}>{label}</span>
       <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 500 }}>{value}</span>
     </div>
   );
@@ -225,15 +225,15 @@ export function DesktopSellUSDT() {
             <div>
               <div style={{ marginBottom: '20px' }}>
                 <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Vendre USDT</h2>
-                <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px' }}>Entrez le montant que vous souhaitez vendre</p>
+                <p style={{ color: 'hsl(var(--terex-accent) / 0.4)', fontSize: '13px' }}>Entrez le montant que vous souhaitez vendre</p>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                 <label style={labelStyle}>Montant</label>
-                <div style={{ display: 'flex', background: 'rgba(255,255,255,0.04)', borderRadius: '10px', padding: '3px', gap: '2px' }}>
+                <div style={{ display: 'flex', background: 'hsl(var(--terex-accent) / 0.04)', borderRadius: '10px', padding: '3px', gap: '2px' }}>
                   {(['USDT', 'XOF'] as const).map(c => (
                     <button key={c} onClick={() => { setInputCurrency(c); setRawAmount(''); }}
-                      style={{ padding: '4px 12px', borderRadius: '8px', border: 'none', fontSize: '12px', fontWeight: 500, cursor: 'pointer', background: inputCurrency === c ? 'hsl(var(--terex-gray))' : 'transparent', color: inputCurrency === c ? 'hsl(var(--foreground))' : 'rgba(255,255,255,0.4)' }}>
+                      style={{ padding: '4px 12px', borderRadius: '8px', border: 'none', fontSize: '12px', fontWeight: 500, cursor: 'pointer', background: inputCurrency === c ? 'hsl(var(--terex-gray))' : 'transparent', color: inputCurrency === c ? 'hsl(var(--foreground))' : 'hsl(var(--terex-accent) / 0.4)' }}>
                       {c === 'XOF' ? 'CFA' : c}
                     </button>
                   ))}
@@ -248,26 +248,26 @@ export function DesktopSellUSDT() {
                 />
                 <span style={{ position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                   {inputCurrency === 'USDT'
-                    ? <><span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '16px' }}>USDT</span><img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" style={{ width: '18px', height: '18px' }} /></>
-                    : <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '16px' }}>CFA</span>
+                    ? <><span style={{ color: 'hsl(var(--terex-accent) / 0.4)', fontSize: '16px' }}>USDT</span><img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" style={{ width: '18px', height: '18px' }} /></>
+                    : <span style={{ color: 'hsl(var(--terex-accent) / 0.4)', fontSize: '16px' }}>CFA</span>
                   }
                 </span>
               </div>
-              <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '11px', marginBottom: '8px' }}>Minimum : {MIN_SELL_USDT} USDT</p>
+              <p style={{ color: 'hsl(var(--terex-accent) / 0.3)', fontSize: '11px', marginBottom: '8px' }}>Minimum : {MIN_SELL_USDT} USDT</p>
 
-              <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '12px', padding: '12px 14px', marginBottom: '4px' }}>
+              <div style={{ background: 'hsl(var(--terex-accent) / 0.03)', border: `1px solid ${BORDER}`, borderRadius: '12px', padding: '12px 14px', marginBottom: '4px' }}>
                 {inputCurrency === 'XOF' && (
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                    <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px' }}>Vous vendez</span>
+                    <span style={{ color: 'hsl(var(--terex-accent) / 0.4)', fontSize: '12px' }}>Vous vendez</span>
                     <span style={{ color: 'hsl(var(--foreground))', fontSize: '12px' }}>{usdtAmount || '0'} USDT</span>
                   </div>
                 )}
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                  <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px' }}>Vous recevez</span>
+                  <span style={{ color: 'hsl(var(--terex-accent) / 0.4)', fontSize: '12px' }}>Vous recevez</span>
                   <span style={{ color: 'hsl(var(--foreground))', fontSize: '12px' }}>{inputCurrency === 'USDT' ? fiatAmount : rawAmount || '0'} CFA</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px' }}>Taux</span>
+                  <span style={{ color: 'hsl(var(--terex-accent) / 0.4)', fontSize: '12px' }}>Taux</span>
                   <span style={{ color: 'hsl(var(--foreground))', fontSize: '12px' }}>1 USDT = {terexBuyRateCfa} CFA</span>
                 </div>
               </div>
@@ -283,15 +283,15 @@ export function DesktopSellUSDT() {
             <div>
               {backBtn('amount')}
               <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Mode d'envoi</h2>
-              <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Choisissez comment envoyer vos USDT</p>
+              <p style={{ color: 'hsl(var(--terex-accent) / 0.4)', fontSize: '13px', marginBottom: '20px' }}>Choisissez comment envoyer vos USDT</p>
 
               {/* Binance Pay toggle */}
-              <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '14px 16px', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ background: 'hsl(var(--terex-accent) / 0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '14px 16px', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <img src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" alt="Binance" style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
                   <div>
                     <div style={{ color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 500 }}>Binance Pay</div>
-                    <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: '11px' }}>Envoi instantané depuis Binance</div>
+                    <div style={{ color: 'hsl(var(--terex-accent) / 0.4)', fontSize: '11px' }}>Envoi instantané depuis Binance</div>
                   </div>
                 </div>
                 <Switch checked={useBinancePay} onCheckedChange={setUseBinancePay} />
@@ -319,11 +319,11 @@ export function DesktopSellUSDT() {
                 <img src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" alt="Binance" style={{ width: '24px', height: '24px', borderRadius: '6px' }} />
                 Binance Pay
               </h2>
-              <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Instructions pour l'envoi via Binance Pay</p>
+              <p style={{ color: 'hsl(var(--terex-accent) / 0.4)', fontSize: '13px', marginBottom: '20px' }}>Instructions pour l'envoi via Binance Pay</p>
 
               <div style={{ background: 'rgba(255,165,0,0.06)', border: '1px solid rgba(255,165,0,0.2)', borderRadius: '12px', padding: '14px 16px', marginBottom: '16px' }}>
                 <p style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 500, marginBottom: '8px' }}>Pour envoyer vos USDT via Binance Pay :</p>
-                <ol style={{ color: 'rgba(255,255,255,0.6)', fontSize: '12px', lineHeight: '1.8', paddingLeft: '16px', margin: 0 }}>
+                <ol style={{ color: 'hsl(var(--terex-accent) / 0.6)', fontSize: '12px', lineHeight: '1.8', paddingLeft: '16px', margin: 0 }}>
                   <li>Ouvrez l'application Binance</li>
                   <li>Allez dans "Pay" puis "Envoyer"</li>
                   <li>Envoyez à l'email: lomohamed834@gmail.com</li>
@@ -333,10 +333,10 @@ export function DesktopSellUSDT() {
                 </ol>
               </div>
 
-              <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '12px', padding: '4px 14px' }}>
+              <div style={{ background: 'hsl(var(--terex-accent) / 0.03)', border: `1px solid ${BORDER}`, borderRadius: '12px', padding: '4px 14px' }}>
                 {[['Email Binance', 'lomohamed834@gmail.com'], ['ID Binance Pay', '450715599']].map(([label, val]) => (
                   <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: `1px solid ${BORDER}` }}>
-                    <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '12px' }}>{label}</span>
+                    <span style={{ color: 'hsl(var(--terex-accent) / 0.45)', fontSize: '12px' }}>{label}</span>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px' }}>{val}</span>
                       <button onClick={() => copyToClipboard(val, label)}
@@ -344,7 +344,7 @@ export function DesktopSellUSDT() {
                           width: 24, height: 24,
                           background: copiedField === label ? 'rgba(74,222,128,0.15)' : SEL_BG,
                           border: 'none', borderRadius: '6px', cursor: 'pointer',
-                          color: copiedField === label ? '#4ade80' : '#fff',
+                          color: copiedField === label ? '#4ade80' : 'hsl(var(--terex-accent))',
                           transition: 'all 0.15s' }}>
                         {copiedField === label ? <CheckCircle size={12} /> : <Copy size={12} />}
                       </button>
@@ -366,7 +366,7 @@ export function DesktopSellUSDT() {
             <div>
               {backBtn(useBinancePay ? 'binance' : 'network')}
               <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Informations de paiement</h2>
-              <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Entrez votre numéro Mobile Money</p>
+              <p style={{ color: 'hsl(var(--terex-accent) / 0.4)', fontSize: '13px', marginBottom: '20px' }}>Entrez votre numéro Mobile Money</p>
 
               <label style={labelStyle}>Service Mobile Money</label>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '16px' }}>
@@ -404,15 +404,15 @@ export function DesktopSellUSDT() {
             <div>
               {backBtn('phone')}
               <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Confirmer la vente</h2>
-              <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Vérifiez les détails de votre transaction</p>
+              <p style={{ color: 'hsl(var(--terex-accent) / 0.4)', fontSize: '13px', marginBottom: '20px' }}>Vérifiez les détails de votre transaction</p>
 
-              <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '4px 16px' }}>
+              <div style={{ background: 'hsl(var(--terex-accent) / 0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '4px 16px' }}>
                 {rowItem('Vous envoyez', `${usdtAmount} USDT`)}
                 {rowItem('Vous recevez', `${fiatAmount} CFA`)}
                 {rowItem('Réseau', useBinancePay ? 'Binance Pay' : network)}
                 {rowItem('Service', provider === 'wave' ? 'Wave' : 'Orange Money')}
                 <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0' }}>
-                  <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Numéro</span>
+                  <span style={{ color: 'hsl(var(--terex-accent) / 0.45)', fontSize: '13px' }}>Numéro</span>
                   <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 500 }}>{phoneNumber}</span>
                 </div>
               </div>
@@ -427,27 +427,27 @@ export function DesktopSellUSDT() {
           <div>
             <div>
               <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Envoyer vos USDT</h2>
-              <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Suivez ces instructions pour compléter votre vente</p>
+              <p style={{ color: 'hsl(var(--terex-accent) / 0.4)', fontSize: '13px', marginBottom: '20px' }}>Suivez ces instructions pour compléter votre vente</p>
 
-              <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '20px' }}>
+              <div style={{ background: 'hsl(var(--terex-accent) / 0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '20px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
                   <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" style={{ width: '36px', height: '36px' }} />
                   {!useBinancePay && network && NETWORK_LOGOS[network as keyof typeof NETWORK_LOGOS] && (
                     <img src={NETWORK_LOGOS[network as keyof typeof NETWORK_LOGOS]} alt={network} style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
                   )}
                   <div style={{ flex: 1 }}>
-                    <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '12px', margin: 0 }}>Envoyez exactement</p>
+                    <p style={{ color: 'hsl(var(--terex-accent) / 0.5)', fontSize: '12px', margin: 0 }}>Envoyez exactement</p>
                     <p style={{ color: 'hsl(var(--foreground))', fontSize: '24px', fontWeight: 700, margin: 0, letterSpacing: '-0.5px' }}>{usdtAmount} <span style={{ fontSize: '14px', fontWeight: 500, color: 'hsl(var(--muted-foreground))' }}>USDT</span></p>
                   </div>
                 </div>
-                {!useBinancePay && <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '12px', marginBottom: '12px' }}>sur le réseau <span style={{ color: 'hsl(var(--foreground))', fontWeight: 600 }}>{network}</span></p>}
+                {!useBinancePay && <p style={{ color: 'hsl(var(--terex-accent) / 0.5)', fontSize: '12px', marginBottom: '12px' }}>sur le réseau <span style={{ color: 'hsl(var(--foreground))', fontWeight: 600 }}>{network}</span></p>}
 
                 {useBinancePay ? (
                   <div style={{ borderTop: `1px solid ${BORDER}`, paddingTop: '12px' }}>
-                    <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px', marginBottom: '8px' }}>Via Binance Pay à :</p>
+                    <p style={{ color: 'hsl(var(--terex-accent) / 0.4)', fontSize: '12px', marginBottom: '8px' }}>Via Binance Pay à :</p>
                     {[['Email', 'lomohamed834@gmail.com'], ['ID Binance', '450715599']].map(([label, val]) => (
                       <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                        <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px' }}>{label}</span>
+                        <span style={{ color: 'hsl(var(--terex-accent) / 0.4)', fontSize: '12px' }}>{label}</span>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                           <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px' }}>{val}</span>
                           <button onClick={() => copyToClipboard(val)} style={{ padding: '4px', background: SEL_BG, border: 'none', borderRadius: '6px', cursor: 'pointer', color: 'hsl(var(--foreground))', display: 'flex' }}>
@@ -472,25 +472,25 @@ export function DesktopSellUSDT() {
                   <div style={{ borderTop: `1px solid ${BORDER}`, paddingTop: '14px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginBottom: '12px' }}>
                       <p style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 600, margin: 0 }}>Scannez le QR</p>
-                      <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px' }}>ou copiez l'adresse</span>
+                      <span style={{ color: 'hsl(var(--terex-accent) / 0.4)', fontSize: '13px' }}>ou copiez l'adresse</span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '14px' }}>
-                      <div style={{ position: 'relative', background: '#fff', padding: '14px', borderRadius: '14px', lineHeight: 0 }}>
+                      <div style={{ position: 'relative', background: 'hsl(var(--terex-accent))', padding: '14px', borderRadius: '14px', lineHeight: 0 }}>
                         <QRCodeSVG value={WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES]} size={200} level="M" />
                         {network && NETWORK_LOGOS[network as keyof typeof NETWORK_LOGOS] && (
                           <img src={NETWORK_LOGOS[network as keyof typeof NETWORK_LOGOS]} alt={network}
-                            style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '40px', height: '40px', borderRadius: '50%', border: '3px solid #fff', background: '#fff' }} />
+                            style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '40px', height: '40px', borderRadius: '50%', border: '3px solid #fff', background: 'hsl(var(--terex-accent))' }} />
                         )}
                       </div>
                     </div>
-                    <div style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '10px 12px' }}>
-                      <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '10px', margin: '0 0 6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Adresse {network}</p>
+                    <div style={{ background: 'hsl(var(--terex-accent) / 0.04)', border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '10px 12px' }}>
+                      <p style={{ color: 'hsl(var(--terex-accent) / 0.4)', fontSize: '10px', margin: '0 0 6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Adresse {network}</p>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <span style={{ color: 'hsl(var(--foreground))', fontSize: '12px', fontFamily: 'monospace', flex: 1, wordBreak: 'break-all' }}>
                           {WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES]}
                         </span>
                         <button onClick={() => copyToClipboard(WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES], 'address')}
-                          style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 12px', background: copiedField === 'address' ? 'rgba(74,222,128,0.15)' : SEL_BG, border: 'none', borderRadius: '10px', cursor: 'pointer', color: copiedField === 'address' ? '#4ade80' : '#fff', fontSize: '12px', fontWeight: 600, flexShrink: 0, transition: 'all 0.15s' }}>
+                          style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 12px', background: copiedField === 'address' ? 'rgba(74,222,128,0.15)' : SEL_BG, border: 'none', borderRadius: '10px', cursor: 'pointer', color: copiedField === 'address' ? '#4ade80' : 'hsl(var(--terex-accent))', fontSize: '12px', fontWeight: 600, flexShrink: 0, transition: 'all 0.15s' }}>
                           {copiedField === 'address' ? <CheckCircle size={13} /> : <Copy size={13} />} Copier
                         </button>
                       </div>

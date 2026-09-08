@@ -64,13 +64,13 @@ function TestimonialCard({ testimonial }: { testimonial: typeof testimonials[0] 
       className="w-[300px] sm:w-[340px] flex-shrink-0 rounded-2xl transition-colors duration-300"
       style={{
         backgroundColor: "hsl(var(--terex-darker))",
-        border: "1px solid rgba(255,255,255,0.07)",
+        border: "1px solid hsl(var(--terex-accent) / 0.07)",
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = "rgba(255,255,255,0.16)";
+        e.currentTarget.style.borderColor = "hsl(var(--terex-accent) / 0.16)";
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = "rgba(255,255,255,0.07)";
+        e.currentTarget.style.borderColor = "hsl(var(--terex-accent) / 0.07)";
       }}
     >
       <CardContent className="p-6">
@@ -82,7 +82,7 @@ function TestimonialCard({ testimonial }: { testimonial: typeof testimonials[0] 
 
         <p
           className="text-sm leading-relaxed mb-6"
-          style={{ color: "rgba(255,255,255,0.75)" }}
+          style={{ color: "hsl(var(--terex-accent) / 0.75)" }}
         >
           "{testimonial.text}"
         </p>
@@ -92,14 +92,14 @@ function TestimonialCard({ testimonial }: { testimonial: typeof testimonials[0] 
             className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
             style={{
               backgroundColor: "hsl(var(--terex-gray))",
-              border: "1px solid rgba(255,255,255,0.10)",
+              border: "1px solid hsl(var(--terex-accent) / 0.10)",
             }}
           >
             <span className="text-white text-xs font-medium">{initials}</span>
           </div>
           <div>
             <h4 className="text-white font-medium text-sm">{testimonial.name}</h4>
-            <p className="text-xs" style={{ color: "rgba(255,255,255,0.45)" }}>
+            <p className="text-xs" style={{ color: "hsl(var(--terex-accent) / 0.45)" }}>
               {testimonial.transaction}
             </p>
           </div>
@@ -120,7 +120,7 @@ export function TestimonialsSection() {
         <div className="text-center mb-14 sm:mb-16">
           <p
             className="text-xs sm:text-sm font-medium uppercase tracking-widest mb-4"
-            style={{ color: "rgba(255,255,255,0.45)" }}
+            style={{ color: "hsl(var(--terex-accent) / 0.45)" }}
           >
             Témoignages
           </p>
@@ -132,7 +132,7 @@ export function TestimonialsSection() {
           </h2>
           <p
             className="text-base sm:text-lg max-w-2xl mx-auto"
-            style={{ color: "rgba(255,255,255,0.55)" }}
+            style={{ color: "hsl(var(--terex-accent) / 0.55)" }}
           >
             Découvrez ce que nos utilisateurs disent de leur expérience avec Terex
           </p>

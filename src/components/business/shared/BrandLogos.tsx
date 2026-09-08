@@ -111,7 +111,7 @@ export function NetworkLogo({ network, size = 28 }: NetworkLogoProps) {
           width: size,
           height: size,
           borderRadius: '50%',
-          background: 'rgba(255, 255, 255,0.15)',
+          background: 'hsl(var(--terex-accent) / 0.15)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',

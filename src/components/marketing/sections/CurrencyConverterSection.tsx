@@ -7,7 +7,7 @@ export function CurrencyConverterSection() {
         <div className="text-center mb-14 sm:mb-16">
           <span
             className="block text-xs tracking-[0.25em] uppercase mb-5"
-            style={{ color: 'rgba(255,255,255,0.45)' }}
+            style={{ color: 'hsl(var(--terex-accent) / 0.45)' }}
           >
             Taux en temps réel
           </span>
@@ -19,7 +19,7 @@ export function CurrencyConverterSection() {
           </h2>
           <p
             className="text-base sm:text-lg max-w-2xl mx-auto mt-5"
-            style={{ color: 'rgba(255,255,255,0.55)' }}
+            style={{ color: 'hsl(var(--terex-accent) / 0.55)' }}
           >
             Utilisez nos convertisseurs pour connaître instantanément nos taux
             USDT et virements internationaux.
@@ -30,7 +30,7 @@ export function CurrencyConverterSection() {
           className="rounded-2xl p-6 sm:p-8"
           style={{
             backgroundColor: 'hsl(var(--terex-darker))',
-            border: '1px solid rgba(255,255,255,0.07)',
+            border: '1px solid hsl(var(--terex-accent) / 0.07)',
           }}
         >
           <UnifiedConverter />

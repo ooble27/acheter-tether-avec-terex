@@ -26,15 +26,15 @@ interface TransactionHistoryProps {
 }
 
 const CARD = 'hsl(var(--terex-darker))';
-const BORDER = 'rgba(255,255,255,0.07)';
-const ICON_BG = 'rgba(255,255,255,0.06)';
+const BORDER = 'hsl(var(--terex-accent) / 0.07)';
+const ICON_BG = 'hsl(var(--terex-accent) / 0.06)';
 
 const typeConfig = (type: string) => {
   switch (type) {
-    case 'buy':      return { label: 'Achat',       Icon: Coins,     color: 'rgba(255,255,255,0.85)' };
-    case 'sell':     return { label: 'Vente',       Icon: HandCoins, color: 'rgba(255,255,255,0.85)' };
-    case 'transfer': return { label: 'Virement',    Icon: Send,      color: 'rgba(255,255,255,0.85)' };
-    default:         return { label: 'Transaction', Icon: Coins,     color: 'rgba(255,255,255,0.85)' };
+    case 'buy':      return { label: 'Achat',       Icon: Coins,     color: 'hsl(var(--terex-accent) / 0.85)' };
+    case 'sell':     return { label: 'Vente',       Icon: HandCoins, color: 'hsl(var(--terex-accent) / 0.85)' };
+    case 'transfer': return { label: 'Virement',    Icon: Send,      color: 'hsl(var(--terex-accent) / 0.85)' };
+    default:         return { label: 'Transaction', Icon: Coins,     color: 'hsl(var(--terex-accent) / 0.85)' };
   }
 };
 
@@ -42,7 +42,7 @@ const statusConfig = (status: string) => {
   switch (status) {
     case 'completed':
     case 'confirmed':
-      return { label: 'Terminée', Icon: CheckCircle, bg: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.55)' };
+      return { label: 'Terminée', Icon: CheckCircle, bg: 'hsl(var(--terex-accent) / 0.06)', color: 'hsl(var(--terex-accent) / 0.55)' };
     case 'processing':
       return { label: 'En traitement', Icon: Clock, bg: 'rgba(251,191,36,0.08)', color: '#fbbf24' };
     case 'cancelled':
@@ -140,7 +140,7 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
 
               {/* Expanded details */}
               {isOpen && (
-                <div style={{ borderTop: `1px solid ${BORDER}`, padding: '10px 16px 14px', display: 'flex', flexDirection: 'column', gap: '8px', background: 'rgba(255,255,255,0.02)' }}>
+                <div style={{ borderTop: `1px solid ${BORDER}`, padding: '10px 16px 14px', display: 'flex', flexDirection: 'column', gap: '8px', background: 'hsl(var(--terex-accent) / 0.02)' }}>
                   {[
                     { label: 'Montant envoyé', value: `${tx.amount} ${tx.currency}` },
                     tx.type === 'buy' && tx.usdtAmount ? { label: 'Reçu', value: `${tx.usdtAmount} USDT` } : null,

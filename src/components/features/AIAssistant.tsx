@@ -383,7 +383,7 @@ Si le problème persiste, contactez notre support :
                   <div
                     className={`max-w-[80%] p-3 rounded-lg ${
                       message.role === 'user'
-                        ? 'bg-terex-accent text-[#141414]'
+                        ? 'bg-terex-accent text-[hsl(var(--terex-accent-fg))]'
                         : 'bg-gray-100 text-gray-900'
                     }`}
                   >
@@ -411,7 +411,7 @@ Si le problème persiste, contactez notre support :
                     <Button
                       size="sm"
                       onClick={() => handleActionConfirm(message.intent)}
-                      className="bg-terex-accent hover:bg-terex-accent/80 text-[#141414]"
+                      className="bg-terex-accent hover:bg-terex-accent/80 text-[hsl(var(--terex-accent-fg))]"
                       disabled={isLoading}
                     >
                       Exécuter automatiquement
@@ -453,7 +453,7 @@ Si le problème persiste, contactez notre support :
           <Button
             onClick={() => sendMessage()}
             disabled={!inputMessage.trim() || isLoading}
-            className="bg-terex-accent hover:bg-terex-accent/80 text-[#141414] px-4"
+            className="bg-terex-accent hover:bg-terex-accent/80 text-[hsl(var(--terex-accent-fg))] px-4"
           >
             {isLoading ? (
               <Loader2 className="w-4 h-4 animate-spin" />

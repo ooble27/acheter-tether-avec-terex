@@ -34,7 +34,7 @@ export function FounderSection() {
           className="rounded-2xl overflow-hidden"
           style={{
             backgroundColor: "hsl(var(--terex-darker))",
-            border: "1px solid rgba(255,255,255,0.07)",
+            border: "1px solid hsl(var(--terex-accent) / 0.07)",
           }}
         >
           <div className="flex flex-col lg:flex-row">
@@ -64,8 +64,8 @@ export function FounderSection() {
                       className="p-2.5 rounded-full backdrop-blur-sm transition-all"
                       style={{
                         backgroundColor: "rgba(20,20,20,0.6)",
-                        border: "1px solid rgba(255,255,255,0.08)",
-                        color: "rgba(255,255,255,0.6)",
+                        border: "1px solid hsl(var(--terex-accent) / 0.08)",
+                        color: "hsl(var(--terex-accent) / 0.6)",
                       }}
                       aria-label={social.name}
                     >
@@ -91,7 +91,7 @@ export function FounderSection() {
               {/* Eyebrow */}
               <p
                 className="text-xs sm:text-sm font-medium uppercase tracking-widest mb-6"
-                style={{ color: "rgba(255,255,255,0.45)" }}
+                style={{ color: "hsl(var(--terex-accent) / 0.45)" }}
               >
                 Le fondateur
               </p>
@@ -113,7 +113,7 @@ export function FounderSection() {
                   Mohamed Lo
                   <span
                     className="font-normal"
-                    style={{ color: "rgba(255,255,255,0.55)" }}
+                    style={{ color: "hsl(var(--terex-accent) / 0.55)" }}
                   >
                     , CEO &amp; Fondateur
                   </span>
@@ -132,17 +132,17 @@ export function FounderSection() {
                       rel="noopener noreferrer"
                       className="p-3 rounded-xl transition-all duration-300"
                       style={{
-                        backgroundColor: "rgba(255,255,255,0.06)",
-                        border: "1px solid rgba(255,255,255,0.08)",
-                        color: "rgba(255,255,255,0.6)",
+                        backgroundColor: "hsl(var(--terex-accent) / 0.06)",
+                        border: "1px solid hsl(var(--terex-accent) / 0.08)",
+                        color: "hsl(var(--terex-accent) / 0.6)",
                       }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.color = "#fff";
-                        e.currentTarget.style.borderColor = "rgba(255,255,255,0.16)";
+                        e.currentTarget.style.borderColor = "hsl(var(--terex-accent) / 0.16)";
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.color = "rgba(255,255,255,0.6)";
-                        e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+                        e.currentTarget.style.color = "hsl(var(--terex-accent) / 0.6)";
+                        e.currentTarget.style.borderColor = "hsl(var(--terex-accent) / 0.08)";
                       }}
                       aria-label={social.name}
                     >
@@ -155,13 +155,13 @@ export function FounderSection() {
               {/* Separator */}
               <div
                 className="pt-6"
-                style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}
+                style={{ borderTop: "1px solid hsl(var(--terex-accent) / 0.07)" }}
               >
                 {/* Highlights */}
                 <div className="flex flex-wrap items-center gap-6">
                   <span
                     className="text-sm"
-                    style={{ color: "rgba(255,255,255,0.45)" }}
+                    style={{ color: "hsl(var(--terex-accent) / 0.45)" }}
                   >
                     Valeurs clés
                   </span>
@@ -172,11 +172,11 @@ export function FounderSection() {
                         <div
                           key={index}
                           className="flex items-center gap-2"
-                          style={{ color: "rgba(255,255,255,0.55)" }}
+                          style={{ color: "hsl(var(--terex-accent) / 0.55)" }}
                         >
                           <IconComponent
                             className="w-4 h-4"
-                            style={{ color: "rgba(255,255,255,0.6)" }}
+                            style={{ color: "hsl(var(--terex-accent) / 0.6)" }}
                           />
                           <span className="text-sm">{item.label}</span>
                         </div>

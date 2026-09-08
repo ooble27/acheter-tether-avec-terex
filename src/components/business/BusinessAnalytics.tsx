@@ -11,7 +11,7 @@ import {
 const C = {
   bg: 'hsl(var(--terex-dark))', l1: 'hsl(var(--terex-darker))', l2: 'hsl(var(--terex-gray))', l3: 'hsl(var(--terex-gray))', l4: 'hsl(var(--terex-gray))',
   bd: 'hsl(var(--terex-gray))', bds: 'hsl(var(--terex-gray))', bdh: '#484848',
-  teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.08)', tealB: 'rgba(255, 255, 255,0.20)',
+  teal: '#ffffff', tealH: '#2d7870', tealT: 'hsl(var(--terex-accent) / 0.08)', tealB: 'hsl(var(--terex-accent) / 0.20)',
   t1: '#f0f0f0', t2: 'hsl(var(--muted-foreground))', t3: '#686868',
   red: '#ef4444', redT: 'rgba(239,68,68,0.08)', redB: 'rgba(239,68,68,0.16)',
   amber: '#C9A227', amberT: 'rgba(201,162,39,0.10)',
@@ -481,12 +481,12 @@ export const BusinessAnalytics = React.memo(function BusinessAnalytics({ user }:
           <StatusStat
             icon={<Clock style={{ width: 14, height: 14 }} />}
             label="En attente" count={2} pct="4.3%"
-            color={C.t2} colorT='rgba(255,255,255,0.05)'
+            color={C.t2} colorT='hsl(var(--terex-accent) / 0.05)'
           />
           <StatusStat
             icon={<Loader2 style={{ width: 14, height: 14 }} />}
             label="En cours" count={1} pct="2.1%"
-            color={C.t3} colorT='rgba(255,255,255,0.04)'
+            color={C.t3} colorT='hsl(var(--terex-accent) / 0.04)'
           />
           <StatusStat
             icon={<XCircle style={{ width: 14, height: 14 }} />}

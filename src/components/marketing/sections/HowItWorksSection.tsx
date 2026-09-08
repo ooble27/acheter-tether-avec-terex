@@ -33,7 +33,7 @@ export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionPr
         <AnimatedSection className="text-center mb-16 sm:mb-20">
           <span
             className="block text-xs font-medium uppercase tracking-widest mb-4"
-            style={{ color: 'rgba(255,255,255,0.45)' }}
+            style={{ color: 'hsl(var(--terex-accent) / 0.45)' }}
           >
             Processus
           </span>
@@ -45,7 +45,7 @@ export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionPr
           </h2>
           <p
             className="max-w-2xl mx-auto mt-4 text-base sm:text-lg"
-            style={{ color: 'rgba(255,255,255,0.55)' }}
+            style={{ color: 'hsl(var(--terex-accent) / 0.55)' }}
           >
             Trois étapes simples, de l'inscription à la réception.
           </p>
@@ -57,30 +57,30 @@ export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionPr
             <AnimatedItem key={step.number} index={index}>
               <div
                 className="h-full rounded-2xl p-8 transition-colors duration-300"
-                style={{ backgroundColor: 'hsl(var(--terex-darker))', border: '1px solid rgba(255,255,255,0.07)' }}
+                style={{ backgroundColor: 'hsl(var(--terex-darker))', border: '1px solid hsl(var(--terex-accent) / 0.07)' }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)';
+                  e.currentTarget.style.borderColor = 'hsl(var(--terex-accent) / 0.15)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)';
+                  e.currentTarget.style.borderColor = 'hsl(var(--terex-accent) / 0.07)';
                 }}
               >
                 {/* Step number badge */}
                 <div
                   className="flex items-center justify-center w-12 h-12 rounded-xl mb-6 text-lg font-bold text-white"
-                  style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}
+                  style={{ backgroundColor: 'hsl(var(--terex-accent) / 0.06)' }}
                 >
                   {step.number}
                 </div>
 
                 <h3 className="text-xl font-semibold text-white mb-3">
                   {step.title}{' '}
-                  <span style={{ color: 'rgba(255,255,255,0.55)' }}>{step.titleHighlight}</span>
+                  <span style={{ color: 'hsl(var(--terex-accent) / 0.55)' }}>{step.titleHighlight}</span>
                 </h3>
 
                 <p
                   className="text-sm sm:text-base leading-relaxed"
-                  style={{ color: 'rgba(255,255,255,0.55)' }}
+                  style={{ color: 'hsl(var(--terex-accent) / 0.55)' }}
                 >
                   {step.description}
                 </p>
@@ -93,7 +93,7 @@ export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionPr
           <Button
             onClick={onBlockchainInfoClick}
             className="rounded-full px-8 py-5 text-sm hover:opacity-90"
-            style={{ backgroundColor: '#ffffff', color: '#141414', fontWeight: 700 }}
+            style={{ backgroundColor: '#ffffff', color: 'hsl(var(--terex-accent-fg))', fontWeight: 700 }}
           >
             En savoir plus sur la blockchain
           </Button>

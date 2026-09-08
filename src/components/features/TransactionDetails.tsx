@@ -301,7 +301,7 @@ export function TransactionDetails({ transaction }: TransactionDetailsProps) {
         <button
           onClick={downloadReceipt}
           className="w-full mt-2 flex items-center justify-center gap-2 rounded-xl py-3 font-semibold"
-          style={{ background: '#fff', color: '#141414' }}
+          style={{ background: '#fff', color: 'hsl(var(--terex-accent-fg))' }}
         >
           <Download className="w-4 h-4" /> Télécharger le reçu (PDF)
         </button>
