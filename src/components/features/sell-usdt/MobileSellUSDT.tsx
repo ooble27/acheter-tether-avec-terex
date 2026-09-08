@@ -16,7 +16,7 @@ import { useSavedPhones } from '@/hooks/useSavedPhones';
 
 const CARD = 'rgba(255,255,255,0.03)';
 const BORDER = 'rgba(255,255,255,0.07)';
-const BTN = '#2d2d2d';
+const BTN = 'hsl(var(--terex-gray))';
 const SEL_BG = 'rgba(255,255,255,0.06)';
 const SEL_BORDER = 'rgba(255,255,255,0.18)';
 
@@ -47,10 +47,10 @@ function StepHeader({ onBack, title, description }: { onBack?: () => void; title
   return (
     <div style={{ padding: '0 20px 16px' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-        {onBack && <button onClick={onBack} style={circleBackBtn}><ArrowLeft size={18} color="#fff" /></button>}
-        <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 700, margin: 0, letterSpacing: '-0.3px', display: 'flex', alignItems: 'center', gap: '8px' }}>{title}</h2>
+        {onBack && <button onClick={onBack} style={circleBackBtn}><ArrowLeft size={18} color="hsl(var(--foreground))" /></button>}
+        <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 700, margin: 0, letterSpacing: '-0.3px', display: 'flex', alignItems: 'center', gap: '8px' }}>{title}</h2>
       </div>
-      <p style={{ color: '#6b7280', fontSize: '13px', margin: '8px 0 0' }}>{description}</p>
+      <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px', margin: '8px 0 0' }}>{description}</p>
     </div>
   );
 }
@@ -65,7 +65,7 @@ function ContinueBtn({ onClick, disabled, children }: { onClick: () => void; dis
           display: 'flex', alignItems: 'center', gap: '8px',
           background: disabled ? 'rgba(255,255,255,0.04)' : BTN,
           borderRadius: '16px', border: '1px solid rgba(255,255,255,0.10)',
-          padding: '13px 22px', color: disabled ? '#6b7280' : '#fff',
+          padding: '13px 22px', color: disabled ? 'hsl(var(--muted-foreground))' : '#fff',
           fontSize: '14px', fontWeight: 600, cursor: disabled ? 'not-allowed' : 'pointer',
           outline: 'none', WebkitTapHighlightColor: 'transparent', transition: 'background 0.15s',
         }}
@@ -167,27 +167,27 @@ export function MobileSellUSDT() {
   if (showKYCPage) return <KYCPage onBack={() => setShowKYCPage(false)} />;
 
   return (
-    <div style={{ minHeight: '100vh', background: '#1a1a1a' }}>
+    <div style={{ minHeight: '100vh', background: 'hsl(var(--terex-dark))' }}>
       <div style={{ maxWidth: '480px', margin: '0 auto' }}>
 
         {/* ── Step 1: Amount ─────────────────────────────────────────── */}
         {step === 'amount' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', padding: '80px 20px 100px' }}>
             <div>
-              <h2 style={{ color: '#fff', fontSize: '26px', fontWeight: 700, margin: '0 0 4px', letterSpacing: '-0.4px' }}>Vendre USDT</h2>
-              <p style={{ color: '#6b7280', fontSize: '13px', margin: 0 }}>Entrez le montant que vous souhaitez vendre</p>
+              <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '26px', fontWeight: 700, margin: '0 0 4px', letterSpacing: '-0.4px' }}>Vendre USDT</h2>
+              <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px', margin: 0 }}>Entrez le montant que vous souhaitez vendre</p>
             </div>
 
             {/* Input card */}
             <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '20px' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-                <span style={{ color: '#6b7280', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Montant</span>
+                <span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Montant</span>
                 <div style={{ display: 'inline-flex', background: 'rgba(255,255,255,0.04)', borderRadius: '10px', padding: '3px', gap: '2px' }}>
                   {(['USDT', 'XOF'] as const).map(c => (
                     <button key={c} onClick={() => { setInputCurrency(c); setRawAmount(''); }}
                       style={{ padding: '5px 12px', borderRadius: '7px', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: 600, outline: 'none',
                         background: inputCurrency === c ? BTN : 'transparent',
-                        color: inputCurrency === c ? '#fff' : '#6b7280', transition: 'all 0.15s' }}>
+                        color: inputCurrency === c ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))', transition: 'all 0.15s' }}>
                       {c === 'XOF' ? 'CFA' : 'USDT'}
                     </button>
                   ))}
@@ -197,44 +197,44 @@ export function MobileSellUSDT() {
               <div style={{ position: 'relative' }}>
                 <input type="number" placeholder="0" value={rawAmount}
                   onChange={e => setRawAmount(e.target.value)}
-                  style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '18px 84px 18px 20px', color: '#fff', fontSize: '34px', fontWeight: 700, outline: 'none', letterSpacing: '-1px', boxSizing: 'border-box', fontFamily: 'inherit' }}
+                  style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '18px 84px 18px 20px', color: 'hsl(var(--foreground))', fontSize: '34px', fontWeight: 700, outline: 'none', letterSpacing: '-1px', boxSizing: 'border-box', fontFamily: 'inherit' }}
                 />
                 <span style={{ position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                   {inputCurrency === 'USDT' ? (
-                    <><span style={{ color: '#6b7280', fontSize: '14px', fontWeight: 500 }}>USDT</span><img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" style={{ width: '20px', height: '20px' }} /></>
+                    <><span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '14px', fontWeight: 500 }}>USDT</span><img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" style={{ width: '20px', height: '20px' }} /></>
                   ) : (
-                    <span style={{ color: '#6b7280', fontSize: '14px', fontWeight: 500 }}>CFA</span>
+                    <span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '14px', fontWeight: 500 }}>CFA</span>
                   )}
                 </span>
               </div>
-              <p style={{ color: '#6b7280', fontSize: '11px', margin: '8px 0 0' }}>Minimum : {MIN_SELL_USDT} USDT</p>
+              <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', margin: '8px 0 0' }}>Minimum : {MIN_SELL_USDT} USDT</p>
             </div>
 
             {/* Summary */}
             <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {inputCurrency === 'XOF' && (
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ color: '#6b7280', fontSize: '13px' }}>Vous vendez</span>
+                  <span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px' }}>Vous vendez</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>{usdtAmount || '0'} USDT</span>
+                    <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 500 }}>{usdtAmount || '0'} USDT</span>
                     <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" style={{ width: '16px', height: '16px' }} />
                   </div>
                 </div>
               )}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ color: '#6b7280', fontSize: '13px' }}>Vous recevez</span>
-                <span style={{ color: '#fff', fontSize: '14px', fontWeight: 600 }}>{inputCurrency === 'USDT' ? fiatAmount : rawAmount || '0'} {currency}</span>
+                <span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px' }}>Vous recevez</span>
+                <span style={{ color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600 }}>{inputCurrency === 'USDT' ? fiatAmount : rawAmount || '0'} {currency}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ color: '#6b7280', fontSize: '13px' }}>Taux</span>
-                <span style={{ color: '#9ca3af', fontSize: '13px' }}>1 USDT = {terexBuyRateCfa} {currency}</span>
+                <span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px' }}>Taux</span>
+                <span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px' }}>1 USDT = {terexBuyRateCfa} {currency}</span>
               </div>
             </div>
 
             {/* Continue — RIGHT */}
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <button onClick={handleContinueToNetwork}
-                style={{ display: 'flex', alignItems: 'center', gap: '8px', background: BTN, borderRadius: '16px', border: '1px solid rgba(255,255,255,0.10)', padding: '13px 22px', color: '#fff', fontSize: '14px', fontWeight: 600, cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent' }}>
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', background: BTN, borderRadius: '16px', border: '1px solid rgba(255,255,255,0.10)', padding: '13px 22px', color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600, cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent' }}>
                 <HandCoins size={17} strokeWidth={2} /> Continuer
               </button>
             </div>
@@ -257,15 +257,15 @@ export function MobileSellUSDT() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <img src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" alt="Binance" style={{ width: '40px', height: '40px', borderRadius: '50%' }} />
                     <div>
-                      <p style={{ color: '#fff', fontSize: '14px', fontWeight: 600, margin: '0 0 2px' }}>Binance Pay</p>
-                      <p style={{ color: '#6b7280', fontSize: '11px', margin: 0 }}>Envoi instantané depuis Binance</p>
+                      <p style={{ color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600, margin: '0 0 2px' }}>Binance Pay</p>
+                      <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', margin: 0 }}>Envoi instantané depuis Binance</p>
                     </div>
                   </div>
-                  <Switch checked={useBinancePay} onCheckedChange={setUseBinancePay} className="data-[state=checked]:bg-[#2d2d2d]" />
+                  <Switch checked={useBinancePay} onCheckedChange={setUseBinancePay} className="data-[state=checked]:bg-[hsl(var(--terex-gray))]" />
                 </div>
                 {useBinancePay && (
                   <div style={{ marginTop: '12px', padding: '10px 14px', background: 'rgba(255,255,255,0.04)', borderRadius: '10px', border: `1px solid ${BORDER}` }}>
-                    <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>Vous enverrez vos USDT via Binance Pay à notre ID Binance</p>
+                    <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px', margin: 0 }}>Vous enverrez vos USDT via Binance Pay à notre ID Binance</p>
                   </div>
                 )}
               </div>
@@ -273,7 +273,7 @@ export function MobileSellUSDT() {
               {/* Blockchain networks */}
               {!useBinancePay && (
                 <div>
-                  <p style={{ color: '#6b7280', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '4px 0 10px' }}>Réseau blockchain</p>
+                  <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '4px 0 10px' }}>Réseau blockchain</p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                     {Object.keys(NETWORK_LOGOS).map(net => (
                       <NetworkPill key={net} network={net} selected={network === net} onSelect={() => setNetwork(net)} />
@@ -301,12 +301,12 @@ export function MobileSellUSDT() {
 
             <div style={{ padding: '4px 20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <p style={{ color: '#fff', fontSize: '13px', fontWeight: 600, margin: 0 }}>Pour envoyer vos USDT via Binance Pay :</p>
-                <ol style={{ color: '#9ca3af', fontSize: '12px', lineHeight: 1.8, paddingLeft: '16px', margin: 0 }}>
+                <p style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 600, margin: 0 }}>Pour envoyer vos USDT via Binance Pay :</p>
+                <ol style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px', lineHeight: 1.8, paddingLeft: '16px', margin: 0 }}>
                   <li>Ouvrez l'application Binance</li>
                   <li>Allez dans « Pay » puis « Envoyer »</li>
                   <li>Utilisez l'email ou l'ID ci-dessous</li>
-                  <li>Montant exact : <strong style={{ color: '#fff' }}>{usdtAmount} USDT</strong></li>
+                  <li>Montant exact : <strong style={{ color: 'hsl(var(--foreground))' }}>{usdtAmount} USDT</strong></li>
                   <li>Confirmez l'envoi</li>
                 </ol>
               </div>
@@ -316,15 +316,15 @@ export function MobileSellUSDT() {
                   { label: 'ID Binance Pay', value: '450715599' },
                 ].map(({ label, value }, i, arr) => (
                   <div key={label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', borderBottom: i < arr.length - 1 ? `1px solid ${BORDER}` : 'none' }}>
-                    <span style={{ color: '#6b7280', fontSize: '12px' }}>{label}</span>
+                    <span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px' }}>{label}</span>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>{value}</span>
+                      <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 500 }}>{value}</span>
                       <button onClick={() => copyToClipboard(value, label)}
                         style={{ display: 'flex', alignItems: 'center', justifyContent: 'center',
                           width: 26, height: 26,
                           background: copiedField === label ? 'rgba(74,222,128,0.15)' : 'rgba(255,255,255,0.06)',
                           border: 'none', borderRadius: '6px', cursor: 'pointer',
-                          color: copiedField === label ? '#4ade80' : '#9ca3af',
+                          color: copiedField === label ? '#4ade80' : 'hsl(var(--muted-foreground))',
                           transition: 'all 0.15s' }}>
                         {copiedField === label ? <CheckCircle size={13} /> : <Copy size={13} />}
                       </button>
@@ -351,7 +351,7 @@ export function MobileSellUSDT() {
 
             <div style={{ padding: '4px 20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div>
-                <p style={{ color: '#6b7280', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 10px' }}>Service Mobile Money</p>
+                <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 10px' }}>Service Mobile Money</p>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                   <ProviderPill provider="wave"   selected={provider === 'wave'}   onSelect={() => setProvider('wave')} />
                   <ProviderPill provider="orange" selected={provider === 'orange'} onSelect={() => setProvider('orange')} />
@@ -359,7 +359,7 @@ export function MobileSellUSDT() {
               </div>
 
               <div>
-                <p style={{ color: '#6b7280', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 10px' }}>Numéro de téléphone</p>
+                <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 10px' }}>Numéro de téléphone</p>
                 <PhoneBook
                   provider={provider}
                   value={phoneNumber}
@@ -403,8 +403,8 @@ export function MobileSellUSDT() {
                   { label: 'Numéro', value: phoneNumber },
                 ].map(({ label, value }, i, arr) => (
                   <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 16px', borderBottom: i < arr.length - 1 ? `1px solid ${BORDER}` : 'none' }}>
-                    <span style={{ color: '#6b7280', fontSize: '13px' }}>{label}</span>
-                    <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>{value}</span>
+                    <span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px' }}>{label}</span>
+                    <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 500 }}>{value}</span>
                   </div>
                 ))}
               </div>
@@ -412,7 +412,7 @@ export function MobileSellUSDT() {
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '16px 20px 28px' }}>
               <button onClick={handleConfirm} disabled={loading}
-                style={{ display: 'flex', alignItems: 'center', gap: '8px', background: loading ? 'rgba(255,255,255,0.04)' : '#ffffff', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.15)', padding: '13px 22px', color: loading ? '#6b7280' : '#141414', fontSize: '14px', fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', outline: 'none' }}>
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', background: loading ? 'rgba(255,255,255,0.04)' : '#ffffff', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.15)', padding: '13px 22px', color: loading ? 'hsl(var(--muted-foreground))' : '#141414', fontSize: '14px', fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', outline: 'none' }}>
                 <HandCoins size={17} strokeWidth={2} />
                 {loading ? 'Traitement…' : 'Confirmer la vente'}
               </button>
@@ -438,9 +438,9 @@ export function MobileSellUSDT() {
                     <img src={NETWORK_LOGOS[network]} alt={network} style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
                   )}
                 </div>
-                <p style={{ color: '#6b7280', fontSize: '12px', margin: '0 0 6px' }}>Envoyez exactement</p>
-                <p style={{ color: '#fff', fontSize: '32px', fontWeight: 700, margin: '0 0 4px', letterSpacing: '-1px' }}>{usdtAmount} <span style={{ fontSize: '16px', fontWeight: 500, color: '#9ca3af' }}>USDT</span></p>
-                {!useBinancePay && <p style={{ color: '#6b7280', fontSize: '12px', margin: 0 }}>sur le réseau <span style={{ color: '#fff', fontWeight: 600 }}>{network}</span></p>}
+                <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px', margin: '0 0 6px' }}>Envoyez exactement</p>
+                <p style={{ color: 'hsl(var(--foreground))', fontSize: '32px', fontWeight: 700, margin: '0 0 4px', letterSpacing: '-1px' }}>{usdtAmount} <span style={{ fontSize: '16px', fontWeight: 500, color: 'hsl(var(--muted-foreground))' }}>USDT</span></p>
+                {!useBinancePay && <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px', margin: 0 }}>sur le réseau <span style={{ color: 'hsl(var(--foreground))', fontWeight: 600 }}>{network}</span></p>}
               </div>
 
               {useBinancePay ? (
@@ -451,12 +451,12 @@ export function MobileSellUSDT() {
                       { label: 'ID Binance Pay', value: '450715599' },
                     ].map(({ label, value }, i, arr) => (
                       <div key={label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', borderBottom: i < arr.length - 1 ? `1px solid ${BORDER}` : 'none' }}>
-                        <span style={{ color: '#6b7280', fontSize: '12px' }}>{label}</span>
+                        <span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px' }}>{label}</span>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>{value}</span>
+                          <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 500 }}>{value}</span>
                           <button onClick={() => copyToClipboard(value, label)}
                             style={{ padding: '4px', background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>
-                            <Copy size={13} color="#9ca3af" />
+                            <Copy size={13} color="hsl(var(--muted-foreground))" />
                           </button>
                         </div>
                       </div>
@@ -470,7 +470,7 @@ export function MobileSellUSDT() {
                         setTimeout(() => window.open(/iPhone|iPad|iPod/.test(navigator.userAgent) ? 'https://apps.apple.com/app/binance-buy-bitcoin-crypto/id1436799971' : 'https://play.google.com/store/apps/details?id=com.binance.dev', '_blank'), 1000);
                       } else { window.open('https://www.binance.com', '_blank'); }
                     }}
-                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%', padding: '14px', background: CARD, border: `1px solid ${BORDER}`, borderRadius: '14px', color: '#fff', fontSize: '14px', fontWeight: 600, cursor: 'pointer', outline: 'none' }}>
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%', padding: '14px', background: CARD, border: `1px solid ${BORDER}`, borderRadius: '14px', color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600, cursor: 'pointer', outline: 'none' }}>
                     <img src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" alt="Binance" style={{ width: '20px', height: '20px' }} />
                     Ouvrir Binance Pay
                   </button>
@@ -478,8 +478,8 @@ export function MobileSellUSDT() {
               ) : (
                 <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '16px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginBottom: '12px' }}>
-                    <p style={{ color: '#fff', fontSize: '13px', fontWeight: 600, margin: 0 }}>Scannez le QR</p>
-                    <span style={{ color: '#6b7280', fontSize: '13px' }}>ou copiez l'adresse</span>
+                    <p style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 600, margin: 0 }}>Scannez le QR</p>
+                    <span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px' }}>ou copiez l'adresse</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '14px' }}>
                     <div style={{ position: 'relative', background: '#fff', padding: '14px', borderRadius: '14px', lineHeight: 0 }}>
@@ -491,9 +491,9 @@ export function MobileSellUSDT() {
                     </div>
                   </div>
                   <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '10px 12px' }}>
-                    <p style={{ color: '#6b7280', fontSize: '10px', margin: '0 0 6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Adresse {network}</p>
+                    <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '10px', margin: '0 0 6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Adresse {network}</p>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <p style={{ color: '#fff', fontSize: '11px', wordBreak: 'break-all', fontFamily: 'monospace', flex: 1, margin: 0, lineHeight: 1.5 }}>
+                      <p style={{ color: 'hsl(var(--foreground))', fontSize: '11px', wordBreak: 'break-all', fontFamily: 'monospace', flex: 1, margin: 0, lineHeight: 1.5 }}>
                         {WALLET_ADDRESSES[network]}
                       </p>
                       <button onClick={() => copyToClipboard(WALLET_ADDRESSES[network], 'address')}
@@ -514,7 +514,7 @@ export function MobileSellUSDT() {
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '16px 20px 28px' }}>
               <button onClick={handleBackToDashboard}
-                style={{ display: 'flex', alignItems: 'center', gap: '8px', background: BTN, borderRadius: '16px', border: '1px solid rgba(255,255,255,0.10)', padding: '13px 22px', color: '#fff', fontSize: '14px', fontWeight: 600, cursor: 'pointer', outline: 'none' }}>
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', background: BTN, borderRadius: '16px', border: '1px solid rgba(255,255,255,0.10)', padding: '13px 22px', color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600, cursor: 'pointer', outline: 'none' }}>
                 <HandCoins size={17} strokeWidth={2} /> Compris
               </button>
             </div>

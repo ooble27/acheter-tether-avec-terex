@@ -2,7 +2,7 @@
 import { Twitter, Facebook, Linkedin, Instagram, Youtube } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-const SURFACE = '#1e1e1e';
+const SURFACE = 'hsl(var(--terex-darker))';
 const BORDER = 'rgba(255,255,255,0.07)';
 const MUTED = 'rgba(255,255,255,0.55)';
 const MUTED_SOFT = 'rgba(255,255,255,0.45)';
@@ -57,7 +57,7 @@ export function FooterSection() {
   ];
 
   return (
-    <footer style={{ backgroundColor: '#1a1a1a', borderTop: `1px solid ${BORDER}` }}>
+    <footer style={{ backgroundColor: 'hsl(var(--terex-dark))', borderTop: `1px solid ${BORDER}` }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid grid-cols-2 md:grid-cols-6 gap-10">
 
@@ -69,7 +69,7 @@ export function FooterSection() {
                 alt="Terex Logo"
                 className="w-12 h-12 object-contain"
               />
-              <span className="text-xl font-bold tracking-tight" style={{ color: '#fff', letterSpacing: '-0.03em' }}>Terex</span>
+              <span className="text-xl font-bold tracking-tight" style={{ color: 'hsl(var(--foreground))', letterSpacing: '-0.03em' }}>Terex</span>
             </div>
 
             <p className="text-sm leading-relaxed mb-6 max-w-xs" style={{ color: MUTED }}>
@@ -100,7 +100,7 @@ export function FooterSection() {
           {/* Link columns */}
           {footerSections.map((section) => (
             <div key={section.title}>
-              <h4 className="text-sm font-semibold mb-4" style={{ color: '#fff' }}>{section.title}</h4>
+              <h4 className="text-sm font-semibold mb-4" style={{ color: 'hsl(var(--foreground))' }}>{section.title}</h4>
               <ul className="space-y-2.5">
                 {section.links.map((link) => (
                   <li key={link.label}>

@@ -17,7 +17,7 @@ interface UserGuideProps {
   onBack: () => void;
 }
 
-const SURFACE = '#1e1e1e';
+const SURFACE = 'hsl(var(--terex-darker))';
 const PAGE = '#141414';
 const BORDER = 'rgba(255,255,255,0.07)';
 const TILE = 'rgba(255,255,255,0.06)';

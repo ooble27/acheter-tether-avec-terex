@@ -9,7 +9,7 @@ const stats = [
 
 export function StatsSection() {
   return (
-    <section className="py-20 sm:py-28" style={{ backgroundColor: '#1a1a1a' }}>
+    <section className="py-20 sm:py-28" style={{ backgroundColor: 'hsl(var(--terex-dark))' }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSection>
           <h2
@@ -34,7 +34,7 @@ export function StatsSection() {
             <div
               key={stat.label}
               className="p-8 sm:p-10"
-              style={{ backgroundColor: '#1e1e1e' }}
+              style={{ backgroundColor: 'hsl(var(--terex-darker))' }}
             >
               <div className="text-4xl sm:text-5xl font-light text-white leading-none mb-3">
                 {stat.value}

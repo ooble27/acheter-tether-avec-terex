@@ -10,15 +10,15 @@ import {
 
 // ── Design tokens ─────────────────────────────────────────────────────
 const C = {
-  bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030',
-  bd: '#383838', bds: '#2a2a2a',
+  bg: 'hsl(var(--terex-dark))', l1: 'hsl(var(--terex-darker))', l2: 'hsl(var(--terex-gray))', l3: 'hsl(var(--terex-gray))',
+  bd: 'hsl(var(--terex-gray))', bds: 'hsl(var(--terex-gray))',
   teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.08)', tealB: 'rgba(255, 255, 255,0.22)',
-  t1: '#f0f0f0', t2: '#999999', t3: '#686868',
+  t1: '#f0f0f0', t2: 'hsl(var(--muted-foreground))', t3: '#686868',
   red: '#ef4444', redT: 'rgba(239,68,68,0.08)', redB: 'rgba(239,68,68,0.22)',
 };
 const FONT = "'Inter', sans-serif";
 const MONO = '"JetBrains Mono", Consolas, monospace';
-const HERO_BG = 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #1a1a1a 100%)';
+const HERO_BG = 'linear-gradient(135deg, hsl(var(--terex-darker)) 0%, hsl(var(--terex-dark)) 60%, hsl(var(--terex-dark)) 100%)';
 
 // ── Types ─────────────────────────────────────────────────────────────
 type ProfilePage = 'main' | 'identity' | 'director' | 'address' | 'legal' | 'security' | 'preferences' | 'billing' | 'api';
@@ -145,7 +145,7 @@ function Inp({ value, onChange, placeholder, type = 'text', disabled, mono }: {
     <input value={value} onChange={e => onChange(e.target.value)} type={type}
       placeholder={placeholder} disabled={disabled}
       onFocus={() => setF(true)} onBlur={() => setF(false)}
-      style={{ width: '100%', background: disabled ? '#1e1e1e' : C.l2, border: `1px solid ${f ? 'rgba(255, 255, 255,0.4)' : C.bd}`, borderRadius: 9, padding: '10px 14px', color: disabled ? C.t3 : C.t1, fontSize: 13, outline: 'none', fontFamily: mono ? MONO : FONT, boxSizing: 'border-box', opacity: disabled ? 0.55 : 1, transition: 'border-color 0.15s' }} />
+      style={{ width: '100%', background: disabled ? 'hsl(var(--terex-darker))' : C.l2, border: `1px solid ${f ? 'rgba(255, 255, 255,0.4)' : C.bd}`, borderRadius: 9, padding: '10px 14px', color: disabled ? C.t3 : C.t1, fontSize: 13, outline: 'none', fontFamily: mono ? MONO : FONT, boxSizing: 'border-box', opacity: disabled ? 0.55 : 1, transition: 'border-color 0.15s' }} />
   );
 }
 
@@ -276,7 +276,7 @@ function NavCard({ icon, label, sub, val, onClick }: {
   const [h, setH] = useState(false);
   return (
     <div onClick={onClick} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
-      style={{ background: h ? '#252525' : C.l1, border: `1px solid ${h ? C.bd : C.bds}`, borderRadius: 14, padding: '18px 20px', cursor: 'pointer', transition: 'all 0.14s', display: 'flex', flexDirection: 'column', gap: 10, minHeight: 110 }}>
+      style={{ background: h ? 'hsl(var(--terex-darker))' : C.l1, border: `1px solid ${h ? C.bd : C.bds}`, borderRadius: 14, padding: '18px 20px', cursor: 'pointer', transition: 'all 0.14s', display: 'flex', flexDirection: 'column', gap: 10, minHeight: 110 }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
         <span style={{ color: C.t3, display: 'flex' }}>{icon}</span>
         <ChevronRight size={14} color={C.t3} />
@@ -486,7 +486,7 @@ function IdentityPage({ form, onBack, onSave, lang }: { form: ProfileData; onBac
 
       {/* Héro */}
       <div style={{ background: HERO_BG, border: `1px solid ${C.bds}`, borderRadius: 16, padding: '24px 28px', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap', boxShadow: '0 4px 32px rgba(0,0,0,0.35)' }}>
-        <div style={{ width: 64, height: 64, borderRadius: 16, background: 'linear-gradient(145deg, #2a2a2a, #1c1c1c)', border: `1px solid ${C.bd}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 800, color: C.t2, fontFamily: MONO, flexShrink: 0 }}>{init}</div>
+        <div style={{ width: 64, height: 64, borderRadius: 16, background: 'linear-gradient(145deg, hsl(var(--terex-gray)), hsl(var(--terex-darker)))', border: `1px solid ${C.bd}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 800, color: C.t2, fontFamily: MONO, flexShrink: 0 }}>{init}</div>
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: 20, fontWeight: 700, color: d.companyName ? C.t1 : C.t3, letterSpacing: '-0.025em', marginBottom: 5 }}>{d.companyName || T.yourCo}</div>
           <div style={{ fontSize: 13, color: C.t3 }}>{[d.businessType, d.sector].filter(Boolean).join(' · ') || T.complete}</div>
@@ -535,7 +535,7 @@ function IdentityPage({ form, onBack, onSave, lang }: { form: ProfileData; onBac
           <div style={{ background: HERO_BG, border: `1px solid ${C.bds}`, borderRadius: 14, padding: '20px 22px' }}>
             <GroupHead>{lang === 'en' ? 'Public profile preview' : 'Aperçu du profil public'}</GroupHead>
             <div style={{ marginTop: 18, display: 'flex', alignItems: 'center', gap: 14, paddingBottom: 16, borderBottom: `1px solid ${C.bds}`, marginBottom: 14 }}>
-              <div style={{ width: 46, height: 46, borderRadius: 12, background: 'linear-gradient(145deg, #2a2a2a, #1c1c1c)', border: `1px solid ${C.bd}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 800, color: C.t2, fontFamily: MONO, flexShrink: 0 }}>{init}</div>
+              <div style={{ width: 46, height: 46, borderRadius: 12, background: 'linear-gradient(145deg, hsl(var(--terex-gray)), hsl(var(--terex-darker)))', border: `1px solid ${C.bd}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 800, color: C.t2, fontFamily: MONO, flexShrink: 0 }}>{init}</div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontSize: 14, fontWeight: 700, color: d.companyName ? C.t1 : C.t3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{d.companyName || (lang === 'en' ? 'Legal name' : 'Raison sociale')}</div>
                 <div style={{ fontSize: 12, color: C.t3, marginTop: 2 }}>{[d.businessType, d.sector].filter(Boolean).join(' · ') || '—'}</div>
@@ -586,7 +586,7 @@ function DirectorPage({ form, onBack, onSave, lang }: { form: ProfileData; onBac
 
       {/* Héro */}
       <div style={{ background: HERO_BG, border: `1px solid ${C.bds}`, borderRadius: 16, padding: '28px 32px', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 22, flexWrap: 'wrap', boxShadow: '0 4px 32px rgba(0,0,0,0.35)' }}>
-        <div style={{ width: 68, height: 68, borderRadius: '50%', background: 'linear-gradient(145deg, #2a2a2a, #1c1c1c)', border: `1px solid ${C.bd}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 800, color: C.t2, fontFamily: MONO, flexShrink: 0 }}>{initials}</div>
+        <div style={{ width: 68, height: 68, borderRadius: '50%', background: 'linear-gradient(145deg, hsl(var(--terex-gray)), hsl(var(--terex-darker)))', border: `1px solid ${C.bd}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 800, color: C.t2, fontFamily: MONO, flexShrink: 0 }}>{initials}</div>
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: 20, fontWeight: 700, color: d.directorName ? C.t1 : C.t3, letterSpacing: '-0.025em', marginBottom: 5 }}>{d.directorName || (lang === 'en' ? 'Director name' : 'Nom du dirigeant')}</div>
           <div style={{ fontSize: 13, color: C.t3 }}>{d.directorRole || (lang === 'en' ? 'Position' : 'Fonction')}{d.directorPhone ? ` · ${d.directorPhone}` : ''}</div>

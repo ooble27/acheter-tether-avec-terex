@@ -7,8 +7,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { ArticleCover } from "@/components/blog/articleCovers";
 
-const BG = "#1a1a1a";
-const CARD = "#1e1e1e";
+const BG = "hsl(var(--terex-dark))";
+const CARD = "hsl(var(--terex-darker))";
 const BORDER = "rgba(255,255,255,0.07)";
 const ICON_BG = "rgba(255,255,255,0.06)";
 const MUTED = "rgba(255,255,255,0.55)";
@@ -71,7 +71,7 @@ const styles = `
     font-size: 1.05rem; color: rgba(255,255,255,0.85); font-style: normal;
   }
   /* Callout blocks authored inline keep their box; normalise inner spacing */
-  .ba-content .bg-\\[\\#1e1e1e\\] h3 { margin-top: 0; }
+  .ba-content .bg-\\[\\hsl(var(--terex-darker))\\] h3 { margin-top: 0; }
 
   @media (max-width: 1100px) { .ba-vline { display: none !important; } }
   @media (max-width: 640px) { .ba-pad { padding-left: 20px !important; padding-right: 20px !important; } }
@@ -114,7 +114,7 @@ export function BlogArticle({
   };
 
   return (
-    <div style={{ background: BG, minHeight: "100vh", color: "#fff", position: "relative", overflowX: "hidden" }}>
+    <div style={{ background: BG, minHeight: "100vh", color: "hsl(var(--foreground))", position: "relative", overflowX: "hidden" }}>
       <style>{styles}</style>
 
       {/* Reading progress */}
@@ -155,7 +155,7 @@ export function BlogArticle({
           {/* Author byline */}
           <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <div style={{ width: 44, height: 44, borderRadius: 13, background: "#1e1e1e", border: `1px solid rgba(255,255,255,0.1)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 700, flexShrink: 0, letterSpacing: "-0.02em" }}>
+              <div style={{ width: 44, height: 44, borderRadius: 13, background: "hsl(var(--terex-darker))", border: `1px solid rgba(255,255,255,0.1)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 700, flexShrink: 0, letterSpacing: "-0.02em" }}>
                 {authorInitials}
               </div>
               <div>
@@ -206,7 +206,7 @@ export function BlogArticle({
             <button onClick={() => navigate("/auth")} className="ba-cta" style={{ background: "#fff", color: "#141414", border: "none", borderRadius: 12, height: 50, padding: "0 24px", fontSize: 15, fontWeight: 700, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8 }}>
               Commencer maintenant <ArrowRight size={16} />
             </button>
-            <button onClick={() => navigate("/blog")} className="ba-cta" style={{ background: "#2d2d2d", color: "#fff", border: `1px solid rgba(255,255,255,0.08)`, borderRadius: 12, height: 50, padding: "0 24px", fontSize: 15, fontWeight: 600, cursor: "pointer" }}>
+            <button onClick={() => navigate("/blog")} className="ba-cta" style={{ background: "hsl(var(--terex-gray))", color: "hsl(var(--foreground))", border: `1px solid rgba(255,255,255,0.08)`, borderRadius: 12, height: 50, padding: "0 24px", fontSize: 15, fontWeight: 600, cursor: "pointer" }}>
               Voir tous les articles
             </button>
           </div>

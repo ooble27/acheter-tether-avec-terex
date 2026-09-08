@@ -5,10 +5,10 @@ import { useCryptoRates } from '@/hooks/useCryptoRates';
 import usdtLogo from '@/assets/usdt-logo.png';
 
 const C = {
-  bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030', l4: '#383838',
-  bd: '#383838', bds: '#2a2a2a', bdh: '#484848',
+  bg: 'hsl(var(--terex-dark))', l1: 'hsl(var(--terex-darker))', l2: 'hsl(var(--terex-gray))', l3: 'hsl(var(--terex-gray))', l4: 'hsl(var(--terex-gray))',
+  bd: 'hsl(var(--terex-gray))', bds: 'hsl(var(--terex-gray))', bdh: '#484848',
   teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.08)', tealB: 'rgba(255, 255, 255,0.20)',
-  t1: '#f0f0f0', t2: '#999999', t3: '#686868',
+  t1: '#f0f0f0', t2: 'hsl(var(--muted-foreground))', t3: '#686868',
   red: '#ef4444', redT: 'rgba(239,68,68,0.08)', redB: 'rgba(239,68,68,0.16)',
 };
 const FONT = "'Inter', sans-serif";
@@ -64,7 +64,7 @@ function StepBar({ step }: { step: number }) {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: 11, fontWeight: 700, flexShrink: 0,
                 background: isDone ? C.teal : isActive ? C.teal : C.l3,
-                color: isDone || isActive ? '#fff' : C.t3,
+                color: isDone || isActive ? 'hsl(var(--foreground))' : C.t3,
                 boxShadow: isActive ? `0 0 0 4px ${C.tealT}` : 'none',
                 border: `2px solid ${isDone || isActive ? C.teal : C.bd}`,
                 transition: 'all 0.15s',
@@ -164,7 +164,7 @@ function NetworkCard({ net, active, onClick }: { net: typeof NETWORKS[0]; active
       </div>
       {active && (
         <div style={{ width: 20, height: 20, borderRadius: '50%', background: C.teal, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <Check style={{ width: 11, height: 11, color: '#fff', strokeWidth: 3 }} />
+          <Check style={{ width: 11, height: 11, color: 'hsl(var(--foreground))', strokeWidth: 3 }} />
         </div>
       )}
     </button>
@@ -369,7 +369,7 @@ export function BusinessPayments({ user, onBack }: {
 
       {/* ── Hero header (no back button inside) ─────────────────── */}
       <div style={{
-        background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #1a1a1a 100%)',
+        background: 'linear-gradient(135deg, hsl(var(--terex-darker)) 0%, hsl(var(--terex-dark)) 60%, hsl(var(--terex-dark)) 100%)',
         border: `1px solid ${C.bds}`, borderRadius: 14,
         padding: '20px 24px', marginBottom: 28,
         boxShadow: '0 1px 3px rgba(0,0,0,0.4)',
@@ -389,7 +389,7 @@ export function BusinessPayments({ user, onBack }: {
         <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
           {NETWORKS.map((n, i) => (
             <img key={n.id} src={n.logo} alt={n.label} title={n.label}
-              style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover', border: '2px solid #1a1a1a', marginLeft: i > 0 ? -8 : 0, zIndex: NETWORKS.length - i, position: 'relative' }}
+              style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover', border: '2px solid hsl(var(--terex-dark))', marginLeft: i > 0 ? -8 : 0, zIndex: NETWORKS.length - i, position: 'relative' }}
               onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
           ))}
           <span style={{ fontSize: 11, color: C.t3, marginLeft: 10 }}>4 réseaux</span>

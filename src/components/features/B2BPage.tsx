@@ -203,8 +203,8 @@ export function B2BPage({ onBack }: B2BPageProps) {
     setActiveTab('new-payment');
   };
 
-  const inputCls = "h-10 bg-[#1a1a1a] border border-[#2e2e2e] text-white placeholder:text-[#3a3a3a] rounded-md focus:border-[#ffffff] focus:ring-1 focus:ring-[#ffffff]/30 transition-colors text-sm";
-  const selectCls = "h-10 bg-[#1a1a1a] border border-[#2e2e2e] text-white rounded-md focus:border-[#ffffff] text-sm px-3 w-full cursor-pointer";
+  const inputCls = "h-10 bg-[hsl(var(--terex-dark))] border border-[hsl(var(--terex-gray))] text-white placeholder:text-[hsl(var(--terex-gray))] rounded-md focus:border-[#ffffff] focus:ring-1 focus:ring-[#ffffff]/30 transition-colors text-sm";
+  const selectCls = "h-10 bg-[hsl(var(--terex-dark))] border border-[hsl(var(--terex-gray))] text-white rounded-md focus:border-[#ffffff] text-sm px-3 w-full cursor-pointer";
 
   const tabs: { id: Tab; label: string; icon: any }[] = [
     { id: 'profile',     label: 'Profil',      icon: Building2 },
@@ -248,7 +248,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
         </div>
       )}
 
-      <div className="flex gap-1 p-1 bg-[#1a1a1a] border border-[#2e2e2e] rounded-xl">
+      <div className="flex gap-1 p-1 bg-[hsl(var(--terex-dark))] border border-[hsl(var(--terex-gray))] rounded-xl">
         {tabs.map(tab => {
           const Icon = tab.icon;
           const active = activeTab === tab.id;
@@ -258,8 +258,8 @@ export function B2BPage({ onBack }: B2BPageProps) {
               onClick={() => setActiveTab(tab.id)}
               className="flex-1 flex flex-col items-center gap-1 py-2 px-1 rounded-lg text-[11px] font-medium transition-all"
               style={{
-                background: active ? '#ffffff' : 'transparent',
-                color: active ? '#fff' : '#6b6b6b',
+                background: active ? 'hsl(var(--foreground))' : 'transparent',
+                color: active ? 'hsl(var(--foreground))' : '#6b6b6b',
               }}
             >
               <Icon className="w-4 h-4" />
@@ -270,7 +270,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
       </div>
 
       {activeTab === 'profile' && (
-        <Card className="bg-[#1a1a1a] border-[#2e2e2e]">
+        <Card className="bg-[hsl(var(--terex-dark))] border-[hsl(var(--terex-gray))]">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-white flex items-center gap-2">
               <Building2 className="w-4 h-4 text-[#ffffff]" />
@@ -326,7 +326,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
               <Label className="text-xs text-gray-400">Email professionnel</Label>
               <Input type="email" placeholder="contact@monentreprise.com" value={pForm.email} onChange={e => setPForm(f => ({ ...f, email: e.target.value }))} className={inputCls} />
             </div>
-            <Separator className="bg-[#2e2e2e]" />
+            <Separator className="bg-[hsl(var(--terex-gray))]" />
             <div className="bg-[#ffffff]/10 border border-[#ffffff]/20 rounded-lg p-3">
               <p className="text-xs text-[#ffffff] font-medium mb-1">Tarifs Business Terex</p>
               <div className="space-y-1">
@@ -351,7 +351,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
       )}
 
       {activeTab === 'new-payment' && (
-        <Card className="bg-[#1a1a1a] border-[#2e2e2e]">
+        <Card className="bg-[hsl(var(--terex-dark))] border-[hsl(var(--terex-gray))]">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-white flex items-center gap-2">
               <Send className="w-4 h-4 text-[#ffffff]" />
@@ -367,13 +367,13 @@ export function B2BPage({ onBack }: B2BPageProps) {
                     <button
                       key={s.id}
                       onClick={() => useSupplierAddress(s)}
-                      className="text-xs px-3 py-1.5 rounded-lg bg-[#1a1a1a] border border-[#2e2e2e] text-gray-300 hover:border-[#ffffff]/50 hover:text-white transition-all"
+                      className="text-xs px-3 py-1.5 rounded-lg bg-[hsl(var(--terex-dark))] border border-[hsl(var(--terex-gray))] text-gray-300 hover:border-[#ffffff]/50 hover:text-white transition-all"
                     >
                       {s.name}
                     </button>
                   ))}
                 </div>
-                <Separator className="bg-[#2e2e2e] mt-1" />
+                <Separator className="bg-[hsl(var(--terex-gray))] mt-1" />
               </div>
             )}
             <div className="space-y-1.5">
@@ -417,7 +417,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
               </div>
             </div>
             {payForm.amount && payForm.currency && (
-              <div className="bg-[#1a1a1a] border border-[#2e2e2e] rounded-lg p-3 space-y-1">
+              <div className="bg-[hsl(var(--terex-dark))] border border-[hsl(var(--terex-gray))] rounded-lg p-3 space-y-1">
                 <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">Résumé</p>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-400">Montant</span>
@@ -452,9 +452,9 @@ export function B2BPage({ onBack }: B2BPageProps) {
             </Button>
           </div>
           {payments.length === 0 ? (
-            <Card className="bg-[#1a1a1a] border-[#2e2e2e]">
+            <Card className="bg-[hsl(var(--terex-dark))] border-[hsl(var(--terex-gray))]">
               <CardContent className="py-12 flex flex-col items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-[#1a1a1a] flex items-center justify-center">
+                <div className="w-12 h-12 rounded-xl bg-[hsl(var(--terex-dark))] flex items-center justify-center">
                   <History className="w-6 h-6 text-gray-600" />
                 </div>
                 <p className="text-sm text-gray-500">Aucune demande de paiement</p>
@@ -465,11 +465,11 @@ export function B2BPage({ onBack }: B2BPageProps) {
             </Card>
           ) : (
             payments.map(pay => (
-              <Card key={pay.id} className="bg-[#1a1a1a] border-[#2e2e2e] hover:border-[#ffffff]/20 transition-colors">
+              <Card key={pay.id} className="bg-[hsl(var(--terex-dark))] border-[hsl(var(--terex-gray))] hover:border-[#ffffff]/20 transition-colors">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-lg bg-[#1a1a1a] flex items-center justify-center shrink-0">
+                      <div className="w-9 h-9 rounded-lg bg-[hsl(var(--terex-dark))] flex items-center justify-center shrink-0">
                         <StatusIcon status={pay.status} />
                       </div>
                       <div>
@@ -482,13 +482,13 @@ export function B2BPage({ onBack }: B2BPageProps) {
                     </div>
                     <p className="text-sm font-semibold text-white whitespace-nowrap">{pay.amount} {pay.currency}</p>
                   </div>
-                  <div className="mt-3 pt-3 border-t border-[#2e2e2e] flex items-center justify-between gap-2">
+                  <div className="mt-3 pt-3 border-t border-[hsl(var(--terex-gray))] flex items-center justify-between gap-2">
                     <div className="flex items-center gap-1 min-w-0">
                       <span className="text-[11px] text-gray-600 shrink-0">Wallet:</span>
                       <span className="text-[11px] text-gray-400 truncate font-mono">{pay.walletAddress}</span>
                     </div>
                     <div className="flex gap-1 shrink-0">
-                      <button onClick={() => copyToClipboard(pay.walletAddress)} className="p-1.5 rounded-md hover:bg-[#2e2e2e] text-gray-500 hover:text-gray-300 transition-colors">
+                      <button onClick={() => copyToClipboard(pay.walletAddress)} className="p-1.5 rounded-md hover:bg-[hsl(var(--terex-gray))] text-gray-500 hover:text-gray-300 transition-colors">
                         <Copy className="w-3.5 h-3.5" />
                       </button>
                       {pay.status === 'pending' && (
@@ -517,7 +517,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
             </Button>
           </div>
           {showSupForm && (
-            <Card className="bg-[#1a1a1a] border-[#ffffff]/30">
+            <Card className="bg-[hsl(var(--terex-dark))] border-[#ffffff]/30">
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-medium text-white">Nouveau fournisseur</CardTitle>
               </CardHeader>
@@ -548,7 +548,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
                   <Button onClick={handleAddSupplier} disabled={supSaving} className="flex-1 h-9 bg-[#ffffff] hover:bg-[#ffffff]/90 text-white border-0 text-sm">
                     {supSaving ? 'Ajout…' : 'Sauvegarder'}
                   </Button>
-                  <Button onClick={() => setShowSupForm(false)} variant="outline" className="h-9 border-[#2e2e2e] bg-transparent text-gray-400 hover:text-white text-sm">
+                  <Button onClick={() => setShowSupForm(false)} variant="outline" className="h-9 border-[hsl(var(--terex-gray))] bg-transparent text-gray-400 hover:text-white text-sm">
                     Annuler
                   </Button>
                 </div>
@@ -556,9 +556,9 @@ export function B2BPage({ onBack }: B2BPageProps) {
             </Card>
           )}
           {suppliers.length === 0 && !showSupForm ? (
-            <Card className="bg-[#1a1a1a] border-[#2e2e2e]">
+            <Card className="bg-[hsl(var(--terex-dark))] border-[hsl(var(--terex-gray))]">
               <CardContent className="py-12 flex flex-col items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-[#1a1a1a] flex items-center justify-center">
+                <div className="w-12 h-12 rounded-xl bg-[hsl(var(--terex-dark))] flex items-center justify-center">
                   <BookUser className="w-6 h-6 text-gray-600" />
                 </div>
                 <p className="text-sm text-gray-500">Aucun fournisseur enregistré</p>
@@ -570,7 +570,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
             </Card>
           ) : (
             suppliers.map(sup => (
-              <Card key={sup.id} className="bg-[#1a1a1a] border-[#2e2e2e] hover:border-[#ffffff]/20 transition-colors">
+              <Card key={sup.id} className="bg-[hsl(var(--terex-dark))] border-[hsl(var(--terex-gray))] hover:border-[#ffffff]/20 transition-colors">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-lg bg-[#ffffff]/10 flex items-center justify-center shrink-0">
@@ -579,20 +579,20 @@ export function B2BPage({ onBack }: B2BPageProps) {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <p className="text-sm font-medium text-white">{sup.name}</p>
-                        <Badge className="bg-[#2e2e2e] text-gray-400 border-0 text-[10px] px-1.5 py-0">{sup.network}</Badge>
+                        <Badge className="bg-[hsl(var(--terex-gray))] text-gray-400 border-0 text-[10px] px-1.5 py-0">{sup.network}</Badge>
                         {sup.country && <span className="text-[11px] text-gray-500">{sup.country}</span>}
                       </div>
                       <p className="text-[11px] text-gray-500 font-mono mt-0.5 truncate">{sup.walletAddress}</p>
                     </div>
                   </div>
-                  <div className="mt-3 pt-3 border-t border-[#2e2e2e] flex gap-2">
+                  <div className="mt-3 pt-3 border-t border-[hsl(var(--terex-gray))] flex gap-2">
                     <Button onClick={() => useSupplierAddress(sup)} size="sm" className="flex-1 h-8 bg-[#ffffff]/10 hover:bg-[#ffffff]/20 text-[#ffffff] border border-[#ffffff]/20 text-xs">
                       Utiliser pour un paiement
                     </Button>
-                    <button onClick={() => copyToClipboard(sup.walletAddress)} className="px-2.5 h-8 rounded-md border border-[#2e2e2e] hover:bg-[#2e2e2e] text-gray-500 hover:text-gray-300 transition-colors">
+                    <button onClick={() => copyToClipboard(sup.walletAddress)} className="px-2.5 h-8 rounded-md border border-[hsl(var(--terex-gray))] hover:bg-[hsl(var(--terex-gray))] text-gray-500 hover:text-gray-300 transition-colors">
                       <Copy className="w-3.5 h-3.5" />
                     </button>
-                    <button onClick={() => handleDeleteSupplier(sup.id)} className="px-2.5 h-8 rounded-md border border-[#2e2e2e] hover:bg-red-500/10 hover:border-red-500/20 text-gray-500 hover:text-red-400 transition-colors">
+                    <button onClick={() => handleDeleteSupplier(sup.id)} className="px-2.5 h-8 rounded-md border border-[hsl(var(--terex-gray))] hover:bg-red-500/10 hover:border-red-500/20 text-gray-500 hover:text-red-400 transition-colors">
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   </div>

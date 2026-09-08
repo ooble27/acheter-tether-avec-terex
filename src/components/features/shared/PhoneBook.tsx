@@ -70,7 +70,7 @@ export function PhoneBook({
             <img src={p.logo} alt="" style={{ width: '30px', height: '30px', borderRadius: '50%', objectFit: 'contain', background: '#fff', flexShrink: 0 }} />
             <div style={{ minWidth: 0, flex: 1 }}>
               {selected?.label && (
-                <div style={{ color: '#fff', fontSize: '13px', fontWeight: 600, marginBottom: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <div style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 600, marginBottom: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {selected.label}
                 </div>
               )}
@@ -132,7 +132,7 @@ export function PhoneBook({
                       <img src={p.logo} alt="" style={{ width: '24px', height: '24px', borderRadius: '50%', objectFit: 'contain', background: '#fff', flexShrink: 0 }} />
                       <div style={{ minWidth: 0, flex: 1 }}>
                         {ph.label && (
-                          <div style={{ color: '#fff', fontSize: '12px', fontWeight: 600, marginBottom: '1px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          <div style={{ color: 'hsl(var(--foreground))', fontSize: '12px', fontWeight: 600, marginBottom: '1px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {ph.label}
                           </div>
                         )}
@@ -141,7 +141,7 @@ export function PhoneBook({
                         </div>
                       </div>
                       {sel && (
-                        <Check size={14} color="#fff" strokeWidth={3} style={{ flexShrink: 0 }} />
+                        <Check size={14} color="hsl(var(--foreground))" strokeWidth={3} style={{ flexShrink: 0 }} />
                       )}
                     </button>
                     <button
@@ -200,7 +200,7 @@ export function PhoneBook({
               placeholder="+221 XX XXX XX XX"
               value={value}
               onChange={e => onChange(e.target.value)}
-              style={{ width: '100%', background: 'transparent', border: 'none', padding: '16px', color: '#fff', fontSize: '16px', outline: 'none', boxSizing: 'border-box' }}
+              style={{ width: '100%', background: 'transparent', border: 'none', padding: '16px', color: 'hsl(var(--foreground))', fontSize: '16px', outline: 'none', boxSizing: 'border-box' }}
             />
           </div>
 
@@ -221,7 +221,7 @@ export function PhoneBook({
                 placeholder="Nom (optionnel) — ex : Mon perso"
                 value={label}
                 onChange={e => onLabelChange(e.target.value)}
-                style={{ width: '100%', background: 'transparent', border: 'none', padding: '14px 16px', color: '#fff', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }}
+                style={{ width: '100%', background: 'transparent', border: 'none', padding: '14px 16px', color: 'hsl(var(--foreground))', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }}
               />
             </div>
           )}

@@ -7,7 +7,7 @@ import { useUserWallets } from '@/hooks/useUserWallets';
 const BORDER = 'rgba(255,255,255,0.09)';
 const SEL_BG = 'rgba(255,255,255,0.06)';
 const SEL_BORDER = 'rgba(255,255,255,0.20)';
-const BTN = '#2d2d2d';
+const BTN = 'hsl(var(--terex-gray))';
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
@@ -15,7 +15,7 @@ const inputStyle: React.CSSProperties = {
   border: `1px solid ${BORDER}`,
   borderRadius: '12px',
   padding: '12px 14px',
-  color: '#fff',
+  color: 'hsl(var(--foreground))',
   fontSize: '14px',
   outline: 'none',
   boxSizing: 'border-box',
@@ -112,7 +112,7 @@ export function BinanceEmailInput({
             {!showInputFields && (
               <button
                 onClick={handleNewWallet}
-                style={{ display: 'flex', alignItems: 'center', gap: '4px', background: BTN, border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '6px 12px', color: '#fff', fontSize: '12px', cursor: 'pointer' }}
+                style={{ display: 'flex', alignItems: 'center', gap: '4px', background: BTN, border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '6px 12px', color: 'hsl(var(--foreground))', fontSize: '12px', cursor: 'pointer' }}
               >
                 <Plus size={13} /> Nouveau
               </button>
@@ -137,7 +137,7 @@ export function BinanceEmailInput({
                     ))}
                     <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
                       <button onClick={() => handleSaveEditWallet(wallet.id)}
-                        style={{ display: 'flex', alignItems: 'center', gap: '6px', background: BTN, border: `1px solid ${BORDER}`, borderRadius: '8px', padding: '7px 14px', color: '#fff', fontSize: '12px', cursor: 'pointer' }}>
+                        style={{ display: 'flex', alignItems: 'center', gap: '6px', background: BTN, border: `1px solid ${BORDER}`, borderRadius: '8px', padding: '7px 14px', color: 'hsl(var(--foreground))', fontSize: '12px', cursor: 'pointer' }}>
                         <Save size={12} /> Sauvegarder
                       </button>
                       <button onClick={() => setEditingWallet(null)}
@@ -152,7 +152,7 @@ export function BinanceEmailInput({
                   >
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                        <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>{wallet.wallet_name}</span>
+                        <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 500 }}>{wallet.wallet_name}</span>
                         {wallet.is_default && (
                           <span style={{ fontSize: '10px', background: 'rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.6)', padding: '2px 7px', borderRadius: '6px', letterSpacing: '0.03em' }}>
                             Défaut
@@ -177,7 +177,7 @@ export function BinanceEmailInput({
                             <Trash2 size={13} />
                           </button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent className="bg-[#1e1e1e] border-[rgba(255,255,255,0.09)]">
+                        <AlertDialogContent className="bg-[hsl(var(--terex-darker))] border-[rgba(255,255,255,0.09)]">
                           <AlertDialogHeader>
                             <AlertDialogTitle className="text-white">Supprimer le wallet Binance</AlertDialogTitle>
                             <AlertDialogDescription className="text-gray-400">
@@ -206,7 +206,7 @@ export function BinanceEmailInput({
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {binanceWallets.length > 0 && (
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>
+              <span style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 500 }}>
                 {editingMode ? 'Modifier le compte' : 'Nouveau compte Binance'}
               </span>
               <button onClick={handleCancelInputEdit}
@@ -235,18 +235,18 @@ export function BinanceEmailInput({
       {canSave && shouldShowInputFields && (
         <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
           <div>
-            <div style={{ color: '#fff', fontSize: '13px', fontWeight: 500, marginBottom: '2px' }}>
+            <div style={{ color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 500, marginBottom: '2px' }}>
               {editingMode ? 'Mettre à jour ce compte' : 'Sauvegarder ce compte'}
             </div>
             <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: '11px' }}>Pour ne plus retaper ces infos</div>
           </div>
           <Dialog open={showSaveDialog} onOpenChange={setShowSaveDialog}>
             <DialogTrigger asChild>
-              <button style={{ display: 'flex', alignItems: 'center', gap: '6px', background: BTN, border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '8px 14px', color: '#fff', fontSize: '12px', cursor: 'pointer', flexShrink: 0 }}>
+              <button style={{ display: 'flex', alignItems: 'center', gap: '6px', background: BTN, border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '8px 14px', color: 'hsl(var(--foreground))', fontSize: '12px', cursor: 'pointer', flexShrink: 0 }}>
                 <Save size={13} /> {editingMode ? 'Mettre à jour' : 'Enregistrer'}
               </button>
             </DialogTrigger>
-            <DialogContent className="bg-[#1e1e1e] border-[rgba(255,255,255,0.09)]">
+            <DialogContent className="bg-[hsl(var(--terex-darker))] border-[rgba(255,255,255,0.09)]">
               <DialogHeader>
                 <DialogTitle className="text-white">{editingMode ? 'Mettre à jour le compte' : 'Sauvegarder le compte Binance'}</DialogTitle>
               </DialogHeader>
@@ -259,7 +259,7 @@ export function BinanceEmailInput({
                 </div>
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <button onClick={handleSaveWallet} disabled={!walletName || loading}
-                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', background: !walletName || loading ? 'rgba(255,255,255,0.05)' : '#fff', border: 'none', borderRadius: '12px', padding: '11px', color: !walletName || loading ? '#6b7280' : '#141414', fontSize: '13px', fontWeight: 600, cursor: !walletName || loading ? 'not-allowed' : 'pointer' }}>
+                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', background: !walletName || loading ? 'rgba(255,255,255,0.05)' : '#fff', border: 'none', borderRadius: '12px', padding: '11px', color: !walletName || loading ? 'hsl(var(--muted-foreground))' : '#141414', fontSize: '13px', fontWeight: 600, cursor: !walletName || loading ? 'not-allowed' : 'pointer' }}>
                     <Save size={14} /> {loading ? 'Sauvegarde...' : editingMode ? 'Mettre à jour' : 'Sauvegarder'}
                   </button>
                   <button onClick={() => setShowSaveDialog(false)}

@@ -36,7 +36,7 @@ export function NetworksSection() {
   ];
 
   return (
-    <section className="py-20 sm:py-28" style={{ backgroundColor: '#1a1a1a' }}>
+    <section className="py-20 sm:py-28" style={{ backgroundColor: 'hsl(var(--terex-dark))' }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSection className="text-center mb-16">
           <span
@@ -58,7 +58,7 @@ export function NetworksSection() {
           <AnimatedSection className="flex justify-center lg:justify-start" direction="left">
             <div
               className="flex flex-col items-center text-center rounded-2xl p-10 w-full max-w-md"
-              style={{ backgroundColor: '#1e1e1e', border: '1px solid rgba(255,255,255,0.07)' }}
+              style={{ backgroundColor: 'hsl(var(--terex-darker))', border: '1px solid rgba(255,255,255,0.07)' }}
             >
               <img
                 src={usdtLogo}
@@ -82,7 +82,7 @@ export function NetworksSection() {
               <AnimatedItem key={index} index={index} baseDelay={200}>
                 <div
                   className="flex items-center gap-4 p-5 rounded-2xl transition-colors duration-300"
-                  style={{ backgroundColor: '#1e1e1e', border: '1px solid rgba(255,255,255,0.07)' }}
+                  style={{ backgroundColor: 'hsl(var(--terex-darker))', border: '1px solid rgba(255,255,255,0.07)' }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)';
                   }}

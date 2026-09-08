@@ -2,10 +2,10 @@ import { useState, useRef } from 'react';
 import { Check, ChevronLeft, ChevronRight, Plus, X, Upload, Pencil } from 'lucide-react';
 
 const C = {
-  bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030',
-  bd: '#383838', bds: '#2a2a2a',
+  bg: 'hsl(var(--terex-dark))', l1: 'hsl(var(--terex-darker))', l2: 'hsl(var(--terex-gray))', l3: 'hsl(var(--terex-gray))',
+  bd: 'hsl(var(--terex-gray))', bds: 'hsl(var(--terex-gray))',
   teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.10)', tealB: 'rgba(255, 255, 255,0.25)',
-  t1: '#f0f0f0', t2: '#999999', t3: '#686868',
+  t1: '#f0f0f0', t2: 'hsl(var(--muted-foreground))', t3: '#686868',
   red: '#ef4444',
 };
 const FONT = "'Inter', sans-serif";
@@ -253,7 +253,7 @@ function MiniCalendar({ scheduledDates, selectedDate, onSelectDate }: { schedule
                 height: 32, borderRadius: 7, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                 background: sel ? C.teal : tod ? C.tealT : 'transparent',
                 border: `1px solid ${sel ? C.teal : tod ? C.tealB : 'transparent'}`,
-                color: past ? C.t3 : sel ? '#fff' : tod ? C.teal : C.t2,
+                color: past ? C.t3 : sel ? 'hsl(var(--foreground))' : tod ? C.teal : C.t2,
                 fontSize: 12, fontFamily: FONT, cursor: past ? 'not-allowed' : 'pointer',
                 position: 'relative', transition: 'all 0.1s', userSelect: 'none', opacity: past ? 0.38 : 1,
               }}
@@ -357,7 +357,7 @@ export function BusinessBatch({ user }: { user: { email: string; name: string; i
       )}
 
       {/* ── Hero ──────────────────────────────────────────────────── */}
-      <div style={{ background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #1a1a1a 100%)', border: `1px solid ${C.bds}`, borderRadius: 16, padding: '26px 28px' }}>
+      <div style={{ background: 'linear-gradient(135deg, hsl(var(--terex-darker)) 0%, hsl(var(--terex-dark)) 60%, hsl(var(--terex-dark)) 100%)', border: `1px solid ${C.bds}`, borderRadius: 16, padding: '26px 28px' }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
           <div>
             <h2 style={{ color: C.t1, fontSize: 21, fontWeight: 700, letterSpacing: '-0.03em', margin: 0 }}>Lots & Planification</h2>

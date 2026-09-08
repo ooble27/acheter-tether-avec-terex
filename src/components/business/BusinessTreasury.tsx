@@ -11,10 +11,10 @@ import usdtLogo from '@/assets/usdt-logo.png';
 import { useCryptoRates } from '@/hooks/useCryptoRates';
 
 const C = {
-  bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030', l4: '#383838',
-  bd: '#383838', bds: '#2a2a2a', bdh: '#484848',
+  bg: 'hsl(var(--terex-dark))', l1: 'hsl(var(--terex-darker))', l2: 'hsl(var(--terex-gray))', l3: 'hsl(var(--terex-gray))', l4: 'hsl(var(--terex-gray))',
+  bd: 'hsl(var(--terex-gray))', bds: 'hsl(var(--terex-gray))', bdh: '#484848',
   teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.08)', tealB: 'rgba(255, 255, 255,0.20)',
-  t1: '#f0f0f0', t2: '#888888', t3: '#565656',
+  t1: '#f0f0f0', t2: 'hsl(var(--muted-foreground))', t3: 'hsl(var(--muted-foreground))',
 };
 const FONT = "'Inter', sans-serif";
 const MONO = '"JetBrains Mono", Consolas, monospace';
@@ -54,7 +54,7 @@ function QRModal({ wallet, onClose }: { wallet: typeof WALLETS[0]; onClose: () =
       background: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(8px)',
     }} onClick={onClose}>
       <div onClick={e => e.stopPropagation()} style={{
-        background: '#1a1a1a', border: `1px solid ${C.bd}`, borderRadius: 18,
+        background: 'hsl(var(--terex-dark))', border: `1px solid ${C.bd}`, borderRadius: 18,
         padding: 28, width: 360, maxWidth: '90vw', position: 'relative',
         fontFamily: FONT, boxShadow: '0 28px 70px rgba(0,0,0,0.6)',
       }}>
@@ -132,7 +132,7 @@ function AlertModal({ onAdd, onClose }: {
       background: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(8px)',
     }} onClick={onClose}>
       <div onClick={e => e.stopPropagation()} style={{
-        background: '#1a1a1a', border: `1px solid ${C.bd}`, borderRadius: 18,
+        background: 'hsl(var(--terex-dark))', border: `1px solid ${C.bd}`, borderRadius: 18,
         padding: 28, width: 380, maxWidth: '90vw', fontFamily: FONT,
         boxShadow: '0 28px 70px rgba(0,0,0,0.6)', position: 'relative',
       }}>
@@ -188,7 +188,7 @@ function AlertModal({ onAdd, onClose }: {
             onClick={() => { if (threshold.trim()) { onAdd({ pair, condition, threshold }); onClose(); } }}
             style={{
               height: 42, background: threshold.trim() ? C.teal : C.l3,
-              border: 'none', borderRadius: 10, color: threshold.trim() ? '#fff' : C.t3,
+              border: 'none', borderRadius: 10, color: threshold.trim() ? 'hsl(var(--foreground))' : C.t3,
               fontSize: 13, fontWeight: 600, cursor: threshold.trim() ? 'pointer' : 'default',
               fontFamily: FONT, transition: 'all 0.15s',
             }}
@@ -371,7 +371,7 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
 
           {/* Héro — balance totale */}
           <div style={{
-            background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #1a1a1a 100%)',
+            background: 'linear-gradient(135deg, hsl(var(--terex-darker)) 0%, hsl(var(--terex-dark)) 60%, hsl(var(--terex-dark)) 100%)',
             border: `1px solid ${C.bds}`, borderRadius: 16,
             padding: '30px 28px 26px',
             boxShadow: '0 4px 32px rgba(0,0,0,0.45)',
@@ -432,7 +432,7 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
                 style={{
                   height: 36, paddingLeft: 18, paddingRight: 18,
                   background: C.teal, border: 'none', borderRadius: 9,
-                  color: '#fff', fontSize: 12, fontWeight: 500,
+                  color: 'hsl(var(--foreground))', fontSize: 12, fontWeight: 500,
                   cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
                   fontFamily: FONT, whiteSpace: 'nowrap', transition: 'background 0.15s',
                 }}

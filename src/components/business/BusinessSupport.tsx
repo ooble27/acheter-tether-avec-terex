@@ -9,15 +9,15 @@ import {
 } from 'lucide-react';
 
 const C = {
-  bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030',
-  bd: '#383838', bds: '#2a2a2a', bdh: '#484848',
+  bg: 'hsl(var(--terex-dark))', l1: 'hsl(var(--terex-darker))', l2: 'hsl(var(--terex-gray))', l3: 'hsl(var(--terex-gray))',
+  bd: 'hsl(var(--terex-gray))', bds: 'hsl(var(--terex-gray))', bdh: '#484848',
   teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.08)', tealB: 'rgba(255, 255, 255,0.22)',
-  t1: '#f0f0f0', t2: '#999999', t3: '#686868',
+  t1: '#f0f0f0', t2: 'hsl(var(--muted-foreground))', t3: '#686868',
   red: '#ef4444', redT: 'rgba(239,68,68,0.08)', redB: 'rgba(239,68,68,0.22)',
 };
 const FONT = "'Inter', sans-serif";
 const MONO = '"JetBrains Mono", Consolas, monospace';
-const HERO_BG = 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #1a1a1a 100%)';
+const HERO_BG = 'linear-gradient(135deg, hsl(var(--terex-darker)) 0%, hsl(var(--terex-dark)) 60%, hsl(var(--terex-dark)) 100%)';
 
 type SubPage = 'main' | 'guide' | 'docs' | 'api' | 'compliance';
 
@@ -85,7 +85,7 @@ function NavCard({ icon: Icon, title, sub, onClick }: { icon: React.ElementType;
 function TealBtn({ children, onClick, style }: { children: React.ReactNode; onClick?: () => void; style?: React.CSSProperties }) {
   const [hov, setHov] = useState(false);
   return (
-    <button onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ height: 36, paddingLeft: 18, paddingRight: 18, background: hov ? C.tealH : C.teal, border: 'none', borderRadius: 9, color: '#fff', fontSize: 12, fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, fontFamily: FONT, whiteSpace: 'nowrap', transition: 'background 0.15s', ...style }}>
+    <button onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ height: 36, paddingLeft: 18, paddingRight: 18, background: hov ? C.tealH : C.teal, border: 'none', borderRadius: 9, color: 'hsl(var(--foreground))', fontSize: 12, fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, fontFamily: FONT, whiteSpace: 'nowrap', transition: 'background 0.15s', ...style }}>
       {children}
     </button>
   );

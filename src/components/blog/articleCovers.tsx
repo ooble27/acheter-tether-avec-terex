@@ -122,7 +122,7 @@ export function ArticleCover({ slug, size = "sm", className }: ArticleCoverProps
         inset: 0,
         width: "100%",
         height: "100%",
-        background: "linear-gradient(150deg, #212121 0%, #191919 55%, #1d1d1d 100%)",
+        background: "linear-gradient(150deg, hsl(var(--terex-darker)) 0%, hsl(var(--terex-dark)) 55%, hsl(var(--terex-darker)) 100%)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -151,7 +151,7 @@ export function ArticleCover({ slug, size = "sm", className }: ArticleCoverProps
           backdropFilter: "blur(6px)",
         }}
       >
-        <Icon size={iconSize} strokeWidth={1.6} color="#fff" />
+        <Icon size={iconSize} strokeWidth={1.6} color="hsl(var(--foreground))" />
       </div>
 
       {/* category chip */}

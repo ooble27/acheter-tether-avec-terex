@@ -26,21 +26,21 @@ interface ProfileProps {
 
 type Section = null | 'informations' | 'activite' | 'parrainage' | 'partager' | 'contact' | 'faq';
 
-const BG     = '#1a1a1a';
-const CARD   = '#1e1e1e';
+const BG     = 'hsl(var(--terex-dark))';
+const CARD   = 'hsl(var(--terex-darker))';
 const BORDER = 'rgba(255,255,255,0.07)';
-const BTN    = '#2d2d2d';
+const BTN    = 'hsl(var(--terex-gray))';
 const ICON_BG = 'rgba(255,255,255,0.06)';
 
 const inputStyle: React.CSSProperties = {
   width: '100%', background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`,
-  borderRadius: '12px', padding: '12px 16px', color: '#fff', fontSize: '15px',
+  borderRadius: '12px', padding: '12px 16px', color: 'hsl(var(--foreground))', fontSize: '15px',
   outline: 'none', boxSizing: 'border-box',
 };
 
 const labelStyle: React.CSSProperties = {
   display: 'flex', alignItems: 'center', gap: '5px',
-  fontSize: '11px', color: '#6b7280', fontWeight: 500,
+  fontSize: '11px', color: 'hsl(var(--muted-foreground))', fontWeight: 500,
   textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '8px',
 };
 
@@ -161,19 +161,19 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: 'calc(env(safe-area-inset-top, 0px) + 14px) 20px 14px' }}>
       <button onClick={() => { setSection(null); setIsEditing(false); }}
         style={{ width: '36px', height: '36px', borderRadius: '50%', background: ICON_BG, border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
-        <ArrowLeft size={16} color="#fff" />
+        <ArrowLeft size={16} color="hsl(var(--foreground))" />
       </button>
-      <h2 style={{ color: '#fff', fontSize: '17px', fontWeight: 600, margin: 0 }}>{title}</h2>
+      <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '17px', fontWeight: 600, margin: 0 }}>{title}</h2>
     </div>
   );
 
   const Field = ({ label, value, icon: Icon }: { label: string; value: string; icon: any }) => (
     <div style={{ padding: '14px 0', borderBottom: `1px solid ${BORDER}` }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
-        <Icon size={13} color="#6b7280" />
-        <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</span>
+        <Icon size={13} color="hsl(var(--muted-foreground))" />
+        <span style={{ fontSize: '11px', color: 'hsl(var(--muted-foreground))', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</span>
       </div>
-      <p style={{ color: value ? '#fff' : '#4b5563', fontSize: '15px', margin: 0 }}>{value || 'Non renseigné'}</p>
+      <p style={{ color: value ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))', fontSize: '15px', margin: 0 }}>{value || 'Non renseigné'}</p>
     </div>
   );
 
@@ -186,8 +186,8 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
           <Icon size={18} color="rgba(255,255,255,0.7)" />
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ color: '#6b7280', fontSize: '11px', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>{label}</p>
-          <p style={{ color: value ? '#fff' : '#4b5563', fontSize: '15px', margin: 0, fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{value || 'Non renseigné'}</p>
+          <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>{label}</p>
+          <p style={{ color: value ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))', fontSize: '15px', margin: 0, fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{value || 'Non renseigné'}</p>
         </div>
       </div>
     );
@@ -200,14 +200,14 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
             <>
               {/* Hero avatar + edit */}
               <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '18px', padding: '24px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '18px', flexWrap: 'wrap' }}>
-                <div style={{ width: '68px', height: '68px', borderRadius: '50%', background: '#2d2d2d', border: `1px solid rgba(255,255,255,0.10)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px', fontWeight: 700, color: '#fff', flexShrink: 0 }}>
+                <div style={{ width: '68px', height: '68px', borderRadius: '50%', background: 'hsl(var(--terex-gray))', border: `1px solid rgba(255,255,255,0.10)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px', fontWeight: 700, color: 'hsl(var(--foreground))', flexShrink: 0 }}>
                   {initials}
                 </div>
                 <div style={{ flex: 1, minWidth: 200 }}>
-                  <p style={{ color: '#fff', fontSize: '18px', fontWeight: 700, margin: '0 0 4px' }}>{formData.name || 'Utilisateur'}</p>
-                  <p style={{ color: '#6b7280', fontSize: '13px', margin: 0 }}>Membre depuis {memberSince}</p>
+                  <p style={{ color: 'hsl(var(--foreground))', fontSize: '18px', fontWeight: 700, margin: '0 0 4px' }}>{formData.name || 'Utilisateur'}</p>
+                  <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px', margin: 0 }}>Membre depuis {memberSince}</p>
                 </div>
-                <button onClick={() => setIsEditing(true)} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: BTN, border: `1px solid rgba(255,255,255,0.10)`, borderRadius: '12px', padding: '10px 18px', color: '#fff', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>
+                <button onClick={() => setIsEditing(true)} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: BTN, border: `1px solid rgba(255,255,255,0.10)`, borderRadius: '12px', padding: '10px 18px', color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>
                   <Edit2 size={14} /> Modifier
                 </button>
               </div>
@@ -237,10 +237,10 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
                 <div>
                   <label style={labelStyle}><MapPin size={12} />Pays</label>
                   <Select value={formData.country} onValueChange={v => setFormData({ ...formData, country: v })}>
-                    <SelectTrigger className="bg-[#1e1e1e] border-[rgba(255,255,255,0.07)] text-white">
+                    <SelectTrigger className="bg-[hsl(var(--terex-darker))] border-[rgba(255,255,255,0.07)] text-white">
                       <SelectValue placeholder="Sélectionnez" />
                     </SelectTrigger>
-                    <SelectContent className="bg-[#1e1e1e] border-[rgba(255,255,255,0.07)] z-50">
+                    <SelectContent className="bg-[hsl(var(--terex-darker))] border-[rgba(255,255,255,0.07)] z-50">
                       {['senegal:Sénégal','mali:Mali','burkina:Burkina Faso','cote_ivoire:Côte d\'Ivoire','niger:Niger','canada:Canada'].map(s => {
                         const [v, l] = s.split(':');
                         return <SelectItem key={v} value={v} className="text-white focus:bg-[rgba(255,255,255,0.06)] focus:text-white">{l}</SelectItem>;
@@ -251,10 +251,10 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
                 <div>
                   <label style={labelStyle}><Globe size={12} />Langue</label>
                   <Select value={formData.language} onValueChange={v => setFormData({ ...formData, language: v })}>
-                    <SelectTrigger className="bg-[#1e1e1e] border-[rgba(255,255,255,0.07)] text-white">
+                    <SelectTrigger className="bg-[hsl(var(--terex-darker))] border-[rgba(255,255,255,0.07)] text-white">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-[#1e1e1e] border-[rgba(255,255,255,0.07)] z-50">
+                    <SelectContent className="bg-[hsl(var(--terex-darker))] border-[rgba(255,255,255,0.07)] z-50">
                       <SelectItem value="fr" className="text-white focus:bg-[rgba(255,255,255,0.06)] focus:text-white">Français</SelectItem>
                       <SelectItem value="en" className="text-white focus:bg-[rgba(255,255,255,0.06)] focus:text-white">English</SelectItem>
                     </SelectContent>
@@ -265,7 +265,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
                 <button onClick={handleSave} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#ffffff', border: 'none', borderRadius: '12px', padding: '11px 22px', color: '#141414', fontSize: '14px', fontWeight: 700, cursor: 'pointer' }}>
                   <Save size={15} /> Sauvegarder
                 </button>
-                <button onClick={() => setIsEditing(false)} style={{ background: BTN, border: `1px solid ${BORDER}`, borderRadius: '12px', padding: '11px 22px', color: '#9ca3af', fontSize: '14px', fontWeight: 500, cursor: 'pointer' }}>
+                <button onClick={() => setIsEditing(false)} style={{ background: BTN, border: `1px solid ${BORDER}`, borderRadius: '12px', padding: '11px 22px', color: 'hsl(var(--muted-foreground))', fontSize: '14px', fontWeight: 500, cursor: 'pointer' }}>
                   Annuler
                 </button>
               </div>
@@ -289,12 +289,12 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
                 <KYCIcon size={20} color={kycStatus.color} />
               </div>
               <div>
-                <p style={{ color: '#fff', fontSize: '14px', fontWeight: 600, margin: '0 0 2px' }}>Vérification KYC</p>
+                <p style={{ color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600, margin: '0 0 2px' }}>Vérification KYC</p>
                 <p style={{ color: kycStatus.color, fontSize: '12px', margin: 0 }}>{kycStatus.text}</p>
               </div>
             </div>
             {!isKYCVerified && kycData?.status !== 'submitted' && kycData?.status !== 'under_review' && (
-              <button onClick={() => setShowKYC(true)} style={{ padding: '9px 16px', background: BTN, border: `1px solid ${BORDER}`, borderRadius: '10px', color: '#fff', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>
+              <button onClick={() => setShowKYC(true)} style={{ padding: '9px 16px', background: BTN, border: `1px solid ${BORDER}`, borderRadius: '10px', color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>
                 Vérifier
               </button>
             )}
@@ -307,10 +307,10 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
                 <Key size={16} color="rgba(255,255,255,0.7)" />
               </div>
               <div style={{ flex: 1, textAlign: 'left' }}>
-                <p style={{ color: '#fff', fontSize: '14px', fontWeight: 500, margin: '0 0 2px' }}>Changer le mot de passe</p>
-                <p style={{ color: '#6b7280', fontSize: '12px', margin: 0 }}>Mettre à jour vos identifiants</p>
+                <p style={{ color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 500, margin: '0 0 2px' }}>Changer le mot de passe</p>
+                <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px', margin: 0 }}>Mettre à jour vos identifiants</p>
               </div>
-              <ChevronRight size={16} color="#4b5563" />
+              <ChevronRight size={16} color="hsl(var(--muted-foreground))" />
             </button>
             <button onClick={() => setShowDeleteDialog(true)} style={{ width: '100%', padding: '16px 20px', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '16px' }}>
               <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(239,68,68,0.10)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -318,9 +318,9 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
               </div>
               <div style={{ flex: 1, textAlign: 'left' }}>
                 <p style={{ color: '#ef4444', fontSize: '14px', fontWeight: 500, margin: '0 0 2px' }}>Supprimer mon compte</p>
-                <p style={{ color: '#6b7280', fontSize: '12px', margin: 0 }}>Action irréversible</p>
+                <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px', margin: 0 }}>Action irréversible</p>
               </div>
-              <ChevronRight size={16} color="#4b5563" />
+              <ChevronRight size={16} color="hsl(var(--muted-foreground))" />
             </button>
           </div>
 
@@ -331,14 +331,14 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
               <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: '13px', fontWeight: 600 }}>Conseils de sécurité</span>
             </div>
             {["Ne partagez jamais vos identifiants de connexion", "Vérifiez toujours les adresses avant d'envoyer", "Utilisez un réseau sécurisé pour vos transactions"].map((tip, i) => (
-              <p key={i} style={{ color: '#6b7280', fontSize: '12px', margin: '0 0 4px', paddingLeft: '4px' }}>· {tip}</p>
+              <p key={i} style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px', margin: '0 0 4px', paddingLeft: '4px' }}>· {tip}</p>
             ))}
           </div>
         </div>
 
         {/* Password dialog */}
         <AlertDialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
-          <AlertDialogContent className="bg-[#1e1e1e] border-[rgba(255,255,255,0.07)]">
+          <AlertDialogContent className="bg-[hsl(var(--terex-darker))] border-[rgba(255,255,255,0.07)]">
             <AlertDialogHeader>
               <AlertDialogTitle className="text-white flex items-center gap-2"><Key className="w-4 h-4 opacity-60" /> Nouveau mot de passe</AlertDialogTitle>
               <AlertDialogDescription className="text-gray-400">Minimum 6 caractères</AlertDialogDescription>
@@ -354,7 +354,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
                     <input type={show ? 'text' : 'password'} value={val} onChange={e => setVal(e.target.value)}
                       style={{ ...inputStyle, paddingRight: '44px' }} />
                     <button type="button" onClick={() => setShow(!show)}
-                      style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#6b7280' }}>
+                      style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'hsl(var(--muted-foreground))' }}>
                       {show ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
                   </div>
@@ -362,20 +362,20 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
               ))}
             </div>
             <AlertDialogFooter>
-              <AlertDialogCancel className="bg-[#2d2d2d] border-[rgba(255,255,255,0.07)] text-white hover:bg-[#2d2d2d]">Annuler</AlertDialogCancel>
+              <AlertDialogCancel className="bg-[hsl(var(--terex-gray))] border-[rgba(255,255,255,0.07)] text-white hover:bg-[hsl(var(--terex-gray))]">Annuler</AlertDialogCancel>
               <AlertDialogAction onClick={handleChangePassword} className="bg-white text-[#141414] hover:bg-white/90">Confirmer</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
 
         <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-          <AlertDialogContent className="bg-[#1e1e1e] border-[rgba(255,255,255,0.07)]">
+          <AlertDialogContent className="bg-[hsl(var(--terex-darker))] border-[rgba(255,255,255,0.07)]">
             <AlertDialogHeader>
               <AlertDialogTitle className="text-white">Supprimer mon compte</AlertDialogTitle>
               <AlertDialogDescription className="text-gray-400">Cette action est irréversible. Toutes vos données seront supprimées définitivement.</AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel className="bg-[#2d2d2d] border-[rgba(255,255,255,0.07)] text-white hover:bg-[#2d2d2d]">Annuler</AlertDialogCancel>
+              <AlertDialogCancel className="bg-[hsl(var(--terex-gray))] border-[rgba(255,255,255,0.07)] text-white hover:bg-[hsl(var(--terex-gray))]">Annuler</AlertDialogCancel>
               <AlertDialogAction onClick={handleDeleteAccount} className="bg-red-600 hover:bg-red-700 text-white">Supprimer définitivement</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -399,11 +399,11 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
 
           {/* Hero résumé */}
           <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '28px 24px', marginBottom: '20px', textAlign: 'center' }}>
-            <p style={{ color: '#6b7280', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 8px' }}>Volume total échangé</p>
-            <p style={{ color: '#fff', fontSize: 'clamp(32px, 5vw, 48px)', fontWeight: 800, letterSpacing: '-1.5px', margin: '0 0 4px' }}>
-              {stats.volume.toLocaleString('fr-FR')} <span style={{ fontSize: '18px', color: '#9ca3af', fontWeight: 500 }}>{stats.currency}</span>
+            <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 8px' }}>Volume total échangé</p>
+            <p style={{ color: 'hsl(var(--foreground))', fontSize: 'clamp(32px, 5vw, 48px)', fontWeight: 800, letterSpacing: '-1.5px', margin: '0 0 4px' }}>
+              {stats.volume.toLocaleString('fr-FR')} <span style={{ fontSize: '18px', color: 'hsl(var(--muted-foreground))', fontWeight: 500 }}>{stats.currency}</span>
             </p>
-            <p style={{ color: '#6b7280', fontSize: '13px', margin: 0 }}>Cumul de toutes vos transactions complétées</p>
+            <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px', margin: 0 }}>Cumul de toutes vos transactions complétées</p>
           </div>
 
           {/* Tuiles stats */}
@@ -411,13 +411,13 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
             {statsCards.map(({ label, value, sub, icon: Icon, tint, color }) => (
               <div key={label} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '20px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-                  <span style={{ color: '#6b7280', fontSize: '12px' }}>{label}</span>
+                  <span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px' }}>{label}</span>
                   <div style={{ width: '32px', height: '32px', borderRadius: '10px', background: tint, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Icon size={16} color={color} />
                   </div>
                 </div>
-                <p style={{ color: '#fff', fontSize: '22px', fontWeight: 700, margin: '0 0 2px', letterSpacing: '-0.5px' }}>{value}</p>
-                <p style={{ color: '#6b7280', fontSize: '11px', margin: 0 }}>{sub}</p>
+                <p style={{ color: 'hsl(var(--foreground))', fontSize: '22px', fontWeight: 700, margin: '0 0 2px', letterSpacing: '-0.5px' }}>{value}</p>
+                <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', margin: 0 }}>{sub}</p>
               </div>
             ))}
           </div>
@@ -428,8 +428,8 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
               <TrendingUp size={18} color="rgba(255,255,255,0.7)" />
             </div>
             <div style={{ flex: 1 }}>
-              <p style={{ color: '#fff', fontSize: '14px', fontWeight: 600, margin: '0 0 2px' }}>Continuez à échanger</p>
-              <p style={{ color: '#6b7280', fontSize: '12px', margin: 0 }}>Consultez l'historique de vos commandes depuis le tableau de bord.</p>
+              <p style={{ color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600, margin: '0 0 2px' }}>Continuez à échanger</p>
+              <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px', margin: 0 }}>Consultez l'historique de vos commandes depuis le tableau de bord.</p>
             </div>
           </div>
         </div>
@@ -451,8 +451,8 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
             ].map(({ label, desc }, i, arr) => (
               <div key={label} style={{ padding: '16px 20px', borderBottom: i < arr.length - 1 ? `1px solid ${BORDER}` : 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div>
-                  <p style={{ color: '#fff', fontSize: '14px', fontWeight: 500, margin: '0 0 2px' }}>{label}</p>
-                  <p style={{ color: '#6b7280', fontSize: '12px', margin: 0 }}>{desc}</p>
+                  <p style={{ color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 500, margin: '0 0 2px' }}>{label}</p>
+                  <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px', margin: 0 }}>{desc}</p>
                 </div>
                 {/* Toggle — activé par défaut, neutre */}
                 <div style={{ width: '44px', height: '24px', background: BTN, borderRadius: '12px', position: 'relative', flexShrink: 0, border: `1px solid rgba(255,255,255,0.12)` }}>
@@ -480,8 +480,8 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
             <div style={{ width: '64px', height: '64px', borderRadius: '18px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
               <Gift size={28} color="rgba(255,255,255,0.7)" />
             </div>
-            <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 700, margin: '0 0 8px' }}>Invitez vos amis</h2>
-            <p style={{ color: '#6b7280', fontSize: '13px', margin: 0, lineHeight: 1.6 }}>Partagez votre code et recevez des avantages exclusifs pour chaque ami qui rejoint Terex.</p>
+            <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 700, margin: '0 0 8px' }}>Invitez vos amis</h2>
+            <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px', margin: 0, lineHeight: 1.6 }}>Partagez votre code et recevez des avantages exclusifs pour chaque ami qui rejoint Terex.</p>
           </div>
 
           {/* Rewards */}
@@ -491,19 +491,19 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
               { label: 'Pour votre filleul', value: '3% de bonus', desc: 'sur sa 1ère transaction' },
             ].map(({ label, value, desc }) => (
               <div key={label} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '16px', textAlign: 'center' }}>
-                <p style={{ color: '#6b7280', fontSize: '11px', margin: '0 0 6px' }}>{label}</p>
-                <p style={{ color: '#fff', fontSize: '18px', fontWeight: 700, margin: '0 0 2px' }}>{value}</p>
-                <p style={{ color: '#4b5563', fontSize: '11px', margin: 0 }}>{desc}</p>
+                <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', margin: '0 0 6px' }}>{label}</p>
+                <p style={{ color: 'hsl(var(--foreground))', fontSize: '18px', fontWeight: 700, margin: '0 0 2px' }}>{value}</p>
+                <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', margin: 0 }}>{desc}</p>
               </div>
             ))}
           </div>
 
           {/* Referral code */}
           <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '20px' }}>
-            <p style={{ color: '#6b7280', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 12px' }}>Votre code de parrainage</p>
+            <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 12px' }}>Votre code de parrainage</p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
               <div style={{ flex: 1, background: 'rgba(255,255,255,0.04)', border: `1px solid rgba(255,255,255,0.10)`, borderRadius: '14px', padding: '14px 18px' }}>
-                <span style={{ color: '#fff', fontSize: '18px', fontWeight: 700, letterSpacing: '2px' }}>{referralCode}</span>
+                <span style={{ color: 'hsl(var(--foreground))', fontSize: '18px', fontWeight: 700, letterSpacing: '2px' }}>{referralCode}</span>
               </div>
               <button
                 onClick={() => copy(referralCode, 'code')}
@@ -511,7 +511,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
                 {copiedKey === 'code' ? <Check size={18} color="#4ade80" /> : <Copy size={18} color="rgba(255,255,255,0.7)" />}
               </button>
             </div>
-            <p style={{ color: '#4b5563', fontSize: '11px', margin: 0 }}>Lien : {referralLink}</p>
+            <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', margin: 0 }}>Lien : {referralLink}</p>
           </div>
 
           {/* Share button */}
@@ -530,7 +530,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
           {/* How it works */}
           <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', overflow: 'hidden' }}>
             <div style={{ padding: '16px 20px', borderBottom: `1px solid ${BORDER}` }}>
-              <p style={{ color: '#6b7280', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>Comment ça marche</p>
+              <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>Comment ça marche</p>
             </div>
             {[
               { step: '1', text: 'Partagez votre code unique à vos contacts' },
@@ -571,8 +571,8 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
             <div style={{ width: '64px', height: '64px', borderRadius: '18px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
               <Share2 size={28} color="rgba(255,255,255,0.7)" />
             </div>
-            <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 700, margin: '0 0 6px' }}>Partagez Terex</h2>
-            <p style={{ color: '#6b7280', fontSize: '13px', margin: '0 0 20px', lineHeight: 1.6 }}>Faites découvrir la façon la plus simple d'acheter et vendre du USDT en CFA.</p>
+            <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 700, margin: '0 0 6px' }}>Partagez Terex</h2>
+            <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px', margin: '0 0 20px', lineHeight: 1.6 }}>Faites découvrir la façon la plus simple d'acheter et vendre du USDT en CFA.</p>
             {/* Native share + copy link */}
             <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
               <button onClick={async () => {
@@ -599,7 +599,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
           </div>
           {/* App URL */}
           <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '12px 16px' }}>
-            <p style={{ color: '#4b5563', fontSize: '11px', margin: '0 0 2px' }}>Lien direct</p>
+            <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', margin: '0 0 2px' }}>Lien direct</p>
             <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px', margin: 0 }}>{appUrl}</p>
           </div>
         </div>
@@ -625,8 +625,8 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
         <SubHeader title="Nous contacter" />
         <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '480px', margin: '0 auto' }}>
           <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '20px 24px', textAlign: 'center' }}>
-            <h2 style={{ color: '#fff', fontSize: '18px', fontWeight: 700, margin: '0 0 4px' }}>Support 24/7</h2>
-            <p style={{ color: '#6b7280', fontSize: '13px', margin: 0 }}>Notre équipe est disponible à tout moment.</p>
+            <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '18px', fontWeight: 700, margin: '0 0 4px' }}>Support 24/7</h2>
+            <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px', margin: 0 }}>Notre équipe est disponible à tout moment.</p>
           </div>
           <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', overflow: 'hidden' }}>
             {contacts.map(({ label, desc, IconEl, action }, i, arr) => (
@@ -636,10 +636,10 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
                   <IconEl />
                 </div>
                 <div style={{ flex: 1 }}>
-                  <p style={{ color: '#fff', fontSize: '14px', fontWeight: 500, margin: '0 0 1px' }}>{label}</p>
-                  <p style={{ color: '#6b7280', fontSize: '12px', margin: 0 }}>{desc}</p>
+                  <p style={{ color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 500, margin: '0 0 1px' }}>{label}</p>
+                  <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px', margin: 0 }}>{desc}</p>
                 </div>
-                <ChevronRight size={15} color="#4b5563" />
+                <ChevronRight size={15} color="hsl(var(--muted-foreground))" />
               </button>
             ))}
           </div>
@@ -690,21 +690,21 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
       <div style={{ display: 'flex', alignItems: 'center', padding: '4px 20px 0' }}>
         <button onClick={() => onNavigate?.('home')} aria-label="Retour"
           style={{ width: '38px', height: '38px', borderRadius: '50%', background: ICON_BG, border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-          <ArrowLeft size={17} color="#fff" />
+          <ArrowLeft size={17} color="hsl(var(--foreground))" />
         </button>
       </div>
 
       {/* Avatar hero */}
       <div style={{ padding: '20px 24px 24px' }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', textAlign: 'center' }}>
-          <div style={{ width: '88px', height: '88px', borderRadius: '50%', background: '#2d2d2d', border: `1px solid rgba(255,255,255,0.10)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '30px', fontWeight: 700, color: '#fff', letterSpacing: '-1px' }}>
+          <div style={{ width: '88px', height: '88px', borderRadius: '50%', background: 'hsl(var(--terex-gray))', border: `1px solid rgba(255,255,255,0.10)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '30px', fontWeight: 700, color: 'hsl(var(--foreground))', letterSpacing: '-1px' }}>
             {initials}
           </div>
           <div>
-            <h1 style={{ color: '#fff', fontSize: '24px', fontWeight: 700, margin: '0 0 4px', letterSpacing: '-0.5px' }}>
+            <h1 style={{ color: 'hsl(var(--foreground))', fontSize: '24px', fontWeight: 700, margin: '0 0 4px', letterSpacing: '-0.5px' }}>
               {formData.name || 'Utilisateur'}
             </h1>
-            <p style={{ color: '#6b7280', fontSize: '13px', margin: 0 }}>{user?.email}</p>
+            <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px', margin: 0 }}>{user?.email}</p>
           </div>
         </div>
       </div>
@@ -715,7 +715,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
         <div style={{ padding: '0 16px', display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '560px', margin: '0 auto' }}>
           {menuGroups.map(group => (
             <div key={group.title}>
-              <p style={{ color: '#4b5563', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 10px 4px' }}>{group.title}</p>
+              <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 10px 4px' }}>{group.title}</p>
               <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', overflow: 'hidden' }}>
                 {group.items.map(({ id, label, desc, icon: Icon }, i, arr) => (
                   <button key={id} onClick={() => setSection(id as Section)}
@@ -724,10 +724,10 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
                       <Icon size={18} color="rgba(255,255,255,0.7)" />
                     </div>
                     <div style={{ flex: 1 }}>
-                      <p style={{ color: '#fff', fontSize: '15px', fontWeight: 500, margin: '0 0 2px' }}>{label}</p>
-                      <p style={{ color: '#6b7280', fontSize: '12px', margin: 0 }}>{desc}</p>
+                      <p style={{ color: 'hsl(var(--foreground))', fontSize: '15px', fontWeight: 500, margin: '0 0 2px' }}>{label}</p>
+                      <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px', margin: 0 }}>{desc}</p>
                     </div>
-                    <ChevronRight size={16} color="#4b5563" />
+                    <ChevronRight size={16} color="hsl(var(--muted-foreground))" />
                   </button>
                 ))}
               </div>
@@ -736,7 +736,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
 
           {isStaff() && (
             <div>
-              <p style={{ color: '#4b5563', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 10px 4px' }}>Administration</p>
+              <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 10px 4px' }}>Administration</p>
               <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', overflow: 'hidden' }}>
                 <button onClick={() => navigate('/admin')}
                   style={{ width: '100%', padding: '16px 20px', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '16px', textAlign: 'left' }}>
@@ -744,17 +744,17 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
                     <Shield size={18} color="rgba(255,255,255,0.7)" />
                   </div>
                   <div style={{ flex: 1 }}>
-                    <p style={{ color: '#fff', fontSize: '15px', fontWeight: 500, margin: '0 0 2px' }}>Portail Administrateur</p>
-                    <p style={{ color: '#6b7280', fontSize: '12px', margin: 0 }}>{isAdmin() ? 'Commandes, KYC, comptabilité…' : 'Commandes et vérifications'}</p>
+                    <p style={{ color: 'hsl(var(--foreground))', fontSize: '15px', fontWeight: 500, margin: '0 0 2px' }}>Portail Administrateur</p>
+                    <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px', margin: 0 }}>{isAdmin() ? 'Commandes, KYC, comptabilité…' : 'Commandes et vérifications'}</p>
                   </div>
-                  <ChevronRight size={16} color="#4b5563" />
+                  <ChevronRight size={16} color="hsl(var(--muted-foreground))" />
                 </button>
               </div>
             </div>
           )}
 
           <div>
-            <p style={{ color: '#4b5563', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 10px 4px' }}>Session</p>
+            <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 10px 4px' }}>Session</p>
             <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', overflow: 'hidden' }}>
               <button onClick={onLogout} style={{ width: '100%', padding: '16px 20px', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '16px', textAlign: 'left' }}>
                 <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(239,68,68,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -762,14 +762,14 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
                 </div>
                 <div style={{ flex: 1 }}>
                   <p style={{ color: '#ef4444', fontSize: '15px', fontWeight: 500, margin: '0 0 2px' }}>Déconnexion</p>
-                  <p style={{ color: '#6b7280', fontSize: '12px', margin: 0 }}>Quitter votre session</p>
+                  <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px', margin: 0 }}>Quitter votre session</p>
                 </div>
-                <ChevronRight size={16} color="#4b5563" />
+                <ChevronRight size={16} color="hsl(var(--muted-foreground))" />
               </button>
             </div>
           </div>
 
-          <p style={{ textAlign: 'center', color: '#374151', fontSize: '11px', marginTop: '8px' }}>Terex · v1.0</p>
+          <p style={{ textAlign: 'center', color: 'hsl(var(--muted-foreground))', fontSize: '11px', marginTop: '8px' }}>Terex · v1.0</p>
         </div>
       ) : (
         /* Grille desktop : tuiles côte à côte au lieu de longue liste */
@@ -778,14 +778,14 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
             {allTiles.map(({ id, label, desc, icon: Icon }) => (
               <button key={id} onClick={() => setSection(id as Section)}
                 style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '18px', padding: '22px', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '14px', textAlign: 'left', transition: 'background 0.15s, border-color 0.15s' }}
-                onMouseEnter={e => { e.currentTarget.style.background = '#232323'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)'; }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'hsl(var(--terex-darker))'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)'; }}
                 onMouseLeave={e => { e.currentTarget.style.background = CARD; e.currentTarget.style.borderColor = BORDER; }}>
                 <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Icon size={20} color="rgba(255,255,255,0.85)" />
                 </div>
                 <div>
-                  <p style={{ color: '#fff', fontSize: '15px', fontWeight: 600, margin: '0 0 4px' }}>{label}</p>
-                  <p style={{ color: '#6b7280', fontSize: '12px', margin: 0, lineHeight: 1.4 }}>{desc}</p>
+                  <p style={{ color: 'hsl(var(--foreground))', fontSize: '15px', fontWeight: 600, margin: '0 0 4px' }}>{label}</p>
+                  <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px', margin: 0, lineHeight: 1.4 }}>{desc}</p>
                 </div>
               </button>
             ))}
@@ -793,14 +793,14 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
             {isStaff() && (
               <button onClick={() => navigate('/admin')}
                 style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '18px', padding: '22px', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '14px', textAlign: 'left', transition: 'background 0.15s, border-color 0.15s' }}
-                onMouseEnter={e => { e.currentTarget.style.background = '#232323'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)'; }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'hsl(var(--terex-darker))'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)'; }}
                 onMouseLeave={e => { e.currentTarget.style.background = CARD; e.currentTarget.style.borderColor = BORDER; }}>
                 <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Shield size={20} color="rgba(255,255,255,0.85)" />
                 </div>
                 <div>
-                  <p style={{ color: '#fff', fontSize: '15px', fontWeight: 600, margin: '0 0 4px' }}>Portail Admin</p>
-                  <p style={{ color: '#6b7280', fontSize: '12px', margin: 0, lineHeight: 1.4 }}>{isAdmin() ? 'Commandes, KYC, comptabilité' : 'Commandes et vérifications'}</p>
+                  <p style={{ color: 'hsl(var(--foreground))', fontSize: '15px', fontWeight: 600, margin: '0 0 4px' }}>Portail Admin</p>
+                  <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px', margin: 0, lineHeight: 1.4 }}>{isAdmin() ? 'Commandes, KYC, comptabilité' : 'Commandes et vérifications'}</p>
                 </div>
               </button>
             )}
@@ -817,7 +817,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
             </button>
           </div>
 
-          <p style={{ textAlign: 'center', color: '#374151', fontSize: '11px', marginTop: '24px' }}>Terex · v1.0</p>
+          <p style={{ textAlign: 'center', color: 'hsl(var(--muted-foreground))', fontSize: '11px', marginTop: '24px' }}>Terex · v1.0</p>
         </div>
       )}
     </div>

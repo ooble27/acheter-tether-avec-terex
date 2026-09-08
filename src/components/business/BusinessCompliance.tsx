@@ -7,10 +7,10 @@ import {
 } from 'lucide-react';
 
 const C = {
-  bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030',
-  bd: '#383838', bds: '#2a2a2a',
+  bg: 'hsl(var(--terex-dark))', l1: 'hsl(var(--terex-darker))', l2: 'hsl(var(--terex-gray))', l3: 'hsl(var(--terex-gray))',
+  bd: 'hsl(var(--terex-gray))', bds: 'hsl(var(--terex-gray))',
   teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.08)', tealB: 'rgba(255, 255, 255,0.22)',
-  t1: '#f0f0f0', t2: '#999999', t3: '#686868',
+  t1: '#f0f0f0', t2: 'hsl(var(--muted-foreground))', t3: '#686868',
   red: '#ef4444', redT: 'rgba(239,68,68,0.08)', redB: 'rgba(239,68,68,0.22)',
 };
 const FONT = "'Inter', sans-serif";
@@ -124,7 +124,7 @@ function DocItem({ doc, onSubmit }: { doc: Doc; onSubmit: (id: string) => void }
             <div style={{ display: 'flex', gap: 8 }}>
               <GhostBtn onClick={() => setModal(false)} style={{ flex: 1 }}>Annuler</GhostBtn>
               <button onClick={() => { onSubmit(doc.id); setModal(false); }}
-                style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, background: C.teal, color: '#fff', border: 'none', borderRadius: 9, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: FONT }}>
+                style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, background: C.teal, color: 'hsl(var(--foreground))', border: 'none', borderRadius: 9, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: FONT }}>
                 <Send size={13} /> Envoyer
               </button>
             </div>
@@ -164,7 +164,7 @@ function VerifyNextPage({ onBack, docs, onSubmit }: {
           </h2>
         </div>
         {allDone && (
-          <button style={{ height: 38, paddingLeft: 18, paddingRight: 18, background: C.teal, color: '#fff', border: 'none', borderRadius: 9, fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 7, fontFamily: FONT }}>
+          <button style={{ height: 38, paddingLeft: 18, paddingRight: 18, background: C.teal, color: 'hsl(var(--foreground))', border: 'none', borderRadius: 9, fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 7, fontFamily: FONT }}>
             <Send size={13} /> Soumettre le dossier
           </button>
         )}
@@ -270,7 +270,7 @@ function LimitRequestPage({ onBack }: { onBack: () => void }) {
           <GhostBtn onClick={onBack}>Annuler</GhostBtn>
           {!sent && (
             <button onClick={() => { if (canSend) setSent(true); }} disabled={!canSend}
-              style={{ height: 38, paddingLeft: 18, paddingRight: 18, background: canSend ? C.teal : C.l3, color: canSend ? '#fff' : C.t3, border: 'none', borderRadius: 9, fontSize: 13, fontWeight: 600, cursor: canSend ? 'pointer' : 'not-allowed', display: 'flex', alignItems: 'center', gap: 7, fontFamily: FONT }}>
+              style={{ height: 38, paddingLeft: 18, paddingRight: 18, background: canSend ? C.teal : C.l3, color: canSend ? 'hsl(var(--foreground))' : C.t3, border: 'none', borderRadius: 9, fontSize: 13, fontWeight: 600, cursor: canSend ? 'pointer' : 'not-allowed', display: 'flex', alignItems: 'center', gap: 7, fontFamily: FONT }}>
               <Send size={13} /> Envoyer la demande
             </button>
           )}
@@ -287,7 +287,7 @@ function LimitRequestPage({ onBack }: { onBack: () => void }) {
             Notre équipe conformité examinera votre dossier et vous contactera par email sous 24 à 48 heures ouvrées.
           </p>
           <button onClick={onBack}
-            style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 7, background: C.teal, color: '#fff', border: 'none', borderRadius: 9, padding: '10px 20px', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: FONT }}>
+            style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 7, background: C.teal, color: 'hsl(var(--foreground))', border: 'none', borderRadius: 9, padding: '10px 20px', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: FONT }}>
             <ArrowLeft size={13} /> Retour à la conformité
           </button>
         </div>
@@ -469,7 +469,7 @@ function CompliancePolicyPage({ onBack }: { onBack: () => void }) {
       </div>
 
       {/* Hero */}
-      <div style={{ background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #1a1a1a 100%)', border: `1px solid ${C.bds}`, borderRadius: 16, padding: '32px 32px 28px', marginBottom: 20 }}>
+      <div style={{ background: 'linear-gradient(135deg, hsl(var(--terex-darker)) 0%, hsl(var(--terex-dark)) 60%, hsl(var(--terex-dark)) 100%)', border: `1px solid ${C.bds}`, borderRadius: 16, padding: '32px 32px 28px', marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
           <ShieldCheck size={16} color={C.t3} />
           <span style={{ fontSize: 10, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.10em' }}>Terex Exchange</span>
@@ -581,7 +581,7 @@ export function BusinessCompliance({ user: _user }: { user: { email: string; nam
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
 
           {/* Héro */}
-          <div style={{ background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #1a1a1a 100%)', border: `1px solid ${C.bds}`, borderRadius: 16, padding: '28px 28px 24px' }}>
+          <div style={{ background: 'linear-gradient(135deg, hsl(var(--terex-darker)) 0%, hsl(var(--terex-dark)) 60%, hsl(var(--terex-dark)) 100%)', border: `1px solid ${C.bds}`, borderRadius: 16, padding: '28px 28px 24px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 22 }}>
               <ShieldCheck size={15} color={C.t3} />
               <span style={{ fontSize: 10, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.10em' }}>Conformité KYC</span>
@@ -619,7 +619,7 @@ export function BusinessCompliance({ user: _user }: { user: { email: string; nam
                 <TrendingUp size={13} /> Augmenter la limite
               </button>
               <button onClick={() => setSubPage('verify-next')}
-                style={{ height: 36, paddingLeft: 18, paddingRight: 18, background: C.teal, border: 'none', borderRadius: 9, color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, fontFamily: FONT, transition: 'background 0.15s' }}
+                style={{ height: 36, paddingLeft: 18, paddingRight: 18, background: C.teal, border: 'none', borderRadius: 9, color: 'hsl(var(--foreground))', fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, fontFamily: FONT, transition: 'background 0.15s' }}
                 onMouseEnter={e => (e.currentTarget.style.background = C.tealH)}
                 onMouseLeave={e => (e.currentTarget.style.background = C.teal)}>
                 <ChevronRight size={13} /> Niveau suivant

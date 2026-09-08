@@ -50,8 +50,8 @@ export function DodoSidebar({ activeSection, onSectionChange, onLogout }: DodoSi
         className={cn(
           'w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] transition-all cursor-pointer',
           active
-            ? 'bg-[#171717] text-white font-medium'
-            : 'text-[#a3a3a3] hover:bg-[#171717]/60 hover:text-[#d4d4d4] font-normal'
+            ? 'bg-[hsl(var(--terex-dark))] text-white font-medium'
+            : 'text-[#a3a3a3] hover:bg-[hsl(var(--terex-dark))]/60 hover:text-[#d4d4d4] font-normal'
         )}
       >
         <span className={cn('flex items-center justify-center w-4 h-4 shrink-0', active ? 'text-white' : 'text-[#737373]')}>
@@ -109,7 +109,7 @@ export function DodoSidebar({ activeSection, onSectionChange, onLogout }: DodoSi
       <div className="px-3 py-3 border-t border-[#262626] space-y-1">
         <button
           onClick={() => onSectionChange('profile')}
-          className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] text-[#a3a3a3] hover:bg-[#171717]/60 hover:text-[#d4d4d4] transition-all"
+          className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] text-[#a3a3a3] hover:bg-[hsl(var(--terex-dark))]/60 hover:text-[#d4d4d4] transition-all"
         >
           <Settings className="w-4 h-4 text-[#737373]" strokeWidth={1.8} />
           <span>Paramètres</span>

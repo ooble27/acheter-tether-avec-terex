@@ -16,7 +16,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
   const handleHowItWorks = () => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
 
   return (
-    <section className="relative" style={{ background: '#1a1a1a' }}>
+    <section className="relative" style={{ background: 'hsl(var(--terex-dark))' }}>
       {/* Halo doux, centré, très subtil */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[520px]" style={{
         background: 'radial-gradient(50% 60% at 50% 0%, rgba(255,255,255,0.045) 0%, transparent 75%)',
@@ -65,7 +65,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
             </button>
             <button onClick={handleHowItWorks}
               className="inline-flex items-center justify-center rounded-xl px-7 h-12 text-[15px] font-semibold transition-colors"
-              style={{ background: '#2d2d2d', border: '1px solid rgba(255,255,255,0.08)', color: '#fff' }}>
+              style={{ background: 'hsl(var(--terex-gray))', border: '1px solid rgba(255,255,255,0.08)', color: 'hsl(var(--foreground))' }}>
               Comment ça marche
             </button>
           </div>
@@ -103,7 +103,7 @@ function ProductPreview() {
   ];
   return (
     <div className="mx-auto text-left" style={{
-      maxWidth: '780px', background: '#1e1e1e', border: '1px solid rgba(255,255,255,0.08)',
+      maxWidth: '780px', background: 'hsl(var(--terex-darker))', border: '1px solid rgba(255,255,255,0.08)',
       borderRadius: '24px', padding: '10px', boxShadow: '0 40px 120px rgba(0,0,0,0.6)',
     }}>
       {/* Barre fenêtre */}
@@ -112,13 +112,13 @@ function ProductPreview() {
           <span key={i} style={{ width: 10, height: 10, borderRadius: '50%', background: c }} />
         ))}
       </div>
-      <div style={{ background: '#1a1a1a', borderRadius: '16px', padding: '22px', border: '1px solid rgba(255,255,255,0.05)' }}>
+      <div style={{ background: 'hsl(var(--terex-dark))', borderRadius: '16px', padding: '22px', border: '1px solid rgba(255,255,255,0.05)' }}>
         {/* Rate card */}
-        <div style={{ background: '#1e1e1e', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '18px', padding: '18px', marginBottom: '14px' }}>
-          <p style={{ color: '#6b7280', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 8px' }}>Taux USDT / CFA</p>
+        <div style={{ background: 'hsl(var(--terex-darker))', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '18px', padding: '18px', marginBottom: '14px' }}>
+          <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 8px' }}>Taux USDT / CFA</p>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-              <span style={{ color: '#fff', fontSize: 34, fontWeight: 700, letterSpacing: '-1px', lineHeight: 1 }}>660</span>
+              <span style={{ color: 'hsl(var(--foreground))', fontSize: 34, fontWeight: 700, letterSpacing: '-1px', lineHeight: 1 }}>660</span>
               <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: 14, fontWeight: 600 }}>CFA</span>
             </div>
             <img src={TETHER} alt="USDT" style={{ width: 38, height: 38, opacity: 0.9 }} />
@@ -127,11 +127,11 @@ function ProductPreview() {
         {/* Quick actions */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
           {actions.map(({ Icon, label, sub }) => (
-            <div key={label} style={{ background: '#1e1e1e', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', padding: '14px' }}>
+            <div key={label} style={{ background: 'hsl(var(--terex-darker))', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', padding: '14px' }}>
               <div style={{ width: 38, height: 38, borderRadius: 11, background: 'rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 10 }}>
                 <Icon className="w-[18px] h-[18px]" style={{ color: 'rgba(255,255,255,0.85)' }} />
               </div>
-              <p style={{ color: '#fff', fontSize: 13, fontWeight: 600, margin: '0 0 1px' }}>{label}</p>
+              <p style={{ color: 'hsl(var(--foreground))', fontSize: 13, fontWeight: 600, margin: '0 0 1px' }}>{label}</p>
               <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 11, margin: 0 }}>{sub}</p>
             </div>
           ))}

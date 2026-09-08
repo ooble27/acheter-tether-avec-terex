@@ -2,7 +2,7 @@ import { UnifiedConverter } from '../UnifiedConverter';
 
 export function CurrencyConverterSection() {
   return (
-    <section className="py-20 sm:py-28" style={{ backgroundColor: '#1a1a1a' }}>
+    <section className="py-20 sm:py-28" style={{ backgroundColor: 'hsl(var(--terex-dark))' }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-14 sm:mb-16">
           <span
@@ -29,7 +29,7 @@ export function CurrencyConverterSection() {
         <div
           className="rounded-2xl p-6 sm:p-8"
           style={{
-            backgroundColor: '#1e1e1e',
+            backgroundColor: 'hsl(var(--terex-darker))',
             border: '1px solid rgba(255,255,255,0.07)',
           }}
         >

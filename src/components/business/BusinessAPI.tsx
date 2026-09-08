@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 
 const C = {
-  bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030', l4: '#383838',
-  bd: '#383838', bds: '#2a2a2a', bdh: '#484848',
+  bg: 'hsl(var(--terex-dark))', l1: 'hsl(var(--terex-darker))', l2: 'hsl(var(--terex-gray))', l3: 'hsl(var(--terex-gray))', l4: 'hsl(var(--terex-gray))',
+  bd: 'hsl(var(--terex-gray))', bds: 'hsl(var(--terex-gray))', bdh: '#484848',
   teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.08)', tealB: 'rgba(255, 255, 255,0.20)',
-  t1: '#f0f0f0', t2: '#999999', t3: '#686868',
+  t1: '#f0f0f0', t2: 'hsl(var(--muted-foreground))', t3: '#686868',
   red: '#ef4444', redT: 'rgba(239,68,68,0.08)', redB: 'rgba(239,68,68,0.16)',
 };
 const FONT = "'Inter', sans-serif";
@@ -152,7 +152,7 @@ function Btn({
   };
   const variants: Record<string, React.CSSProperties> = {
     ghost: { background: hovered ? C.l3 : 'transparent', color: hovered ? C.t1 : C.t3, border: 'none' },
-    primary: { background: hovered ? C.tealH : C.teal, color: '#fff', border: 'none' },
+    primary: { background: hovered ? C.tealH : C.teal, color: 'hsl(var(--foreground))', border: 'none' },
     danger: { background: hovered ? C.redT : 'transparent', color: hovered ? C.red : C.t3, border: `1px solid ${hovered ? C.redB : 'transparent'}` },
     outline: { background: hovered ? C.l2 : 'transparent', color: hovered ? C.t1 : C.t2, border: `1px solid ${hovered ? C.bdh : C.bd}` },
   };

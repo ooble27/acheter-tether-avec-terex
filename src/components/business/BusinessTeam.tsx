@@ -5,10 +5,10 @@ import {
 } from 'lucide-react';
 
 const C = {
-  bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030',
-  bd: '#383838', bds: '#2a2a2a',
+  bg: 'hsl(var(--terex-dark))', l1: 'hsl(var(--terex-darker))', l2: 'hsl(var(--terex-gray))', l3: 'hsl(var(--terex-gray))',
+  bd: 'hsl(var(--terex-gray))', bds: 'hsl(var(--terex-gray))',
   teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.10)', tealB: 'rgba(255, 255, 255,0.25)',
-  t1: '#f0f0f0', t2: '#999999', t3: '#686868',
+  t1: '#f0f0f0', t2: 'hsl(var(--muted-foreground))', t3: '#686868',
   red: '#ef4444',
 };
 const FONT = "'Inter', sans-serif";
@@ -245,7 +245,7 @@ function DashboardPreview({ role, name }: { role: Role; name: string }) {
   const displayName = name || 'Nouveau membre';
 
   const card: React.CSSProperties = {
-    background: '#222222',
+    background: 'hsl(var(--terex-darker))',
     border: '1px solid rgba(255,255,255,0.07)',
     borderRadius: 9,
   };
@@ -257,10 +257,10 @@ function DashboardPreview({ role, name }: { role: Role; name: string }) {
   ];
 
   return (
-    <div style={{ borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.09)', background: '#181818', fontFamily: FONT }}>
+    <div style={{ borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.09)', background: 'hsl(var(--terex-dark))', fontFamily: FONT }}>
 
       {/* Chrome navigateur */}
-      <div style={{ background: '#1e1e1e', padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 7, borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+      <div style={{ background: 'hsl(var(--terex-darker))', padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 7, borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
         <div style={{ display: 'flex', gap: 4 }}>
           {['#FF5F57', '#FFBD2E', '#28CA41'].map((c, i) => (
             <div key={i} style={{ width: 8, height: 8, borderRadius: '50%', background: c, opacity: 0.65 }} />
@@ -484,7 +484,7 @@ function InvitePage({ onBack, onInvite }: { onBack: () => void; onInvite: (inv: 
     <div style={{ fontFamily: FONT, maxWidth: 1040, margin: '0 auto', paddingBottom: 48 }}>
 
       {/* ── Hero — même style que les autres pages ── */}
-      <div style={{ background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #1a1a1a 100%)', border: `1px solid ${C.bds}`, borderRadius: 16, padding: '24px 28px', marginBottom: 20 }}>
+      <div style={{ background: 'linear-gradient(135deg, hsl(var(--terex-darker)) 0%, hsl(var(--terex-dark)) 60%, hsl(var(--terex-dark)) 100%)', border: `1px solid ${C.bds}`, borderRadius: 16, padding: '24px 28px', marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
             <button onClick={onBack}
@@ -798,7 +798,7 @@ export function BusinessTeam({ user: _user }: { user: { email: string; name: str
         }} />
 
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <div style={{ background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #1a1a1a 100%)', border: `1px solid ${C.bds}`, borderRadius: 16, padding: '26px 28px' }}>
+      <div style={{ background: 'linear-gradient(135deg, hsl(var(--terex-darker)) 0%, hsl(var(--terex-dark)) 60%, hsl(var(--terex-dark)) 100%)', border: `1px solid ${C.bds}`, borderRadius: 16, padding: '26px 28px' }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 18 }}>
             <button onClick={() => logoRef.current?.click()}

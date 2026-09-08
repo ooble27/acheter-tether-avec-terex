@@ -52,10 +52,10 @@ const NET_LABEL: Record<string, string> = {
 };
 
 const C = {
-  bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030', l4: '#383838',
-  bd: '#383838', bds: '#2a2a2a', bdh: '#484848',
+  bg: 'hsl(var(--terex-dark))', l1: 'hsl(var(--terex-darker))', l2: 'hsl(var(--terex-gray))', l3: 'hsl(var(--terex-gray))', l4: 'hsl(var(--terex-gray))',
+  bd: 'hsl(var(--terex-gray))', bds: 'hsl(var(--terex-gray))', bdh: '#484848',
   teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.08)', tealB: 'rgba(255, 255, 255,0.20)',
-  t1: '#f0f0f0', t2: '#888888', t3: '#686868', t4: '#333333',
+  t1: '#f0f0f0', t2: 'hsl(var(--muted-foreground))', t3: '#686868', t4: 'hsl(var(--terex-gray))',
   red: '#ef4444', redT: 'rgba(239,68,68,0.08)',
 };
 const FONT = "'Inter', sans-serif";
@@ -178,7 +178,7 @@ function SupplierCard({
           style={{
             flex: 1, height: 36, borderRadius: 8,
             background: C.teal, border: 'none',
-            color: '#fff', fontSize: 13, fontWeight: 500,
+            color: 'hsl(var(--foreground))', fontSize: 13, fontWeight: 500,
             cursor: 'pointer', fontFamily: FONT,
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
             transition: 'background 0.1s',
@@ -405,7 +405,7 @@ function SupplierModal({
             style={{
               flex: 1, height: 40, borderRadius: 8, fontSize: 13, fontWeight: 500,
               background: valid ? C.teal : 'rgba(255, 255, 255,0.3)',
-              border: 'none', color: '#fff',
+              border: 'none', color: 'hsl(var(--foreground))',
               cursor: valid ? 'pointer' : 'not-allowed', fontFamily: FONT,
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
             }}
@@ -567,7 +567,7 @@ function SupplierDetailPanel({
 
         {/* Footer actions */}
         <div style={{ padding: '14px 20px', borderTop: `1px solid ${C.bds}`, display: 'flex', gap: 8 }}>
-          <button onClick={onPay} style={{ flex: 1, height: 38, borderRadius: 8, background: C.teal, border: 'none', color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, fontFamily: FONT, transition: 'background 0.1s' }}
+          <button onClick={onPay} style={{ flex: 1, height: 38, borderRadius: 8, background: C.teal, border: 'none', color: 'hsl(var(--foreground))', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, fontFamily: FONT, transition: 'background 0.1s' }}
             onMouseEnter={e => (e.currentTarget.style.background = C.tealH)}
             onMouseLeave={e => (e.currentTarget.style.background = C.teal)}>
             <Send style={{ width: 13, height: 13 }} /> Payer
@@ -665,7 +665,7 @@ export function BusinessSuppliers({ user, onNavigate }: Props) {
           style={{
             height: 32, paddingLeft: 12, paddingRight: 12,
             background: C.teal, border: 'none', borderRadius: 7,
-            color: '#fff', fontSize: 12, fontWeight: 500,
+            color: 'hsl(var(--foreground))', fontSize: 12, fontWeight: 500,
             cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
             fontFamily: FONT, flexShrink: 0,
           }}

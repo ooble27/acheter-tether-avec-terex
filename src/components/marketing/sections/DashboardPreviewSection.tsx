@@ -13,7 +13,7 @@ export function DashboardPreviewSection() {
   const [activeView, setActiveView] = useState<'desktop' | 'mobile'>('desktop');
 
   return (
-    <section className="py-20 md:py-28" style={{ backgroundColor: '#1a1a1a' }}>
+    <section className="py-20 md:py-28" style={{ backgroundColor: 'hsl(var(--terex-dark))' }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12 md:mb-16">
@@ -44,7 +44,7 @@ export function DashboardPreviewSection() {
             <div className="flex justify-center mb-10">
               <div
                 className="inline-flex rounded-2xl p-1"
-                style={{ backgroundColor: '#1e1e1e', border: '1px solid rgba(255,255,255,0.07)' }}
+                style={{ backgroundColor: 'hsl(var(--terex-darker))', border: '1px solid rgba(255,255,255,0.07)' }}
               >
                 <button
                   onClick={() => setActiveView('desktop')}
@@ -119,7 +119,7 @@ function DesktopFrame({ large }: { large?: boolean }) {
   return (
     <div
       className="rounded-2xl overflow-hidden"
-      style={{ backgroundColor: '#1e1e1e', border: '1px solid rgba(255,255,255,0.07)' }}
+      style={{ backgroundColor: 'hsl(var(--terex-darker))', border: '1px solid rgba(255,255,255,0.07)' }}
     >
       {/* Window title bar */}
       <div
