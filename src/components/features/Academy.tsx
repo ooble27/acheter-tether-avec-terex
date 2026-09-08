@@ -950,21 +950,34 @@ function QuizCard({
 // ═══════════════════════════════════════════════════════════════════════
 /**
  * Same flat horizontal sliding switch as the Dashboard's ThemeToggle,
- * fixed to the top-right of the Academy so it stays in view while scrolling.
- * The knob slides left (dark) ↔ right (light); the sun/moon icon rides on it.
- * The theme state is shared with the Dashboard via ThemeContext.
+ * anchored to the top-right of the Academy scope. The theme state is
+ * shared with the Dashboard via ThemeContext.
+ *
+ * Positioning:
+ *  - On mobile, kept `fixed` at the viewport corner (unchanged).
+ *  - On tablet/desktop, made `absolute` inside the Academy scope so it
+ *    lives in the normal document flow and scrolls with the content —
+ *    on wide screens the fixed corner used to be clipped by the browser
+ *    chrome (Safari address bar) or by the tablet bezel; keeping it in
+ *    the flow puts it inside each screen's own header padding instead.
  */
 function ThemeToggle({ theme, onToggle }: { theme: 'dark' | 'light'; onToggle: () => void }) {
   const light = theme === 'light';
+  const isMobile = useIsMobile();
   const W = 58, H = 30, KNOB = 24, PAD = 3;
   return (
     <button
       onClick={onToggle}
       aria-label={light ? 'Passer en mode sombre' : 'Passer en mode clair'}
       style={{
-        position: 'fixed', zIndex: 50,
-        top: 'calc(env(safe-area-inset-top, 0px) + 16px)',
-        right: 'max(16px, calc((100vw - 1000px) / 2 + 16px))',
+        position: isMobile ? 'fixed' : 'absolute',
+        zIndex: 50,
+        top: isMobile
+          ? 'calc(env(safe-area-inset-top, 0px) + 16px)'
+          : 24,
+        right: isMobile
+          ? 'max(16px, calc((100vw - 1000px) / 2 + 16px))'
+          : 'max(16px, calc((100vw - 1000px) / 2 + 16px))',
         width: W, height: H,
         borderRadius: 999,
         border: `1px solid ${C.accentBd}`,
