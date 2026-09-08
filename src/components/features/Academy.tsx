@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { setBrowserThemeColor } from '@/contexts/ThemeContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import {
   ArrowLeft, Video, FileText, Type, Radio,
@@ -59,6 +60,18 @@ export function Academy({ onBack }: { onBack: () => void }) {
   const [quizId, setQuizId] = useState<string | null>(null);
   const [quizModuleTitle, setQuizModuleTitle] = useState<string>('');
   const [theme, setTheme] = useState<'dark' | 'light'>(() => loadAcademyTheme());
+
+  // The Academy runs its own light/dark scope, so keep the browser chrome
+  // (Safari/Chrome status bar) in sync with IT while mounted, then restore the
+  // global app theme's colour when leaving the Academy.
+  useEffect(() => {
+    setBrowserThemeColor(theme === 'light');
+    return () => {
+      let globalLight = false;
+      try { globalLight = localStorage.getItem('terex-theme') === 'light'; } catch { /* ignore */ }
+      setBrowserThemeColor(globalLight);
+    };
+  }, [theme]);
 
   const toggleTheme = () => {
     setTheme(prev => {

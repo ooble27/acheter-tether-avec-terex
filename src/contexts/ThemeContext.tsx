@@ -22,21 +22,32 @@ function readStored(): Theme {
   }
 }
 
-function apply(theme: Theme) {
-  const root = document.documentElement;
-  root.classList.toggle('light', theme === 'light');
-  // Keep the iOS/Android status-bar chrome in sync so there's no dark band
-  // at the top of the page in light mode.
+const LIGHT_BG = '#f5f6f8';
+const DARK_BG = '#1a1a1a';
+
+/**
+ * Set the browser chrome colour (Safari/Chrome status bar, top & bottom).
+ * Exported so the Academy — which runs its own light/dark scope — can keep the
+ * bar in sync too. Also drives the CSS color-scheme for native controls.
+ */
+export function setBrowserThemeColor(isLight: boolean) {
   try {
-    let meta = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
+    let meta = document.getElementById('theme-color-meta') as HTMLMetaElement | null
+      || (document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null);
     if (!meta) {
       meta = document.createElement('meta');
       meta.name = 'theme-color';
+      meta.id = 'theme-color-meta';
       document.head.appendChild(meta);
     }
-    meta.content = theme === 'light' ? '#f5f6f8' : '#1a1a1a';
-    root.style.setProperty('color-scheme', theme === 'light' ? 'light' : 'dark');
+    meta.setAttribute('content', isLight ? LIGHT_BG : DARK_BG);
+    document.documentElement.style.colorScheme = isLight ? 'light' : 'dark';
   } catch { /* ignore */ }
+}
+
+function apply(theme: Theme) {
+  document.documentElement.classList.toggle('light', theme === 'light');
+  setBrowserThemeColor(theme === 'light');
 }
 
 type ThemeContextValue = {
