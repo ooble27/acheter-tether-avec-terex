@@ -28,12 +28,12 @@ type Section = null | 'informations' | 'activite' | 'parrainage' | 'partager' | 
 
 const BG     = 'hsl(var(--terex-dark))';
 const CARD   = 'hsl(var(--terex-darker))';
-const BORDER = 'rgba(255,255,255,0.07)';
+const BORDER = 'hsl(var(--terex-accent) / 0.07)';
 const BTN    = 'hsl(var(--terex-gray))';
-const ICON_BG = 'rgba(255,255,255,0.06)';
+const ICON_BG = 'hsl(var(--terex-accent) / 0.06)';
 
 const inputStyle: React.CSSProperties = {
-  width: '100%', background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`,
+  width: '100%', background: 'hsl(var(--terex-accent) / 0.04)', border: `1px solid ${BORDER}`,
   borderRadius: '12px', padding: '12px 16px', color: 'hsl(var(--foreground))', fontSize: '15px',
   outline: 'none', boxSizing: 'border-box',
 };
@@ -183,7 +183,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
     const InfoCard = ({ label, value, icon: Icon }: { label: string; value: string; icon: any }) => (
       <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '18px 20px', display: 'flex', alignItems: 'center', gap: '14px' }}>
         <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <Icon size={18} color="rgba(255,255,255,0.7)" />
+          <Icon size={18} color="hsl(var(--terex-accent) / 0.7)" />
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>{label}</p>
@@ -200,14 +200,14 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
             <>
               {/* Hero avatar + edit */}
               <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '18px', padding: '24px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '18px', flexWrap: 'wrap' }}>
-                <div style={{ width: '68px', height: '68px', borderRadius: '50%', background: 'hsl(var(--terex-gray))', border: `1px solid rgba(255,255,255,0.10)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px', fontWeight: 700, color: 'hsl(var(--foreground))', flexShrink: 0 }}>
+                <div style={{ width: '68px', height: '68px', borderRadius: '50%', background: 'hsl(var(--terex-gray))', border: `1px solid hsl(var(--terex-accent) / 0.10)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px', fontWeight: 700, color: 'hsl(var(--foreground))', flexShrink: 0 }}>
                   {initials}
                 </div>
                 <div style={{ flex: 1, minWidth: 200 }}>
                   <p style={{ color: 'hsl(var(--foreground))', fontSize: '18px', fontWeight: 700, margin: '0 0 4px' }}>{formData.name || 'Utilisateur'}</p>
                   <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px', margin: 0 }}>Membre depuis {memberSince}</p>
                 </div>
-                <button onClick={() => setIsEditing(true)} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: BTN, border: `1px solid rgba(255,255,255,0.10)`, borderRadius: '12px', padding: '10px 18px', color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>
+                <button onClick={() => setIsEditing(true)} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: BTN, border: `1px solid hsl(var(--terex-accent) / 0.10)`, borderRadius: '12px', padding: '10px 18px', color: 'hsl(var(--foreground))', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>
                   <Edit2 size={14} /> Modifier
                 </button>
               </div>
@@ -237,13 +237,13 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
                 <div>
                   <label style={labelStyle}><MapPin size={12} />Pays</label>
                   <Select value={formData.country} onValueChange={v => setFormData({ ...formData, country: v })}>
-                    <SelectTrigger className="bg-[hsl(var(--terex-darker))] border-[rgba(255,255,255,0.07)] text-white">
+                    <SelectTrigger className="bg-[hsl(var(--terex-darker))] border-[hsl(var(--terex-accent) / 0.07)] text-white">
                       <SelectValue placeholder="Sélectionnez" />
                     </SelectTrigger>
-                    <SelectContent className="bg-[hsl(var(--terex-darker))] border-[rgba(255,255,255,0.07)] z-50">
+                    <SelectContent className="bg-[hsl(var(--terex-darker))] border-[hsl(var(--terex-accent) / 0.07)] z-50">
                       {['senegal:Sénégal','mali:Mali','burkina:Burkina Faso','cote_ivoire:Côte d\'Ivoire','niger:Niger','canada:Canada'].map(s => {
                         const [v, l] = s.split(':');
-                        return <SelectItem key={v} value={v} className="text-white focus:bg-[rgba(255,255,255,0.06)] focus:text-white">{l}</SelectItem>;
+                        return <SelectItem key={v} value={v} className="text-white focus:bg-[hsl(var(--terex-accent) / 0.06)] focus:text-white">{l}</SelectItem>;
                       })}
                     </SelectContent>
                   </Select>
@@ -251,18 +251,18 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
                 <div>
                   <label style={labelStyle}><Globe size={12} />Langue</label>
                   <Select value={formData.language} onValueChange={v => setFormData({ ...formData, language: v })}>
-                    <SelectTrigger className="bg-[hsl(var(--terex-darker))] border-[rgba(255,255,255,0.07)] text-white">
+                    <SelectTrigger className="bg-[hsl(var(--terex-darker))] border-[hsl(var(--terex-accent) / 0.07)] text-white">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-[hsl(var(--terex-darker))] border-[rgba(255,255,255,0.07)] z-50">
-                      <SelectItem value="fr" className="text-white focus:bg-[rgba(255,255,255,0.06)] focus:text-white">Français</SelectItem>
-                      <SelectItem value="en" className="text-white focus:bg-[rgba(255,255,255,0.06)] focus:text-white">English</SelectItem>
+                    <SelectContent className="bg-[hsl(var(--terex-darker))] border-[hsl(var(--terex-accent) / 0.07)] z-50">
+                      <SelectItem value="fr" className="text-white focus:bg-[hsl(var(--terex-accent) / 0.06)] focus:text-white">Français</SelectItem>
+                      <SelectItem value="en" className="text-white focus:bg-[hsl(var(--terex-accent) / 0.06)] focus:text-white">English</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
               <div style={{ display: 'flex', gap: '12px', paddingTop: '20px', marginTop: '20px', borderTop: `1px solid ${BORDER}` }}>
-                <button onClick={handleSave} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#ffffff', border: 'none', borderRadius: '12px', padding: '11px 22px', color: '#141414', fontSize: '14px', fontWeight: 700, cursor: 'pointer' }}>
+                <button onClick={handleSave} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'hsl(var(--terex-accent))', border: 'none', borderRadius: '12px', padding: '11px 22px', color: 'hsl(var(--terex-accent-fg))', fontSize: '14px', fontWeight: 700, cursor: 'pointer' }}>
                   <Save size={15} /> Sauvegarder
                 </button>
                 <button onClick={() => setIsEditing(false)} style={{ background: BTN, border: `1px solid ${BORDER}`, borderRadius: '12px', padding: '11px 22px', color: 'hsl(var(--muted-foreground))', fontSize: '14px', fontWeight: 500, cursor: 'pointer' }}>
@@ -304,7 +304,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
           <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '16px', overflow: 'hidden' }}>
             <button onClick={() => setShowPasswordDialog(true)} style={{ width: '100%', padding: '16px 20px', background: 'none', border: 'none', borderBottom: `1px solid ${BORDER}`, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '16px' }}>
               <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Key size={16} color="rgba(255,255,255,0.7)" />
+                <Key size={16} color="hsl(var(--terex-accent) / 0.7)" />
               </div>
               <div style={{ flex: 1, textAlign: 'left' }}>
                 <p style={{ color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 500, margin: '0 0 2px' }}>Changer le mot de passe</p>
@@ -325,10 +325,10 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
           </div>
 
           {/* Security tips */}
-          <div style={{ marginTop: '16px', background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '16px' }}>
+          <div style={{ marginTop: '16px', background: 'hsl(var(--terex-accent) / 0.03)', border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-              <Shield size={15} color="rgba(255,255,255,0.55)" />
-              <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: '13px', fontWeight: 600 }}>Conseils de sécurité</span>
+              <Shield size={15} color="hsl(var(--terex-accent) / 0.55)" />
+              <span style={{ color: 'hsl(var(--terex-accent) / 0.55)', fontSize: '13px', fontWeight: 600 }}>Conseils de sécurité</span>
             </div>
             {["Ne partagez jamais vos identifiants de connexion", "Vérifiez toujours les adresses avant d'envoyer", "Utilisez un réseau sécurisé pour vos transactions"].map((tip, i) => (
               <p key={i} style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px', margin: '0 0 4px', paddingLeft: '4px' }}>· {tip}</p>
@@ -338,7 +338,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
 
         {/* Password dialog */}
         <AlertDialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
-          <AlertDialogContent className="bg-[hsl(var(--terex-darker))] border-[rgba(255,255,255,0.07)]">
+          <AlertDialogContent className="bg-[hsl(var(--terex-darker))] border-[hsl(var(--terex-accent) / 0.07)]">
             <AlertDialogHeader>
               <AlertDialogTitle className="text-white flex items-center gap-2"><Key className="w-4 h-4 opacity-60" /> Nouveau mot de passe</AlertDialogTitle>
               <AlertDialogDescription className="text-gray-400">Minimum 6 caractères</AlertDialogDescription>
@@ -362,20 +362,20 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
               ))}
             </div>
             <AlertDialogFooter>
-              <AlertDialogCancel className="bg-[hsl(var(--terex-gray))] border-[rgba(255,255,255,0.07)] text-white hover:bg-[hsl(var(--terex-gray))]">Annuler</AlertDialogCancel>
-              <AlertDialogAction onClick={handleChangePassword} className="bg-white text-[#141414] hover:bg-white/90">Confirmer</AlertDialogAction>
+              <AlertDialogCancel className="bg-[hsl(var(--terex-gray))] border-[hsl(var(--terex-accent) / 0.07)] text-white hover:bg-[hsl(var(--terex-gray))]">Annuler</AlertDialogCancel>
+              <AlertDialogAction onClick={handleChangePassword} className="bg-terex-accent text-[hsl(var(--terex-accent-fg))] hover:bg-white/90">Confirmer</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
 
         <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-          <AlertDialogContent className="bg-[hsl(var(--terex-darker))] border-[rgba(255,255,255,0.07)]">
+          <AlertDialogContent className="bg-[hsl(var(--terex-darker))] border-[hsl(var(--terex-accent) / 0.07)]">
             <AlertDialogHeader>
               <AlertDialogTitle className="text-white">Supprimer mon compte</AlertDialogTitle>
               <AlertDialogDescription className="text-gray-400">Cette action est irréversible. Toutes vos données seront supprimées définitivement.</AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel className="bg-[hsl(var(--terex-gray))] border-[rgba(255,255,255,0.07)] text-white hover:bg-[hsl(var(--terex-gray))]">Annuler</AlertDialogCancel>
+              <AlertDialogCancel className="bg-[hsl(var(--terex-gray))] border-[hsl(var(--terex-accent) / 0.07)] text-white hover:bg-[hsl(var(--terex-gray))]">Annuler</AlertDialogCancel>
               <AlertDialogAction onClick={handleDeleteAccount} className="bg-red-600 hover:bg-red-700 text-white">Supprimer définitivement</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -423,9 +423,9 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
           </div>
 
           {/* Astuce / prochaine action */}
-          <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '18px 20px', display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <div style={{ background: 'hsl(var(--terex-accent) / 0.03)', border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '18px 20px', display: 'flex', alignItems: 'center', gap: '14px' }}>
             <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <TrendingUp size={18} color="rgba(255,255,255,0.7)" />
+              <TrendingUp size={18} color="hsl(var(--terex-accent) / 0.7)" />
             </div>
             <div style={{ flex: 1 }}>
               <p style={{ color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600, margin: '0 0 2px' }}>Continuez à échanger</p>
@@ -455,7 +455,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
                   <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px', margin: 0 }}>{desc}</p>
                 </div>
                 {/* Toggle — activé par défaut, neutre */}
-                <div style={{ width: '44px', height: '24px', background: BTN, borderRadius: '12px', position: 'relative', flexShrink: 0, border: `1px solid rgba(255,255,255,0.12)` }}>
+                <div style={{ width: '44px', height: '24px', background: BTN, borderRadius: '12px', position: 'relative', flexShrink: 0, border: `1px solid hsl(var(--terex-accent) / 0.12)` }}>
                   <div style={{ position: 'absolute', right: '3px', top: '3px', width: '16px', height: '16px', background: '#fff', borderRadius: '50%' }} />
                 </div>
               </div>
@@ -478,7 +478,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
           {/* Hero */}
           <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '28px 24px', textAlign: 'center' }}>
             <div style={{ width: '64px', height: '64px', borderRadius: '18px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
-              <Gift size={28} color="rgba(255,255,255,0.7)" />
+              <Gift size={28} color="hsl(var(--terex-accent) / 0.7)" />
             </div>
             <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 700, margin: '0 0 8px' }}>Invitez vos amis</h2>
             <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px', margin: 0, lineHeight: 1.6 }}>Partagez votre code et recevez des avantages exclusifs pour chaque ami qui rejoint Terex.</p>
@@ -502,13 +502,13 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
           <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '20px' }}>
             <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 12px' }}>Votre code de parrainage</p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-              <div style={{ flex: 1, background: 'rgba(255,255,255,0.04)', border: `1px solid rgba(255,255,255,0.10)`, borderRadius: '14px', padding: '14px 18px' }}>
+              <div style={{ flex: 1, background: 'hsl(var(--terex-accent) / 0.04)', border: `1px solid hsl(var(--terex-accent) / 0.10)`, borderRadius: '14px', padding: '14px 18px' }}>
                 <span style={{ color: 'hsl(var(--foreground))', fontSize: '18px', fontWeight: 700, letterSpacing: '2px' }}>{referralCode}</span>
               </div>
               <button
                 onClick={() => copy(referralCode, 'code')}
-                style={{ width: '48px', height: '48px', borderRadius: '14px', background: copiedKey === 'code' ? 'rgba(74,222,128,0.15)' : BTN, border: `1px solid ${copiedKey === 'code' ? 'rgba(74,222,128,0.35)' : 'rgba(255,255,255,0.10)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0, transition: 'all 0.15s' }}>
-                {copiedKey === 'code' ? <Check size={18} color="#4ade80" /> : <Copy size={18} color="rgba(255,255,255,0.7)" />}
+                style={{ width: '48px', height: '48px', borderRadius: '14px', background: copiedKey === 'code' ? 'rgba(74,222,128,0.15)' : BTN, border: `1px solid ${copiedKey === 'code' ? 'rgba(74,222,128,0.35)' : 'hsl(var(--terex-accent) / 0.10)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0, transition: 'all 0.15s' }}>
+                {copiedKey === 'code' ? <Check size={18} color="#4ade80" /> : <Copy size={18} color="hsl(var(--terex-accent) / 0.7)" />}
               </button>
             </div>
             <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', margin: 0 }}>Lien : {referralLink}</p>
@@ -523,7 +523,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
                 copy(referralLink, 'link');
               }
             }}
-            style={{ background: '#fff', border: 'none', borderRadius: '14px', padding: '15px', color: '#141414', fontSize: '15px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+            style={{ background: '#fff', border: 'none', borderRadius: '14px', padding: '15px', color: 'hsl(var(--terex-accent-fg))', fontSize: '15px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
             <Share2 size={16} /> Partager mon code
           </button>
 
@@ -539,7 +539,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
             ].map(({ step, text }, i, arr) => (
               <div key={step} style={{ padding: '14px 20px', borderBottom: i < arr.length - 1 ? `1px solid ${BORDER}` : 'none', display: 'flex', alignItems: 'center', gap: '14px' }}>
                 <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '12px', fontWeight: 700 }}>{step}</span>
+                  <span style={{ color: 'hsl(var(--terex-accent) / 0.7)', fontSize: '12px', fontWeight: 700 }}>{step}</span>
                 </div>
                 <p style={{ color: '#d1d5db', fontSize: '13px', margin: 0 }}>{text}</p>
               </div>
@@ -569,7 +569,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
         <div style={{ padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '480px', margin: '0 auto' }}>
           <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '24px', textAlign: 'center' }}>
             <div style={{ width: '64px', height: '64px', borderRadius: '18px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
-              <Share2 size={28} color="rgba(255,255,255,0.7)" />
+              <Share2 size={28} color="hsl(var(--terex-accent) / 0.7)" />
             </div>
             <h2 style={{ color: 'hsl(var(--foreground))', fontSize: '20px', fontWeight: 700, margin: '0 0 6px' }}>Partagez Terex</h2>
             <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px', margin: '0 0 20px', lineHeight: 1.6 }}>Faites découvrir la façon la plus simple d'acheter et vendre du USDT en CFA.</p>
@@ -579,11 +579,11 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
                 if (navigator.share) {
                   try { await navigator.share({ title: 'Terex', text: shareText, url: appUrl }); } catch {}
                 } else { copy(appUrl, 'app-share'); }
-              }} style={{ background: '#fff', border: 'none', borderRadius: '12px', padding: '11px 20px', color: '#141414', fontSize: '14px', fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+              }} style={{ background: '#fff', border: 'none', borderRadius: '12px', padding: '11px 20px', color: 'hsl(var(--terex-accent-fg))', fontSize: '14px', fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                 <ExternalLink size={14} /> Partager
               </button>
               <button onClick={() => copy(appUrl, 'app-copy')}
-                style={{ background: copiedKey === 'app-copy' ? 'rgba(74,222,128,0.15)' : BTN, border: `1px solid ${copiedKey === 'app-copy' ? 'rgba(74,222,128,0.35)' : 'rgba(255,255,255,0.10)'}`, borderRadius: '12px', padding: '11px 20px', color: copiedKey === 'app-copy' ? '#4ade80' : '#fff', fontSize: '14px', fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px', transition: 'all 0.15s' }}>
+                style={{ background: copiedKey === 'app-copy' ? 'rgba(74,222,128,0.15)' : BTN, border: `1px solid ${copiedKey === 'app-copy' ? 'rgba(74,222,128,0.35)' : 'hsl(var(--terex-accent) / 0.10)'}`, borderRadius: '12px', padding: '11px 20px', color: copiedKey === 'app-copy' ? '#4ade80' : '#fff', fontSize: '14px', fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px', transition: 'all 0.15s' }}>
                 {copiedKey === 'app-copy' ? <Check size={14} /> : <Copy size={14} />} Copier
               </button>
             </div>
@@ -600,7 +600,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
           {/* App URL */}
           <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '12px 16px' }}>
             <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', margin: '0 0 2px' }}>Lien direct</p>
-            <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px', margin: 0 }}>{appUrl}</p>
+            <p style={{ color: 'hsl(var(--terex-accent) / 0.7)', fontSize: '13px', margin: 0 }}>{appUrl}</p>
           </div>
         </div>
       </div>
@@ -611,14 +611,14 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
 
   if (section === 'contact') {
     const WAIcon = () => (
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="rgba(255,255,255,0.7)">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="hsl(var(--terex-accent) / 0.7)">
         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
       </svg>
     );
     const contacts = [
       { label: 'WhatsApp', desc: '+1 (418) 261-9091', IconEl: WAIcon, action: () => window.open('https://wa.me/+14182619091', '_blank') },
-      { label: 'Téléphone', desc: '+1 (418) 261-9091', IconEl: () => <Phone size={18} color="rgba(255,255,255,0.7)" />, action: () => window.open('tel:+14182619091') },
-      { label: 'Email', desc: 'terangaexchange@gmail.com', IconEl: () => <Mail size={18} color="rgba(255,255,255,0.7)" />, action: () => window.open('mailto:terangaexchange@gmail.com', '_blank') },
+      { label: 'Téléphone', desc: '+1 (418) 261-9091', IconEl: () => <Phone size={18} color="hsl(var(--terex-accent) / 0.7)" />, action: () => window.open('tel:+14182619091') },
+      { label: 'Email', desc: 'terangaexchange@gmail.com', IconEl: () => <Mail size={18} color="hsl(var(--terex-accent) / 0.7)" />, action: () => window.open('mailto:terangaexchange@gmail.com', '_blank') },
     ];
     return (
       <div style={subPageStyle}>
@@ -697,7 +697,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
       {/* Avatar hero */}
       <div style={{ padding: '20px 24px 24px' }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', textAlign: 'center' }}>
-          <div style={{ width: '88px', height: '88px', borderRadius: '50%', background: 'hsl(var(--terex-gray))', border: `1px solid rgba(255,255,255,0.10)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '30px', fontWeight: 700, color: 'hsl(var(--foreground))', letterSpacing: '-1px' }}>
+          <div style={{ width: '88px', height: '88px', borderRadius: '50%', background: 'hsl(var(--terex-gray))', border: `1px solid hsl(var(--terex-accent) / 0.10)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '30px', fontWeight: 700, color: 'hsl(var(--foreground))', letterSpacing: '-1px' }}>
             {initials}
           </div>
           <div>
@@ -721,7 +721,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
                   <button key={id} onClick={() => setSection(id as Section)}
                     style={{ width: '100%', padding: '16px 20px', background: 'none', border: 'none', borderBottom: i < arr.length - 1 ? `1px solid ${BORDER}` : 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '16px', textAlign: 'left' }}>
                     <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <Icon size={18} color="rgba(255,255,255,0.7)" />
+                      <Icon size={18} color="hsl(var(--terex-accent) / 0.7)" />
                     </div>
                     <div style={{ flex: 1 }}>
                       <p style={{ color: 'hsl(var(--foreground))', fontSize: '15px', fontWeight: 500, margin: '0 0 2px' }}>{label}</p>
@@ -741,7 +741,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
                 <button onClick={() => navigate('/admin')}
                   style={{ width: '100%', padding: '16px 20px', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '16px', textAlign: 'left' }}>
                   <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <Shield size={18} color="rgba(255,255,255,0.7)" />
+                    <Shield size={18} color="hsl(var(--terex-accent) / 0.7)" />
                   </div>
                   <div style={{ flex: 1 }}>
                     <p style={{ color: 'hsl(var(--foreground))', fontSize: '15px', fontWeight: 500, margin: '0 0 2px' }}>Portail Administrateur</p>
@@ -778,10 +778,10 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
             {allTiles.map(({ id, label, desc, icon: Icon }) => (
               <button key={id} onClick={() => setSection(id as Section)}
                 style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '18px', padding: '22px', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '14px', textAlign: 'left', transition: 'background 0.15s, border-color 0.15s' }}
-                onMouseEnter={e => { e.currentTarget.style.background = 'hsl(var(--terex-darker))'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)'; }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'hsl(var(--terex-darker))'; e.currentTarget.style.borderColor = 'hsl(var(--terex-accent) / 0.14)'; }}
                 onMouseLeave={e => { e.currentTarget.style.background = CARD; e.currentTarget.style.borderColor = BORDER; }}>
                 <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Icon size={20} color="rgba(255,255,255,0.85)" />
+                  <Icon size={20} color="hsl(var(--terex-accent) / 0.85)" />
                 </div>
                 <div>
                   <p style={{ color: 'hsl(var(--foreground))', fontSize: '15px', fontWeight: 600, margin: '0 0 4px' }}>{label}</p>
@@ -793,10 +793,10 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
             {isStaff() && (
               <button onClick={() => navigate('/admin')}
                 style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '18px', padding: '22px', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '14px', textAlign: 'left', transition: 'background 0.15s, border-color 0.15s' }}
-                onMouseEnter={e => { e.currentTarget.style.background = 'hsl(var(--terex-darker))'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)'; }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'hsl(var(--terex-darker))'; e.currentTarget.style.borderColor = 'hsl(var(--terex-accent) / 0.14)'; }}
                 onMouseLeave={e => { e.currentTarget.style.background = CARD; e.currentTarget.style.borderColor = BORDER; }}>
                 <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Shield size={20} color="rgba(255,255,255,0.85)" />
+                  <Shield size={20} color="hsl(var(--terex-accent) / 0.85)" />
                 </div>
                 <div>
                   <p style={{ color: 'hsl(var(--foreground))', fontSize: '15px', fontWeight: 600, margin: '0 0 4px' }}>Portail Admin</p>

@@ -14,11 +14,11 @@ import { AddressBook } from '../shared/AddressBook';
 import { useSavedWallets } from '@/hooks/useSavedWallets';
 import { useNabooPay } from '@/hooks/useNabooPay';
 
-const CARD = 'rgba(255,255,255,0.03)';
-const BORDER = 'rgba(255,255,255,0.07)';
+const CARD = 'hsl(var(--terex-accent) / 0.03)';
+const BORDER = 'hsl(var(--terex-accent) / 0.07)';
 const BTN = 'hsl(var(--terex-gray))';
-const SEL_BG = 'rgba(255,255,255,0.06)';
-const SEL_BORDER = 'rgba(255,255,255,0.18)';
+const SEL_BG = 'hsl(var(--terex-accent) / 0.06)';
+const SEL_BORDER = 'hsl(var(--terex-accent) / 0.18)';
 
 const NETWORK_LOGOS: Record<string, string> = {
   TRC20:   'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png',
@@ -33,7 +33,7 @@ const NETWORK_LOGOS: Record<string, string> = {
 const circleBackBtn: React.CSSProperties = {
   display: 'flex', alignItems: 'center', justifyContent: 'center',
   width: '38px', height: '38px', flexShrink: 0,
-  background: 'rgba(255,255,255,0.06)', borderRadius: '50%', border: 'none', cursor: 'pointer',
+  background: 'hsl(var(--terex-accent) / 0.06)', borderRadius: '50%', border: 'none', cursor: 'pointer',
   outline: 'none', WebkitTapHighlightColor: 'transparent',
 };
 
@@ -63,9 +63,9 @@ function ContinueBtn({ onClick, disabled, children }: { onClick: () => void; dis
         disabled={disabled}
         style={{
           display: 'flex', alignItems: 'center', gap: '8px',
-          background: disabled ? 'rgba(255,255,255,0.04)' : BTN,
-          borderRadius: '16px', border: '1px solid rgba(255,255,255,0.10)',
-          padding: '13px 22px', color: disabled ? 'hsl(var(--muted-foreground))' : '#fff',
+          background: disabled ? 'hsl(var(--terex-accent) / 0.04)' : BTN,
+          borderRadius: '16px', border: '1px solid hsl(var(--terex-accent) / 0.10)',
+          padding: '13px 22px', color: disabled ? 'hsl(var(--muted-foreground))' : 'hsl(var(--terex-accent))',
           fontSize: '14px', fontWeight: 600, cursor: disabled ? 'not-allowed' : 'pointer',
           outline: 'none', WebkitTapHighlightColor: 'transparent', transition: 'background 0.15s',
         }}
@@ -257,7 +257,7 @@ export function MobileBuyUSDT() {
                 <span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Montant</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   {/* Currency toggle */}
-                  <div style={{ display: 'inline-flex', background: 'rgba(255,255,255,0.04)', borderRadius: '10px', padding: '3px', gap: '2px' }}>
+                  <div style={{ display: 'inline-flex', background: 'hsl(var(--terex-accent) / 0.04)', borderRadius: '10px', padding: '3px', gap: '2px' }}>
                     {(['XOF', 'USDT'] as const).map(c => (
                       <button key={c} onClick={() => { setInputCurrency(c); setRawAmount(''); }}
                         style={{ padding: '5px 12px', borderRadius: '7px', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: 600, outline: 'none',
@@ -313,7 +313,7 @@ export function MobileBuyUSDT() {
                       setRawAmount(val);
                     }
                   }}
-                  style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '18px 84px 18px 20px', color: 'hsl(var(--foreground))', fontSize: '34px', fontWeight: 700, outline: 'none', letterSpacing: '-1px', boxSizing: 'border-box', fontFamily: 'inherit' }}
+                  style={{ width: '100%', background: 'hsl(var(--terex-accent) / 0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '18px 84px 18px 20px', color: 'hsl(var(--foreground))', fontSize: '34px', fontWeight: 700, outline: 'none', letterSpacing: '-1px', boxSizing: 'border-box', fontFamily: 'inherit' }}
                 />
                 <span style={{ position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                   {inputCurrency === 'USDT' ? (
@@ -355,7 +355,7 @@ export function MobileBuyUSDT() {
             {/* Continue — LEFT */}
             <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
               <button onClick={handleContinueToNetwork}
-                style={{ display: 'flex', alignItems: 'center', gap: '8px', background: BTN, borderRadius: '16px', border: '1px solid rgba(255,255,255,0.10)', padding: '13px 22px', color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600, cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent' }}>
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', background: BTN, borderRadius: '16px', border: '1px solid hsl(var(--terex-accent) / 0.10)', padding: '13px 22px', color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600, cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent' }}>
                 <Coins size={17} strokeWidth={2} /> Continuer
               </button>
             </div>
@@ -457,7 +457,7 @@ export function MobileBuyUSDT() {
                 ].map(({ label, value, mono, accent, bold }, i, arr) => (
                   <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 16px', borderBottom: i < arr.length - 1 ? `1px solid ${BORDER}` : 'none' }}>
                     <span style={{ color: 'hsl(var(--muted-foreground))', fontSize: '13px' }}>{label}</span>
-                    <span style={{ color: accent ? '#f97316' : '#fff', fontSize: mono ? '11px' : '13px', fontWeight: bold ? 700 : 500, maxWidth: '60%', textAlign: 'right', wordBreak: 'break-all', fontFamily: mono ? 'monospace' : undefined }}>
+                    <span style={{ color: accent ? '#f97316' : 'hsl(var(--terex-accent))', fontSize: mono ? '11px' : '13px', fontWeight: bold ? 700 : 500, maxWidth: '60%', textAlign: 'right', wordBreak: 'break-all', fontFamily: mono ? 'monospace' : undefined }}>
                       {value}
                     </span>
                   </div>
@@ -467,7 +467,7 @@ export function MobileBuyUSDT() {
 
             <div style={{ display: 'flex', justifyContent: 'flex-start', padding: '16px 20px 28px' }}>
               <button onClick={handleConfirm} disabled={loading}
-                style={{ display: 'flex', alignItems: 'center', gap: '8px', background: loading ? 'rgba(255,255,255,0.04)' : '#ffffff', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.15)', padding: '13px 22px', color: loading ? 'hsl(var(--muted-foreground))' : '#141414', fontSize: '14px', fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', outline: 'none' }}>
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', background: loading ? 'hsl(var(--terex-accent) / 0.04)' : 'hsl(var(--terex-accent))', borderRadius: '16px', border: '1px solid hsl(var(--terex-accent) / 0.15)', padding: '13px 22px', color: loading ? 'hsl(var(--muted-foreground))' : 'hsl(var(--terex-accent-fg))', fontSize: '14px', fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', outline: 'none' }}>
                 <Coins size={17} strokeWidth={2} />
                 {loading ? 'Traitement…' : 'Confirmer et payer'}
               </button>

@@ -11,7 +11,7 @@ import {
 const C = {
   bg: 'hsl(var(--terex-dark))', l1: 'hsl(var(--terex-darker))', l2: 'hsl(var(--terex-gray))', l3: 'hsl(var(--terex-gray))',
   bd: 'hsl(var(--terex-gray))', bds: 'hsl(var(--terex-gray))', bdh: '#484848',
-  teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.08)', tealB: 'rgba(255, 255, 255,0.22)',
+  teal: '#ffffff', tealH: '#2d7870', tealT: 'hsl(var(--terex-accent) / 0.08)', tealB: 'hsl(var(--terex-accent) / 0.22)',
   t1: '#f0f0f0', t2: 'hsl(var(--muted-foreground))', t3: '#686868',
   red: '#ef4444', redT: 'rgba(239,68,68,0.08)', redB: 'rgba(239,68,68,0.22)',
 };
@@ -411,7 +411,7 @@ print(bal.total_usdt)  # 65780`,
   const ep = ENDPOINTS[selected];
 
   const methodColor = (m: string) => ({ GET: C.teal, POST: C.t2, PUT: C.t3, DELETE: C.red }[m] || C.t3);
-  const methodBg    = (m: string) => ({ GET: C.tealT, POST: 'rgba(255,255,255,0.05)', PUT: 'rgba(255,255,255,0.03)', DELETE: C.redT }[m] || 'transparent');
+  const methodBg    = (m: string) => ({ GET: C.tealT, POST: 'hsl(var(--terex-accent) / 0.05)', PUT: 'hsl(var(--terex-accent) / 0.03)', DELETE: C.redT }[m] || 'transparent');
 
   const codeMap = { curl: ep.curlEx, node: ep.nodeEx, python: ep.pythonEx };
 
@@ -547,7 +547,7 @@ function CompliancePolicyPage({ onBack }: { onBack: () => void }) {
     <div style={{ fontFamily: FONT, maxWidth: 900, margin: '0 auto', paddingBottom: 40 }}>
       {/* Breadcrumb */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
-        <button onClick={onBack} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.04)', border: `1px solid ${C.bds}`, cursor: 'pointer', color: C.t3, fontSize: 12, padding: '7px 12px', borderRadius: 9, fontFamily: FONT, transition: 'all 0.13s' }} onMouseEnter={e => { e.currentTarget.style.color = C.t1; e.currentTarget.style.borderColor = C.bd; }} onMouseLeave={e => { e.currentTarget.style.color = C.t3; e.currentTarget.style.borderColor = C.bds; }}>
+        <button onClick={onBack} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'hsl(var(--terex-accent) / 0.04)', border: `1px solid ${C.bds}`, cursor: 'pointer', color: C.t3, fontSize: 12, padding: '7px 12px', borderRadius: 9, fontFamily: FONT, transition: 'all 0.13s' }} onMouseEnter={e => { e.currentTarget.style.color = C.t1; e.currentTarget.style.borderColor = C.bd; }} onMouseLeave={e => { e.currentTarget.style.color = C.t3; e.currentTarget.style.borderColor = C.bds; }}>
           <ArrowLeft size={13} /> Support
         </button>
         <span style={{ color: C.t3, fontSize: 13 }}>/</span>
@@ -752,7 +752,7 @@ export function BusinessSupport({ user }: Props) {
           <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 14, overflow: 'hidden' }}>
             <div style={{ padding: '14px 18px', borderBottom: `1px solid ${C.bds}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <h3 style={{ fontSize: 10, fontWeight: 600, color: C.t3, margin: 0, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Horaires d'assistance</h3>
-              <span style={{ fontSize: 11, color: openNow ? C.teal : C.t3, background: openNow ? C.tealT : 'rgba(255,255,255,0.04)', border: `1px solid ${openNow ? C.tealB : C.bds}`, padding: '2px 8px', borderRadius: 20 }}>
+              <span style={{ fontSize: 11, color: openNow ? C.teal : C.t3, background: openNow ? C.tealT : 'hsl(var(--terex-accent) / 0.04)', border: `1px solid ${openNow ? C.tealB : C.bds}`, padding: '2px 8px', borderRadius: 20 }}>
                 {openNow ? 'Ouvert' : 'Fermé'}
               </span>
             </div>

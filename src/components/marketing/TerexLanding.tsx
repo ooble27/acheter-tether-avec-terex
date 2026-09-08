@@ -11,8 +11,8 @@ import waveLogo from '@/assets/wave-logo.png';
 import orangeLogo from '@/assets/orange-money-logo.png';
 
 const BG = 'hsl(var(--terex-dark))';
-const BORDER = 'rgba(255,255,255,0.07)';
-const ICON_BG = 'rgba(255,255,255,0.06)';
+const BORDER = 'hsl(var(--terex-accent) / 0.07)';
+const ICON_BG = 'hsl(var(--terex-accent) / 0.06)';
 const TETHER = 'https://coin-images.coingecko.com/coins/images/325/large/Tether.png';
 const LOGO = '/terex-logo.png';
 
@@ -106,8 +106,8 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
       `}</style>
 
       {/* Lignes verticales guides */}
-      <div className="tx-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 560px)', width: 1, background: 'rgba(255,255,255,0.05)', pointerEvents: 'none', zIndex: 0 }} />
-      <div className="tx-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 560px)', width: 1, background: 'rgba(255,255,255,0.05)', pointerEvents: 'none', zIndex: 0 }} />
+      <div className="tx-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 560px)', width: 1, background: 'hsl(var(--terex-accent) / 0.05)', pointerEvents: 'none', zIndex: 0 }} />
+      <div className="tx-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 560px)', width: 1, background: 'hsl(var(--terex-accent) / 0.05)', pointerEvents: 'none', zIndex: 0 }} />
 
       {/* En-tête unifié (dropdown desktop · Commencer mobile) — identique partout */}
       <HeaderSection user={user ?? null} onShowDashboard={onShowDashboard} onLogout={() => {}} />
@@ -121,11 +121,11 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
             <h1 className="tx-hero-title" style={{ fontSize: 58, fontWeight: 800, lineHeight: 1.04, letterSpacing: '-0.035em', margin: '0 0 18px' }}>
               Achetez et vendez<br />des USDT en CFA
             </h1>
-            <p style={{ fontSize: 17.5, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, margin: '0 0 32px', maxWidth: 440 }}>
+            <p style={{ fontSize: 17.5, color: 'hsl(var(--terex-accent) / 0.55)', lineHeight: 1.6, margin: '0 0 32px', maxWidth: 440 }}>
               Achat et vente de USDT en quelques minutes. Rapide, sécurisé et au meilleur taux CFA.
             </p>
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-              <button onClick={goPrimary} className="tx-cta" style={{ background: '#fff', color: '#141414', border: 'none', borderRadius: 12, height: 50, padding: '0 26px', fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+              <button onClick={goPrimary} className="tx-cta" style={{ background: '#fff', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 12, height: 50, padding: '0 26px', fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
                 {user ? 'Mon tableau de bord' : 'Commencer gratuitement'} <ArrowRight size={16} />
               </button>
               <button onClick={() => document.getElementById('how')?.scrollIntoView({ behavior: 'smooth' })}
@@ -143,10 +143,10 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
                 {rateDisplay ? (
                   <>
                     <span style={{ fontSize: 52, fontWeight: 700, letterSpacing: '-1.5px', lineHeight: 1 }}>{rateDisplay}</span>
-                    <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: 16, fontWeight: 600 }}>CFA</span>
+                    <span style={{ color: 'hsl(var(--terex-accent) / 0.45)', fontSize: 16, fontWeight: 600 }}>CFA</span>
                   </>
                 ) : (
-                  <span style={{ display: 'inline-block', width: 140, height: 40, borderRadius: 10, background: 'rgba(255,255,255,0.06)' }} />
+                  <span style={{ display: 'inline-block', width: 140, height: 40, borderRadius: 10, background: 'hsl(var(--terex-accent) / 0.06)' }} />
                 )}
               </div>
               <img src={TETHER} alt="USDT" style={{ width: 48, height: 48, opacity: 0.9 }} />
@@ -155,16 +155,16 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
               {ACTIONS.map(({ Icon, label, sub }) => (
                 <button key={label} onClick={goAuth}
                   style={{ background: 'transparent', border: `1px solid ${BORDER}`, borderRadius: 18, padding: '18px 16px', cursor: 'pointer', textAlign: 'left', transition: 'border-color 0.15s, background 0.15s', gridColumn: label === 'OTC' ? '1 / -1' : undefined }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)'; e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'hsl(var(--terex-accent) / 0.18)'; e.currentTarget.style.background = 'hsl(var(--terex-accent) / 0.02)'; }}
                   onMouseLeave={e => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.background = 'transparent'; }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
                     <div style={{ width: 42, height: 42, borderRadius: 13, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Icon size={20} color="rgba(255,255,255,0.85)" strokeWidth={1.8} />
+                      <Icon size={20} color="hsl(var(--terex-accent) / 0.85)" strokeWidth={1.8} />
                     </div>
-                    <ArrowUpRight size={15} color="rgba(255,255,255,0.2)" />
+                    <ArrowUpRight size={15} color="hsl(var(--terex-accent) / 0.2)" />
                   </div>
                   <p style={{ fontSize: 15, fontWeight: 600, margin: '0 0 2px' }}>{label}</p>
-                  <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 12, margin: 0 }}>{sub}</p>
+                  <p style={{ color: 'hsl(var(--terex-accent) / 0.3)', fontSize: 12, margin: 0 }}>{sub}</p>
                 </button>
               ))}
             </div>
@@ -180,10 +180,10 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
             {FEATURES.map(({ Icon, title, desc }) => (
               <div key={title} style={{ padding: '30px 28px', borderRight: `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}` }}>
                 <div style={{ width: 42, height: 42, borderRadius: 12, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
-                  <Icon size={20} color="rgba(255,255,255,0.85)" strokeWidth={1.8} />
+                  <Icon size={20} color="hsl(var(--terex-accent) / 0.85)" strokeWidth={1.8} />
                 </div>
                 <h3 style={{ fontSize: 16, fontWeight: 600, margin: '0 0 8px' }}>{title}</h3>
-                <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.5)', lineHeight: 1.65, margin: 0 }}>{desc}</p>
+                <p style={{ fontSize: 13.5, color: 'hsl(var(--terex-accent) / 0.5)', lineHeight: 1.65, margin: 0 }}>{desc}</p>
               </div>
             ))}
           </div>
@@ -199,7 +199,7 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
               <div key={name} style={{ border: `1px solid ${BORDER}`, borderRadius: 16, padding: '20px 14px', textAlign: 'center' }}>
                 <img src={logo} alt={name} style={{ width: 40, height: 40, borderRadius: '50%', margin: '0 auto 12px', display: 'block' }} />
                 <p style={{ fontSize: 13.5, fontWeight: 600, margin: '0 0 2px' }}>{name}</p>
-                <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', margin: 0, fontWeight: 600, letterSpacing: '0.04em' }}>{sub}</p>
+                <p style={{ fontSize: 11, color: 'hsl(var(--terex-accent) / 0.4)', margin: 0, fontWeight: 600, letterSpacing: '0.04em' }}>{sub}</p>
               </div>
             ))}
           </div>
@@ -218,7 +218,7 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
                 </div>
                 <div>
                   <p style={{ fontSize: 16, fontWeight: 600, margin: '0 0 2px' }}>{name}</p>
-                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', margin: 0 }}>Dépôt et retrait instantanés</p>
+                  <p style={{ fontSize: 13, color: 'hsl(var(--terex-accent) / 0.45)', margin: 0 }}>Dépôt et retrait instantanés</p>
                 </div>
               </div>
             ))}
@@ -234,10 +234,10 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
             {WHY.map(({ Icon, title, desc }) => (
               <div key={title} className="tx-tile" style={{ border: `1px solid ${BORDER}`, borderRadius: 20, padding: '26px 24px' }}>
                 <div style={{ width: 44, height: 44, borderRadius: 13, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 18 }}>
-                  <Icon size={21} color="rgba(255,255,255,0.9)" strokeWidth={1.8} />
+                  <Icon size={21} color="hsl(var(--terex-accent) / 0.9)" strokeWidth={1.8} />
                 </div>
                 <h3 style={{ fontSize: 16.5, fontWeight: 600, margin: '0 0 8px' }}>{title}</h3>
-                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', lineHeight: 1.65, margin: 0 }}>{desc}</p>
+                <p style={{ fontSize: 14, color: 'hsl(var(--terex-accent) / 0.5)', lineHeight: 1.65, margin: 0 }}>{desc}</p>
               </div>
             ))}
           </div>
@@ -249,12 +249,12 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
         <div className="tx-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '72px 32px' }}>
           <div className="tx-two" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48, alignItems: 'center' }}>
             <div>
-              <p style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.4)', margin: '0 0 12px' }}>OTC · Gros volumes</p>
+              <p style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'hsl(var(--terex-accent) / 0.4)', margin: '0 0 12px' }}>OTC · Gros volumes</p>
               <h2 style={{ fontSize: 34, fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.12, margin: '0 0 16px' }}>Des transactions importantes ?<br />Un service dédié.</h2>
-              <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.55)', lineHeight: 1.65, margin: '0 0 26px', maxWidth: 440 }}>
+              <p style={{ fontSize: 16, color: 'hsl(var(--terex-accent) / 0.55)', lineHeight: 1.65, margin: '0 0 26px', maxWidth: 440 }}>
                 Pour les montants élevés, bénéficiez d'un accompagnement personnalisé, de taux préférentiels et d'un règlement rapide et sécurisé.
               </p>
-              <button onClick={goAuth} className="tx-cta" style={{ background: '#fff', color: '#141414', border: 'none', borderRadius: 12, height: 48, padding: '0 24px', fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+              <button onClick={goAuth} className="tx-cta" style={{ background: '#fff', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 12, height: 48, padding: '0 24px', fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
                 Demander un devis OTC <ArrowRight size={16} />
               </button>
             </div>
@@ -267,7 +267,7 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
               ].map(({ Icon, t }) => (
                 <div key={t} className="tx-tile" style={{ border: `1px solid ${BORDER}`, borderRadius: 16, padding: '20px 18px' }}>
                   <div style={{ width: 40, height: 40, borderRadius: 12, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
-                    <Icon size={19} color="rgba(255,255,255,0.9)" strokeWidth={1.8} />
+                    <Icon size={19} color="hsl(var(--terex-accent) / 0.9)" strokeWidth={1.8} />
                   </div>
                   <p style={{ fontSize: 14, fontWeight: 600, margin: 0 }}>{t}</p>
                 </div>
@@ -286,7 +286,7 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
               <div key={n}>
                 <div style={{ width: 40, height: 40, borderRadius: 12, background: ICON_BG, border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16, fontSize: 15, fontWeight: 700 }}>{n}</div>
                 <h3 style={{ fontSize: 16, fontWeight: 600, margin: '0 0 8px' }}>{title}</h3>
-                <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.5)', lineHeight: 1.65, margin: 0 }}>{desc}</p>
+                <p style={{ fontSize: 13.5, color: 'hsl(var(--terex-accent) / 0.5)', lineHeight: 1.65, margin: 0 }}>{desc}</p>
               </div>
             ))}
           </div>
@@ -304,10 +304,10 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
                 <div key={i} style={{ borderBottom: `1px solid ${BORDER}` }}>
                   <button onClick={() => setFaqOpen(open ? null : i)}
                     style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '20px 0', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' }}>
-                    <span style={{ fontSize: 15, fontWeight: 500, color: open ? 'hsl(var(--foreground))' : 'rgba(255,255,255,0.8)' }}>{item.q}</span>
-                    <ChevronDown size={17} color="rgba(255,255,255,0.4)" style={{ flexShrink: 0, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                    <span style={{ fontSize: 15, fontWeight: 500, color: open ? 'hsl(var(--foreground))' : 'hsl(var(--terex-accent) / 0.8)' }}>{item.q}</span>
+                    <ChevronDown size={17} color="hsl(var(--terex-accent) / 0.4)" style={{ flexShrink: 0, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
                   </button>
-                  {open && <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7, margin: '0 0 20px' }}>{item.a}</p>}
+                  {open && <p style={{ fontSize: 14, color: 'hsl(var(--terex-accent) / 0.5)', lineHeight: 1.7, margin: '0 0 20px' }}>{item.a}</p>}
                 </div>
               );
             })}
@@ -319,8 +319,8 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
       <section style={{ borderTop: `1px solid ${BORDER}`, position: 'relative', zIndex: 1 }}>
         <div className="tx-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '88px 32px', textAlign: 'center' }}>
           <h2 style={{ fontSize: 38, fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 14px' }}>Prêt à commencer ?</h2>
-          <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.55)', margin: '0 0 28px' }}>Créez votre compte et échangez vos premiers USDT en quelques minutes.</p>
-          <button onClick={goPrimary} style={{ background: '#fff', color: '#141414', border: 'none', borderRadius: 12, height: 52, padding: '0 32px', fontSize: 16, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+          <p style={{ fontSize: 16, color: 'hsl(var(--terex-accent) / 0.55)', margin: '0 0 28px' }}>Créez votre compte et échangez vos premiers USDT en quelques minutes.</p>
+          <button onClick={goPrimary} style={{ background: '#fff', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 12, height: 52, padding: '0 32px', fontSize: 16, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
             {user ? 'Mon tableau de bord' : 'Commencer gratuitement'} <ArrowRight size={17} />
           </button>
         </div>
@@ -334,9 +334,9 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
 function SectionHead({ eyebrow, title, sub, center }: { eyebrow: string; title: string; sub?: string; center?: boolean }) {
   return (
     <div style={{ marginBottom: 36, textAlign: center ? 'center' : 'left' }}>
-      <p style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.4)', margin: '0 0 10px' }}>{eyebrow}</p>
+      <p style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'hsl(var(--terex-accent) / 0.4)', margin: '0 0 10px' }}>{eyebrow}</p>
       <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', margin: 0, lineHeight: 1.1 }}>{title}</h2>
-      {sub && <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.5)', margin: '12px 0 0', maxWidth: center ? 'none' : 520 }}>{sub}</p>}
+      {sub && <p style={{ fontSize: 15, color: 'hsl(var(--terex-accent) / 0.5)', margin: '12px 0 0', maxWidth: center ? 'none' : 520 }}>{sub}</p>}
     </div>
   );
 }

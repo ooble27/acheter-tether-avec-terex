@@ -54,7 +54,7 @@ const NET_LABEL: Record<string, string> = {
 const C = {
   bg: 'hsl(var(--terex-dark))', l1: 'hsl(var(--terex-darker))', l2: 'hsl(var(--terex-gray))', l3: 'hsl(var(--terex-gray))', l4: 'hsl(var(--terex-gray))',
   bd: 'hsl(var(--terex-gray))', bds: 'hsl(var(--terex-gray))', bdh: '#484848',
-  teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.08)', tealB: 'rgba(255, 255, 255,0.20)',
+  teal: '#ffffff', tealH: '#2d7870', tealT: 'hsl(var(--terex-accent) / 0.08)', tealB: 'hsl(var(--terex-accent) / 0.20)',
   t1: '#f0f0f0', t2: 'hsl(var(--muted-foreground))', t3: '#686868', t4: 'hsl(var(--terex-gray))',
   red: '#ef4444', redT: 'rgba(239,68,68,0.08)',
 };
@@ -245,7 +245,7 @@ function SupplierModal({
   const valid = name.trim() && wallet.trim();
 
   const inputStyle = (focused: boolean): React.CSSProperties => ({
-    width: '100%', background: C.l2, border: `1px solid ${focused ? 'rgba(255, 255, 255,0.35)' : C.bd}`,
+    width: '100%', background: C.l2, border: `1px solid ${focused ? 'hsl(var(--terex-accent) / 0.35)' : C.bd}`,
     borderRadius: 8, paddingLeft: 12, paddingRight: 12, paddingTop: 10, paddingBottom: 10,
     color: C.t1, fontSize: 13, outline: 'none', fontFamily: FONT,
     boxSizing: 'border-box', transition: 'border-color 0.15s',
@@ -404,7 +404,7 @@ function SupplierModal({
             onClick={() => { if (valid) { onSave({ name, walletAddress: wallet, network, country, category: category || undefined }); onClose(); } }}
             style={{
               flex: 1, height: 40, borderRadius: 8, fontSize: 13, fontWeight: 500,
-              background: valid ? C.teal : 'rgba(255, 255, 255,0.3)',
+              background: valid ? C.teal : 'hsl(var(--terex-accent) / 0.3)',
               border: 'none', color: 'hsl(var(--foreground))',
               cursor: valid ? 'pointer' : 'not-allowed', fontFamily: FONT,
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
@@ -691,7 +691,7 @@ export function BusinessSuppliers({ user, onNavigate }: Props) {
           onBlur={() => setSearchFocused(false)}
           placeholder="Rechercher par nom ou pays…"
           style={{
-            width: '100%', background: C.l1, border: `1px solid ${searchFocused ? 'rgba(255, 255, 255,0.35)' : C.bds}`,
+            width: '100%', background: C.l1, border: `1px solid ${searchFocused ? 'hsl(var(--terex-accent) / 0.35)' : C.bds}`,
             borderRadius: 8, paddingLeft: 36, paddingRight: 16, paddingTop: 10, paddingBottom: 10,
             color: C.t1, fontSize: 13, outline: 'none', fontFamily: FONT,
             boxSizing: 'border-box', transition: 'border-color 0.15s',

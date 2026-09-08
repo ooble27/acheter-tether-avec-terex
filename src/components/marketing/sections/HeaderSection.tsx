@@ -17,10 +17,10 @@ interface HeaderSectionProps {
 const BG = 'hsl(var(--terex-dark))';
 const CARD = 'hsl(var(--terex-darker))';
 const ROW = 'hsl(var(--terex-darker))';
-const BORDER = 'rgba(255,255,255,0.07)';
-const ICON_BG = 'rgba(255,255,255,0.06)';
-const MUTED = 'rgba(255,255,255,0.55)';
-const MUTED2 = 'rgba(255,255,255,0.42)';
+const BORDER = 'hsl(var(--terex-accent) / 0.07)';
+const ICON_BG = 'hsl(var(--terex-accent) / 0.06)';
+const MUTED = 'hsl(var(--terex-accent) / 0.55)';
+const MUTED2 = 'hsl(var(--terex-accent) / 0.42)';
 
 type Item = { icon: any; title: string; desc: string; href: string };
 type Group = { label: string; items: Item[] };
@@ -82,7 +82,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
 
   const primaryBtn = (
     <button onClick={primary}
-      style={{ background: '#fff', color: '#141414', border: 'none', borderRadius: 11, height: 40, padding: '0 18px', fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
+      style={{ background: '#fff', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 11, height: 40, padding: '0 18px', fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
       {user ? 'Tableau de bord' : 'Commencer'} <ArrowRight size={15} />
     </button>
   );
@@ -145,7 +145,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                       <button key={it.title} className="hs-item" onClick={() => go(it.href)}
                         style={{ display: 'flex', alignItems: 'center', gap: 13, padding: '11px 12px', borderRadius: 12, background: 'transparent', border: '1px solid transparent', cursor: 'pointer', textAlign: 'left' }}>
                         <div style={{ width: 38, height: 38, borderRadius: 10, background: ICON_BG, border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                          <Icon size={18} strokeWidth={1.7} color="rgba(255,255,255,0.9)" />
+                          <Icon size={18} strokeWidth={1.7} color="hsl(var(--terex-accent) / 0.9)" />
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <p style={{ margin: 0, fontSize: 14, fontWeight: 650, color: 'hsl(var(--foreground))', letterSpacing: '-0.01em' }}>{it.title}</p>
@@ -171,7 +171,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                   </button>
                 )}
                 <button onClick={() => onShowDashboard?.()}
-                  style={{ background: '#fff', color: '#141414', border: 'none', borderRadius: 11, height: 40, padding: '0 18px', fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
+                  style={{ background: '#fff', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 11, height: 40, padding: '0 18px', fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
                   <User size={15} /> Tableau de bord
                 </button>
               </>

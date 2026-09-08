@@ -13,7 +13,7 @@ import { useCryptoRates } from '@/hooks/useCryptoRates';
 const C = {
   bg: 'hsl(var(--terex-dark))', l1: 'hsl(var(--terex-darker))', l2: 'hsl(var(--terex-gray))', l3: 'hsl(var(--terex-gray))', l4: 'hsl(var(--terex-gray))',
   bd: 'hsl(var(--terex-gray))', bds: 'hsl(var(--terex-gray))', bdh: '#484848',
-  teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.08)', tealB: 'rgba(255, 255, 255,0.20)',
+  teal: '#ffffff', tealH: '#2d7870', tealT: 'hsl(var(--terex-accent) / 0.08)', tealB: 'hsl(var(--terex-accent) / 0.20)',
   t1: '#f0f0f0', t2: 'hsl(var(--muted-foreground))', t3: 'hsl(var(--muted-foreground))',
 };
 const FONT = "'Inter', sans-serif";
@@ -216,7 +216,7 @@ const FrozenAreaChart = React.memo(
               <stop offset="95%" stopColor={C.teal} stopOpacity={0.02} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--terex-accent) / 0.04)" vertical={false} />
           <XAxis dataKey="day" tick={{ fill: C.t3, fontSize: 9, fontFamily: FONT }}
             tickLine={false} axisLine={false} interval={4} />
           <YAxis tick={{ fill: C.t3, fontSize: 9, fontFamily: MONO }}
@@ -512,7 +512,7 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
                   display: 'flex', alignItems: 'center', gap: 12,
                   transition: 'background 0.12s',
                 }}
-                onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.015)')}
+                onMouseEnter={e => (e.currentTarget.style.background = 'hsl(var(--terex-accent) / 0.015)')}
                 onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
               >
                 <img src={w.logo} alt={w.chain}

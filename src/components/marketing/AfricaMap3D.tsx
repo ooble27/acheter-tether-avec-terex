@@ -101,7 +101,7 @@ export function AfricaMap3D() {
                  C150 65, 160 60, 170 65
                  L180 70
                  C185 75, 182 78, 180 80 Z"
-              fill="rgba(255, 255, 255, 0.2)"
+              fill="hsl(var(--terex-accent) / 0.2)"
               className="sahara-region"
             />
           </svg>

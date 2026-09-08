@@ -586,10 +586,10 @@ function CourseHero({ course, pct, enrolled, isMobile }: {
         display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-          <span style={{ ...sH, fontSize: 10, color: 'rgba(255,255,255,0.60)' }}>Terex Academy</span>
+          <span style={{ ...sH, fontSize: 10, color: 'hsl(var(--terex-accent) / 0.60)' }}>Terex Academy</span>
           {enrolled && (
             <>
-              <span style={{ width: 3, height: 3, borderRadius: '50%', background: 'rgba(255,255,255,0.30)' }} />
+              <span style={{ width: 3, height: 3, borderRadius: '50%', background: 'hsl(var(--terex-accent) / 0.30)' }} />
               <span style={{ display: 'flex', alignItems: 'center', gap: 5, color: OK, fontSize: 10, fontWeight: 400, letterSpacing: '0.16em', textTransform: 'uppercase' }}>
                 <Sparkles size={11} /> Inscrit · {pct}%
               </span>
@@ -607,7 +607,7 @@ function CourseHero({ course, pct, enrolled, isMobile }: {
         </h1>
         {course.description && !course.cover_url && (
           <p style={{
-            color: 'rgba(255,255,255,0.70)', fontSize: isMobile ? 13 : 14,
+            color: 'hsl(var(--terex-accent) / 0.70)', fontSize: isMobile ? 13 : 14,
             margin: '10px 0 0', fontWeight: 300, maxWidth: 560, lineHeight: 1.55,
           }}>
             {course.description}

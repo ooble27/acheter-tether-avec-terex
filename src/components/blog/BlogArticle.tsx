@@ -9,10 +9,10 @@ import { ArticleCover } from "@/components/blog/articleCovers";
 
 const BG = "hsl(var(--terex-dark))";
 const CARD = "hsl(var(--terex-darker))";
-const BORDER = "rgba(255,255,255,0.07)";
-const ICON_BG = "rgba(255,255,255,0.06)";
-const MUTED = "rgba(255,255,255,0.55)";
-const MUTED2 = "rgba(255,255,255,0.4)";
+const BORDER = "hsl(var(--terex-accent) / 0.07)";
+const ICON_BG = "hsl(var(--terex-accent) / 0.06)";
+const MUTED = "hsl(var(--terex-accent) / 0.55)";
+const MUTED2 = "hsl(var(--terex-accent) / 0.4)";
 
 interface BlogArticleProps {
   title: string;
@@ -38,7 +38,7 @@ const styles = `
   .ba-back:hover { color: #fff !important; }
 
   /* Editorial typography — scoped to article body */
-  .ba-content { font-size: 16.5px; line-height: 1.75; color: rgba(255,255,255,0.72); }
+  .ba-content { font-size: 16.5px; line-height: 1.75; color: hsl(var(--terex-accent) / 0.72); }
   .ba-content > *:first-child { margin-top: 0 !important; }
   .ba-content h2 {
     font-size: clamp(1.4rem, 3vw, 1.75rem); font-weight: 800; letter-spacing: -0.025em;
@@ -48,27 +48,27 @@ const styles = `
     font-size: 1.15rem; font-weight: 700; letter-spacing: -0.015em;
     color: #fff; margin: 34px 0 12px;
   }
-  .ba-content p { margin: 0 0 20px; color: rgba(255,255,255,0.72); }
+  .ba-content p { margin: 0 0 20px; color: hsl(var(--terex-accent) / 0.72); }
   .ba-content strong { color: #fff; font-weight: 650; }
-  .ba-content a { color: #fff; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(255,255,255,0.3); }
+  .ba-content a { color: #fff; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: hsl(var(--terex-accent) / 0.3); }
   .ba-content ul, .ba-content ol { margin: 0 0 22px; padding: 0; list-style: none; }
   .ba-content ul li, .ba-content ol li {
-    position: relative; padding-left: 26px; margin: 0 0 12px; color: rgba(255,255,255,0.72);
+    position: relative; padding-left: 26px; margin: 0 0 12px; color: hsl(var(--terex-accent) / 0.72);
   }
   .ba-content ul li::before {
     content: ''; position: absolute; left: 4px; top: 11px; width: 6px; height: 6px;
-    border-radius: 50%; background: rgba(255,255,255,0.4);
+    border-radius: 50%; background: hsl(var(--terex-accent) / 0.4);
   }
   .ba-content ol { counter-reset: ba-c; }
   .ba-content ol li { counter-increment: ba-c; }
   .ba-content ol li::before {
     content: counter(ba-c); position: absolute; left: 0; top: 1px;
-    font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.5);
+    font-size: 12px; font-weight: 700; color: hsl(var(--terex-accent) / 0.5);
     width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;
   }
   .ba-content blockquote {
-    margin: 28px 0; padding: 4px 0 4px 22px; border-left: 2px solid rgba(255,255,255,0.2);
-    font-size: 1.05rem; color: rgba(255,255,255,0.85); font-style: normal;
+    margin: 28px 0; padding: 4px 0 4px 22px; border-left: 2px solid hsl(var(--terex-accent) / 0.2);
+    font-size: 1.05rem; color: hsl(var(--terex-accent) / 0.85); font-style: normal;
   }
   /* Callout blocks authored inline keep their box; normalise inner spacing */
   .ba-content .bg-\\[\\hsl(var(--terex-darker))\\] h3 { margin-top: 0; }
@@ -119,12 +119,12 @@ export function BlogArticle({
 
       {/* Reading progress */}
       <div style={{ position: "fixed", top: 0, left: 0, right: 0, height: 2, zIndex: 60, background: "transparent" }}>
-        <div style={{ height: "100%", width: `${progress}%`, background: "#fff", transition: "width 0.1s linear" }} />
+        <div style={{ height: "100%", width: `${progress}%`, background: "hsl(var(--terex-accent))", transition: "width 0.1s linear" }} />
       </div>
 
       {/* Fixed vertical guides */}
-      <div className="ba-vline" style={{ position: "fixed", top: 0, bottom: 0, left: "calc(50% - 560px)", width: 1, background: "rgba(255,255,255,0.05)", pointerEvents: "none", zIndex: 0 }} />
-      <div className="ba-vline" style={{ position: "fixed", top: 0, bottom: 0, right: "calc(50% - 560px)", width: 1, background: "rgba(255,255,255,0.05)", pointerEvents: "none", zIndex: 0 }} />
+      <div className="ba-vline" style={{ position: "fixed", top: 0, bottom: 0, left: "calc(50% - 560px)", width: 1, background: "hsl(var(--terex-accent) / 0.05)", pointerEvents: "none", zIndex: 0 }} />
+      <div className="ba-vline" style={{ position: "fixed", top: 0, bottom: 0, right: "calc(50% - 560px)", width: 1, background: "hsl(var(--terex-accent) / 0.05)", pointerEvents: "none", zIndex: 0 }} />
 
       <HeaderSection
         user={user ? { email: user.email || "", name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split("@")[0] || "Utilisateur" } : null}
@@ -144,7 +144,7 @@ export function BlogArticle({
         </button>
 
         <div className="ba-fade">
-          <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", padding: "6px 13px", borderRadius: 999, background: ICON_BG, border: `1px solid ${BORDER}`, color: "rgba(255,255,255,0.7)", marginBottom: 22 }}>
+          <span style={{ display: "inline-block", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", padding: "6px 13px", borderRadius: 999, background: ICON_BG, border: `1px solid ${BORDER}`, color: "hsl(var(--terex-accent) / 0.7)", marginBottom: 22 }}>
             {category}
           </span>
 
@@ -155,7 +155,7 @@ export function BlogArticle({
           {/* Author byline */}
           <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <div style={{ width: 44, height: 44, borderRadius: 13, background: "hsl(var(--terex-darker))", border: `1px solid rgba(255,255,255,0.1)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 700, flexShrink: 0, letterSpacing: "-0.02em" }}>
+              <div style={{ width: 44, height: 44, borderRadius: 13, background: "hsl(var(--terex-darker))", border: `1px solid hsl(var(--terex-accent) / 0.1)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 700, flexShrink: 0, letterSpacing: "-0.02em" }}>
                 {authorInitials}
               </div>
               <div>
@@ -203,10 +203,10 @@ export function BlogArticle({
             Achetez, vendez et transférez en quelques minutes, au meilleur taux, avec Wave et Orange Money.
           </p>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            <button onClick={() => navigate("/auth")} className="ba-cta" style={{ background: "#fff", color: "#141414", border: "none", borderRadius: 12, height: 50, padding: "0 24px", fontSize: 15, fontWeight: 700, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8 }}>
+            <button onClick={() => navigate("/auth")} className="ba-cta" style={{ background: "hsl(var(--terex-accent))", color: "hsl(var(--terex-accent-fg))", border: "none", borderRadius: 12, height: 50, padding: "0 24px", fontSize: 15, fontWeight: 700, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8 }}>
               Commencer maintenant <ArrowRight size={16} />
             </button>
-            <button onClick={() => navigate("/blog")} className="ba-cta" style={{ background: "hsl(var(--terex-gray))", color: "hsl(var(--foreground))", border: `1px solid rgba(255,255,255,0.08)`, borderRadius: 12, height: 50, padding: "0 24px", fontSize: 15, fontWeight: 600, cursor: "pointer" }}>
+            <button onClick={() => navigate("/blog")} className="ba-cta" style={{ background: "hsl(var(--terex-gray))", color: "hsl(var(--foreground))", border: `1px solid hsl(var(--terex-accent) / 0.08)`, borderRadius: 12, height: 50, padding: "0 24px", fontSize: 15, fontWeight: 600, cursor: "pointer" }}>
               Voir tous les articles
             </button>
           </div>

@@ -19,7 +19,7 @@ export function PaymentMethodsSection() {
         <div className="text-center mb-14 sm:mb-16">
           <p
             className="text-xs sm:text-sm font-medium uppercase tracking-widest mb-4"
-            style={{ color: "rgba(255,255,255,0.45)" }}
+            style={{ color: "hsl(var(--terex-accent) / 0.45)" }}
           >
             Moyens de paiement
           </p>
@@ -31,7 +31,7 @@ export function PaymentMethodsSection() {
           </h2>
           <p
             className="text-base sm:text-lg max-w-2xl mx-auto"
-            style={{ color: "rgba(255,255,255,0.55)" }}
+            style={{ color: "hsl(var(--terex-accent) / 0.55)" }}
           >
             Achetez vos USDT directement avec votre portefeuille mobile
           </p>
@@ -44,18 +44,18 @@ export function PaymentMethodsSection() {
               className="flex items-center gap-4 px-6 py-5 sm:px-8 sm:py-6 rounded-2xl transition-colors duration-300 min-w-[200px] sm:min-w-[240px]"
               style={{
                 backgroundColor: "hsl(var(--terex-darker))",
-                border: "1px solid rgba(255,255,255,0.07)",
+                border: "1px solid hsl(var(--terex-accent) / 0.07)",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "rgba(255,255,255,0.16)";
+                e.currentTarget.style.borderColor = "hsl(var(--terex-accent) / 0.16)";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "rgba(255,255,255,0.07)";
+                e.currentTarget.style.borderColor = "hsl(var(--terex-accent) / 0.07)";
               }}
             >
               <div
                 className="flex items-center justify-center rounded-xl w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0"
-                style={{ backgroundColor: "rgba(255,255,255,0.06)" }}
+                style={{ backgroundColor: "hsl(var(--terex-accent) / 0.06)" }}
               >
                 <img
                   src={method.logo}

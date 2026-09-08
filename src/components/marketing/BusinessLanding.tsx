@@ -18,7 +18,7 @@ const C = {
   // Fond aligné sur le design système normal (hsl(var(--terex-dark))), en gardant la hiérarchie d'élévation.
   bg: 'hsl(var(--terex-dark))', l1: 'hsl(var(--terex-darker))', l2: 'hsl(var(--terex-darker))', l3: 'hsl(var(--terex-gray))',
   bds: 'hsl(var(--terex-gray))', bd: 'hsl(var(--terex-gray))',
-  teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.08)', tealB: 'rgba(255, 255, 255,0.22)',
+  teal: '#ffffff', tealH: '#2d7870', tealT: 'hsl(var(--terex-accent) / 0.08)', tealB: 'hsl(var(--terex-accent) / 0.22)',
   t1: '#f0f0f0', t2: 'hsl(var(--muted-foreground))', t3: 'hsl(var(--muted-foreground))',
 };
 const FONT = "'Inter', sans-serif";
@@ -175,7 +175,7 @@ function OutlineBtn({ children, onClick, large }: { children: React.ReactNode; o
   return (
     <button onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{
       height: large ? 50 : 40, paddingLeft: large ? 26 : 18, paddingRight: large ? 26 : 18,
-      background: hov ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.03)',
+      background: hov ? 'hsl(var(--terex-accent) / 0.06)' : 'hsl(var(--terex-accent) / 0.03)',
       border: `1px solid ${hov ? C.bd : C.bds}`, borderRadius: 12,
       color: hov ? C.t1 : C.t2, fontSize: large ? 15 : 13, fontWeight: 500,
       cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8,
@@ -349,8 +349,8 @@ export function BusinessLanding() {
 
 
       {/* ── VERTICAL LINES — zIndex 1, visibles sur toute la page ── */}
-      <div className="biz-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 580px)', width: 1, background: 'rgba(255,255,255,0.04)', pointerEvents: 'none', zIndex: 1 }} />
-      <div className="biz-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 580px)', width: 1, background: 'rgba(255,255,255,0.04)', pointerEvents: 'none', zIndex: 1 }} />
+      <div className="biz-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 580px)', width: 1, background: 'hsl(var(--terex-accent) / 0.04)', pointerEvents: 'none', zIndex: 1 }} />
+      <div className="biz-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 580px)', width: 1, background: 'hsl(var(--terex-accent) / 0.04)', pointerEvents: 'none', zIndex: 1 }} />
 
       {/* ── NAV ──────────────────────────────────────────────────── */}
       {/* En-tête unifié (dropdown desktop · Commencer mobile) — identique partout */}
@@ -392,7 +392,7 @@ export function BusinessLanding() {
               transformOrigin: heroScale < 1 ? 'top left' : 'center top',
               borderRadius: '16px 16px 0 0',
               overflow: 'hidden',
-              border: '1px solid rgba(255,255,255,0.10)',
+              border: '1px solid hsl(var(--terex-accent) / 0.10)',
               borderBottom: 'none',
               boxShadow: '0 20px 80px rgba(0,0,0,0.6)',
             }}>

@@ -25,6 +25,18 @@ function readStored(): Theme {
 function apply(theme: Theme) {
   const root = document.documentElement;
   root.classList.toggle('light', theme === 'light');
+  // Keep the iOS/Android status-bar chrome in sync so there's no dark band
+  // at the top of the page in light mode.
+  try {
+    let meta = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.name = 'theme-color';
+      document.head.appendChild(meta);
+    }
+    meta.content = theme === 'light' ? '#f5f6f8' : '#1a1a1a';
+    root.style.setProperty('color-scheme', theme === 'light' ? 'light' : 'dark');
+  } catch { /* ignore */ }
 }
 
 type ThemeContextValue = {

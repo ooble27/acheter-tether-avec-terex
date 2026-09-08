@@ -14,7 +14,7 @@ interface AddressBookProps {
   placeholder?: string;
 }
 
-const CARD_BORDER = 'rgba(255,255,255,0.10)';
+const CARD_BORDER = 'hsl(var(--terex-accent) / 0.10)';
 const short = (v: string) => (v.length > 22 ? `${v.slice(0, 10)}…${v.slice(-8)}` : v);
 
 /**
@@ -70,7 +70,7 @@ export function AddressBook({
             display: 'flex', alignItems: 'center', gap: '10px',
             padding: '12px 8px 12px 14px', borderRadius: '14px',
             border: `1px solid ${CARD_BORDER}`,
-            background: 'rgba(255,255,255,0.03)',
+            background: 'hsl(var(--terex-accent) / 0.03)',
           }}>
             <img src={logo} alt="" style={{ width: '30px', height: '30px', borderRadius: '50%', flexShrink: 0 }} />
             <div style={{ minWidth: 0, flex: 1 }}>
@@ -80,7 +80,7 @@ export function AddressBook({
                 </div>
               )}
               <div style={{
-                color: selected?.label ? 'rgba(255,255,255,0.55)' : '#fff',
+                color: selected?.label ? 'hsl(var(--terex-accent) / 0.55)' : '#fff',
                 fontSize: '12px',
                 fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
                 overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
@@ -96,10 +96,10 @@ export function AddressBook({
               style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 width: '32px', height: '32px', borderRadius: '8px',
-                background: open ? 'rgba(255,255,255,0.10)' : 'transparent',
+                background: open ? 'hsl(var(--terex-accent) / 0.10)' : 'transparent',
                 border: 'none', cursor: 'pointer', outline: 'none',
                 WebkitTapHighlightColor: 'transparent', transition: 'background 0.15s',
-                flexShrink: 0, color: 'rgba(255,255,255,0.75)',
+                flexShrink: 0, color: 'hsl(var(--terex-accent) / 0.75)',
               }}
             >
               <ChevronDown size={16} strokeWidth={2} style={{ transition: 'transform 0.15s', transform: open ? 'rotate(180deg)' : 'none' }} />
@@ -126,7 +126,7 @@ export function AddressBook({
                   <div key={w.id} style={{
                     display: 'flex', alignItems: 'center', gap: '10px',
                     padding: '10px 12px',
-                    background: sel ? 'rgba(255,255,255,0.08)' : 'transparent',
+                    background: sel ? 'hsl(var(--terex-accent) / 0.08)' : 'transparent',
                     borderBottom: `1px solid ${CARD_BORDER}`,
                   }}>
                     <button
@@ -146,7 +146,7 @@ export function AddressBook({
                           </div>
                         )}
                         <div style={{
-                          color: 'rgba(255,255,255,0.6)', fontSize: '11px',
+                          color: 'hsl(var(--terex-accent) / 0.6)', fontSize: '11px',
                           fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
                           overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                         }}>
@@ -161,7 +161,7 @@ export function AddressBook({
                       type="button"
                       onClick={(e) => { e.stopPropagation(); if (confirm('Supprimer cette adresse ?')) remove(w.id); }}
                       title="Supprimer"
-                      style={{ background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', padding: '4px', flexShrink: 0 }}
+                      style={{ background: 'transparent', border: 'none', color: 'hsl(var(--terex-accent) / 0.4)', cursor: 'pointer', padding: '4px', flexShrink: 0 }}
                     >
                       <Trash2 size={12} />
                     </button>
@@ -179,7 +179,7 @@ export function AddressBook({
               alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: '6px',
               padding: '8px 12px', borderRadius: '10px',
               border: `1px dashed ${CARD_BORDER}`, background: 'transparent',
-              color: 'rgba(255,255,255,0.75)', fontSize: '13px', fontWeight: 500,
+              color: 'hsl(var(--terex-accent) / 0.75)', fontSize: '13px', fontWeight: 500,
               cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent',
             }}
           >
@@ -196,7 +196,7 @@ export function AddressBook({
               onClick={() => setMode('saved')}
               style={{
                 alignSelf: 'flex-start', background: 'transparent', border: 'none',
-                color: 'rgba(255,255,255,0.55)', fontSize: '12px', cursor: 'pointer',
+                color: 'hsl(var(--terex-accent) / 0.55)', fontSize: '12px', cursor: 'pointer',
                 padding: '2px 0', textDecoration: 'underline',
               }}
             >
@@ -204,10 +204,10 @@ export function AddressBook({
             </button>
           )}
 
-          <div style={{ overflow: 'hidden', borderRadius: '14px', border: `1px solid ${CARD_BORDER}`, background: 'rgba(255,255,255,0.03)' }}>
+          <div style={{ overflow: 'hidden', borderRadius: '14px', border: `1px solid ${CARD_BORDER}`, background: 'hsl(var(--terex-accent) / 0.03)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', borderBottom: `1px solid ${CARD_BORDER}`, padding: '10px 16px' }}>
               <img src={logo} alt="" style={{ width: '22px', height: '22px', borderRadius: '50%' }} />
-              <span style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)' }}>{network}</span>
+              <span style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'hsl(var(--terex-accent) / 0.55)' }}>{network}</span>
             </div>
             <input
               type="text"
@@ -220,7 +220,7 @@ export function AddressBook({
             />
           </div>
 
-          <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', color: 'rgba(255,255,255,0.75)', fontSize: '13px', userSelect: 'none', padding: '2px' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', color: 'hsl(var(--terex-accent) / 0.75)', fontSize: '13px', userSelect: 'none', padding: '2px' }}>
             <input
               type="checkbox"
               checked={saveToBook}
@@ -231,7 +231,7 @@ export function AddressBook({
           </label>
 
           {saveToBook && (
-            <div style={{ overflow: 'hidden', borderRadius: '14px', border: `1px solid ${CARD_BORDER}`, background: 'rgba(255,255,255,0.03)' }}>
+            <div style={{ overflow: 'hidden', borderRadius: '14px', border: `1px solid ${CARD_BORDER}`, background: 'hsl(var(--terex-accent) / 0.03)' }}>
               <input
                 type="text"
                 placeholder="Nom (optionnel) — ex : Trust Wallet"

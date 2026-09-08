@@ -7,7 +7,7 @@ import {
 const C = {
   bg: 'hsl(var(--terex-dark))', l1: 'hsl(var(--terex-darker))', l2: 'hsl(var(--terex-gray))', l3: 'hsl(var(--terex-gray))',
   bd: 'hsl(var(--terex-gray))', bds: 'hsl(var(--terex-gray))',
-  teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.10)', tealB: 'rgba(255, 255, 255,0.25)',
+  teal: '#ffffff', tealH: '#2d7870', tealT: 'hsl(var(--terex-accent) / 0.10)', tealB: 'hsl(var(--terex-accent) / 0.25)',
   t1: '#f0f0f0', t2: 'hsl(var(--muted-foreground))', t3: '#686868',
   red: '#ef4444',
 };
@@ -134,7 +134,7 @@ function GhostBtn({ children, onClick, style }: { children: React.ReactNode; onC
   const [hov, setHov] = useState(false);
   return (
     <button onClick={onClick}
-      style={{ background: hov ? C.l3 : 'rgba(255,255,255,0.04)', color: C.t2, border: `1px solid ${C.bds}`, borderRadius: 9, padding: '9px 18px', fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: FONT, transition: 'all 0.12s', ...style }}
+      style={{ background: hov ? C.l3 : 'hsl(var(--terex-accent) / 0.04)', color: C.t2, border: `1px solid ${C.bds}`, borderRadius: 9, padding: '9px 18px', fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: FONT, transition: 'all 0.12s', ...style }}
       onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
       {children}
     </button>
@@ -143,8 +143,8 @@ function GhostBtn({ children, onClick, style }: { children: React.ReactNode; onC
 
 function Avatar({ size = 36 }: { size?: number }) {
   return (
-    <div style={{ width: size, height: size, borderRadius: '50%', background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.10)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-      <User size={Math.round(size * 0.46)} color="rgba(255,255,255,0.28)" />
+    <div style={{ width: size, height: size, borderRadius: '50%', background: 'hsl(var(--terex-accent) / 0.07)', border: '1px solid hsl(var(--terex-accent) / 0.10)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+      <User size={Math.round(size * 0.46)} color="hsl(var(--terex-accent) / 0.28)" />
     </div>
   );
 }
@@ -161,7 +161,7 @@ function ModalWrap({ onClose, children, width = 500 }: { onClose: () => void; ch
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.68)', backdropFilter: 'blur(6px)' }}
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
-      <div style={{ background: '#1c1c1e', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 18, padding: 28, width, maxWidth: 'calc(100vw - 32px)', boxShadow: '0 28px 70px rgba(0,0,0,0.75)', fontFamily: FONT, maxHeight: '92vh', overflowY: 'auto' }}>
+      <div style={{ background: '#1c1c1e', border: '1px solid hsl(var(--terex-accent) / 0.12)', borderRadius: 18, padding: 28, width, maxWidth: 'calc(100vw - 32px)', boxShadow: '0 28px 70px rgba(0,0,0,0.75)', fontFamily: FONT, maxHeight: '92vh', overflowY: 'auto' }}>
         {children}
       </div>
     </div>
@@ -192,7 +192,7 @@ function RoleCard({ role, desc, icon: Icon, selected, onClick }: { role: Role; d
     <button onClick={onClick}
       style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: '14px', borderRadius: 11, border: `1px solid ${selected ? C.teal : hov ? C.bd : C.bds}`, background: selected ? C.tealT : 'transparent', cursor: 'pointer', textAlign: 'left', transition: 'all 0.13s', fontFamily: FONT, width: '100%' }}
       onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
-      <div style={{ width: 34, height: 34, borderRadius: 9, background: selected ? C.tealB : 'rgba(255,255,255,0.06)', border: `1px solid ${selected ? C.tealB : 'rgba(255,255,255,0.08)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+      <div style={{ width: 34, height: 34, borderRadius: 9, background: selected ? C.tealB : 'hsl(var(--terex-accent) / 0.06)', border: `1px solid ${selected ? C.tealB : 'hsl(var(--terex-accent) / 0.08)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
         <Icon size={15} color={selected ? C.teal : C.t3} />
       </div>
       <div>
@@ -246,7 +246,7 @@ function DashboardPreview({ role, name }: { role: Role; name: string }) {
 
   const card: React.CSSProperties = {
     background: 'hsl(var(--terex-darker))',
-    border: '1px solid rgba(255,255,255,0.07)',
+    border: '1px solid hsl(var(--terex-accent) / 0.07)',
     borderRadius: 9,
   };
 
@@ -257,17 +257,17 @@ function DashboardPreview({ role, name }: { role: Role; name: string }) {
   ];
 
   return (
-    <div style={{ borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.09)', background: 'hsl(var(--terex-dark))', fontFamily: FONT }}>
+    <div style={{ borderRadius: 16, overflow: 'hidden', border: '1px solid hsl(var(--terex-accent) / 0.09)', background: 'hsl(var(--terex-dark))', fontFamily: FONT }}>
 
       {/* Chrome navigateur */}
-      <div style={{ background: 'hsl(var(--terex-darker))', padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 7, borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+      <div style={{ background: 'hsl(var(--terex-darker))', padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 7, borderBottom: '1px solid hsl(var(--terex-accent) / 0.07)' }}>
         <div style={{ display: 'flex', gap: 4 }}>
           {['#FF5F57', '#FFBD2E', '#28CA41'].map((c, i) => (
             <div key={i} style={{ width: 8, height: 8, borderRadius: '50%', background: c, opacity: 0.65 }} />
           ))}
         </div>
-        <div style={{ flex: 1, background: 'rgba(255,255,255,0.05)', borderRadius: 4, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <span style={{ fontSize: 7.5, color: 'rgba(255,255,255,0.22)', fontFamily: MONO }}>terex.io</span>
+        <div style={{ flex: 1, background: 'hsl(var(--terex-accent) / 0.05)', borderRadius: 4, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <span style={{ fontSize: 7.5, color: 'hsl(var(--terex-accent) / 0.22)', fontFamily: MONO }}>terex.io</span>
         </div>
       </div>
 
@@ -280,7 +280,7 @@ function DashboardPreview({ role, name }: { role: Role; name: string }) {
             <div style={{ fontSize: 13.5, fontWeight: 700, color: C.t1 }}>Bonjour, {displayName} 👋</div>
             <div style={{ fontSize: 7.5, color: C.t3, marginTop: 2 }}>dimanche 17 mai 2026</div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 9px', border: '1px solid rgba(255,255,255,0.14)', borderRadius: 20, fontSize: 7.5, color: C.t2 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 9px', border: '1px solid hsl(var(--terex-accent) / 0.14)', borderRadius: 20, fontSize: 7.5, color: C.t2 }}>
             Configurer le profil <ArrowRight size={7} />
           </div>
         </div>
@@ -308,13 +308,13 @@ function DashboardPreview({ role, name }: { role: Role; name: string }) {
           <div style={{ ...card, padding: '12px 11px' }}>
             <div style={{ height: 46, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 9 }}>
               <svg width="56" height="36" viewBox="0 0 56 36" fill="none">
-                <rect x="1" y="5" width="26" height="18" rx="3.5" stroke="rgba(255,255,255,0.22)" strokeWidth="1.4" />
-                <line x1="1" y1="10" x2="27" y2="10" stroke="rgba(255,255,255,0.22)" strokeWidth="1.4" />
-                <line x1="5" y1="16" x2="13" y2="16" stroke="rgba(255,255,255,0.12)" strokeWidth="1.2" />
-                <path d="M30 14 L35 14 M35 14 L33 12 M35 14 L33 16" stroke="rgba(255,255,255,0.3)" strokeWidth="1.3" strokeLinecap="round" />
-                <rect x="37" y="6" width="16" height="22" rx="3" stroke="rgba(255,255,255,0.22)" strokeWidth="1.4" />
-                <circle cx="45" cy="14" r="4" stroke="rgba(255,255,255,0.18)" strokeWidth="1.2" />
-                <line x1="41" y1="21" x2="49" y2="21" stroke="rgba(255,255,255,0.12)" strokeWidth="1.1" />
+                <rect x="1" y="5" width="26" height="18" rx="3.5" stroke="hsl(var(--terex-accent) / 0.22)" strokeWidth="1.4" />
+                <line x1="1" y1="10" x2="27" y2="10" stroke="hsl(var(--terex-accent) / 0.22)" strokeWidth="1.4" />
+                <line x1="5" y1="16" x2="13" y2="16" stroke="hsl(var(--terex-accent) / 0.12)" strokeWidth="1.2" />
+                <path d="M30 14 L35 14 M35 14 L33 12 M35 14 L33 16" stroke="hsl(var(--terex-accent) / 0.3)" strokeWidth="1.3" strokeLinecap="round" />
+                <rect x="37" y="6" width="16" height="22" rx="3" stroke="hsl(var(--terex-accent) / 0.22)" strokeWidth="1.4" />
+                <circle cx="45" cy="14" r="4" stroke="hsl(var(--terex-accent) / 0.18)" strokeWidth="1.2" />
+                <line x1="41" y1="21" x2="49" y2="21" stroke="hsl(var(--terex-accent) / 0.12)" strokeWidth="1.1" />
               </svg>
             </div>
             <div style={{ fontSize: 9, fontWeight: 700, color: C.t1, marginBottom: 4 }}>Paiements</div>
@@ -325,9 +325,9 @@ function DashboardPreview({ role, name }: { role: Role; name: string }) {
           <div style={{ ...card, padding: '12px 11px' }}>
             <div style={{ height: 46, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 9 }}>
               <svg width="56" height="36" viewBox="0 0 56 36" fill="none">
-                <rect x="4" y="6" width="24" height="20" rx="3.5" stroke="rgba(255,255,255,0.22)" strokeWidth="1.4" />
-                <circle cx="16" cy="14" r="4.5" stroke="rgba(255,255,255,0.18)" strokeWidth="1.2" />
-                <line x1="28" y1="19" x2="33" y2="19" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
+                <rect x="4" y="6" width="24" height="20" rx="3.5" stroke="hsl(var(--terex-accent) / 0.22)" strokeWidth="1.4" />
+                <circle cx="16" cy="14" r="4.5" stroke="hsl(var(--terex-accent) / 0.18)" strokeWidth="1.2" />
+                <line x1="28" y1="19" x2="33" y2="19" stroke="hsl(var(--terex-accent) / 0.12)" strokeWidth="1" />
                 <line x1="35" y1="28" x2="35" y2="20" stroke={C.teal} strokeWidth="1.5" strokeLinecap="round" />
                 <line x1="39.5" y1="28" x2="39.5" y2="16" stroke={C.teal} strokeWidth="1.5" strokeLinecap="round" opacity="0.7" />
                 <line x1="44" y1="28" x2="44" y2="22" stroke={C.teal} strokeWidth="1.5" strokeLinecap="round" opacity="0.45" />
@@ -343,9 +343,9 @@ function DashboardPreview({ role, name }: { role: Role; name: string }) {
             <div style={{ height: 46, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 9 }}>
               <svg width="56" height="36" viewBox="0 0 56 36" fill="none">
                 <polyline points="3,30 14,22 24,26 34,12 44,6 53,10" stroke={C.teal} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                <line x1="3" y1="32" x2="53" y2="32" stroke="rgba(255,255,255,0.09)" strokeWidth="1" />
-                <line x1="3" y1="20" x2="53" y2="20" stroke="rgba(255,255,255,0.05)" strokeWidth="0.8" />
-                <line x1="3" y1="8" x2="53" y2="8" stroke="rgba(255,255,255,0.05)" strokeWidth="0.8" />
+                <line x1="3" y1="32" x2="53" y2="32" stroke="hsl(var(--terex-accent) / 0.09)" strokeWidth="1" />
+                <line x1="3" y1="20" x2="53" y2="20" stroke="hsl(var(--terex-accent) / 0.05)" strokeWidth="0.8" />
+                <line x1="3" y1="8" x2="53" y2="8" stroke="hsl(var(--terex-accent) / 0.05)" strokeWidth="0.8" />
               </svg>
             </div>
             <div style={{ fontSize: 9, fontWeight: 700, color: C.t1, marginBottom: 4 }}>Analytique</div>
@@ -366,7 +366,7 @@ function DashboardPreview({ role, name }: { role: Role; name: string }) {
               { initials: 'DG', label: 'Dubaï gold',    date: '16/05/2026 · TRC20', amount: '9 000 USDT' },
               { initials: 'TC', label: 'Turkiy center', date: '16/05/2026 · TRC20', amount: '9 000 USDT' },
             ].map((tx, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '6px 0', borderTop: i > 0 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '6px 0', borderTop: i > 0 ? '1px solid hsl(var(--terex-accent) / 0.05)' : 'none' }}>
                 <div style={{ width: 22, height: 22, borderRadius: 7, background: C.tealT, border: `1px solid ${C.tealB}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <span style={{ fontSize: 6.5, fontWeight: 700, color: C.teal }}>{tx.initials}</span>
                 </div>
@@ -388,8 +388,8 @@ function DashboardPreview({ role, name }: { role: Role; name: string }) {
             {ACTIONS.map((a, i) => {
               const Icon = a.icon;
               return (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '5px 0', borderTop: i > 0 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
-                  <div style={{ width: 20, height: 20, borderRadius: 6, background: a.teal ? C.tealT : 'rgba(255,255,255,0.06)', border: `1px solid ${a.teal ? C.tealB : 'rgba(255,255,255,0.08)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '5px 0', borderTop: i > 0 ? '1px solid hsl(var(--terex-accent) / 0.05)' : 'none' }}>
+                  <div style={{ width: 20, height: 20, borderRadius: 6, background: a.teal ? C.tealT : 'hsl(var(--terex-accent) / 0.06)', border: `1px solid ${a.teal ? C.tealB : 'hsl(var(--terex-accent) / 0.08)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                     <Icon size={8} color={a.teal ? C.teal : C.t3} />
                   </div>
                   <div style={{ minWidth: 0 }}>
@@ -488,7 +488,7 @@ function InvitePage({ onBack, onInvite }: { onBack: () => void; onInvite: (inv: 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
             <button onClick={onBack}
-              style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'rgba(255,255,255,0.06)', border: `1px solid ${C.bds}`, cursor: 'pointer', color: C.t2, fontSize: 12, padding: '7px 13px', borderRadius: 9, fontFamily: FONT, transition: 'all 0.13s' }}
+              style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'hsl(var(--terex-accent) / 0.06)', border: `1px solid ${C.bds}`, cursor: 'pointer', color: C.t2, fontSize: 12, padding: '7px 13px', borderRadius: 9, fontFamily: FONT, transition: 'all 0.13s' }}
               onMouseEnter={e => { e.currentTarget.style.color = C.t1; e.currentTarget.style.borderColor = C.bd; }}
               onMouseLeave={e => { e.currentTarget.style.color = C.t2; e.currentTarget.style.borderColor = C.bds; }}>
               <ArrowLeft size={13} /> Équipe & Accès
@@ -575,7 +575,7 @@ function InvitePage({ onBack, onInvite }: { onBack: () => void; onInvite: (inv: 
                 const has = p[roleKey as keyof typeof p] as boolean;
                 return (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 9, opacity: has ? 1 : 0.3 }}>
-                    <div style={{ width: 20, height: 20, borderRadius: 6, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: has ? C.tealT : 'rgba(255,255,255,0.04)', border: `1px solid ${has ? C.tealB : C.bds}` }}>
+                    <div style={{ width: 20, height: 20, borderRadius: 6, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: has ? C.tealT : 'hsl(var(--terex-accent) / 0.04)', border: `1px solid ${has ? C.tealB : C.bds}` }}>
                       {has
                         ? <Check size={11} color={C.teal} strokeWidth={3} />
                         : <X size={9} color={C.t3} strokeWidth={2} />}
@@ -802,7 +802,7 @@ export function BusinessTeam({ user: _user }: { user: { email: string; name: str
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 18 }}>
             <button onClick={() => logoRef.current?.click()}
-              style={{ width: 56, height: 56, borderRadius: 14, background: teamLogo ? 'transparent' : 'rgba(255,255,255,0.06)', border: `1px dashed ${teamLogo ? 'transparent' : C.bds}`, cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, flexShrink: 0, overflow: 'hidden', transition: 'border-color 0.15s' }}
+              style={{ width: 56, height: 56, borderRadius: 14, background: teamLogo ? 'transparent' : 'hsl(var(--terex-accent) / 0.06)', border: `1px dashed ${teamLogo ? 'transparent' : C.bds}`, cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, flexShrink: 0, overflow: 'hidden', transition: 'border-color 0.15s' }}
               onMouseEnter={e => { if (!teamLogo) e.currentTarget.style.borderColor = C.teal; }}
               onMouseLeave={e => { if (!teamLogo) e.currentTarget.style.borderColor = C.bds; }}
               title="Uploader le logo de l'équipe">
@@ -879,7 +879,7 @@ export function BusinessTeam({ user: _user }: { user: { email: string; name: str
         <div>
           {invitations.length === 0 ? (
             <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 14, padding: '48px 24px', textAlign: 'center' }}>
-              <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: `1px solid ${C.bds}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+              <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'hsl(var(--terex-accent) / 0.06)', border: `1px solid ${C.bds}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
                 <Mail size={20} color={C.t3} />
               </div>
               <p style={{ color: C.t3, fontSize: 13, margin: '0 0 16px' }}>Aucune invitation en attente</p>
@@ -891,7 +891,7 @@ export function BusinessTeam({ user: _user }: { user: { email: string; name: str
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {invitations.map(inv => (
                 <div key={inv.id} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '15px 18px', background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12 }}>
-                  <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: `1px solid ${C.bds}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'hsl(var(--terex-accent) / 0.06)', border: `1px solid ${C.bds}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                     <Mail size={17} color={C.t3} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
@@ -964,7 +964,7 @@ export function BusinessTeam({ user: _user }: { user: { email: string; name: str
                 </thead>
                 <tbody>
                   {PERMISSIONS.map((p, i) => (
-                    <tr key={i} style={{ borderBottom: i < PERMISSIONS.length - 1 ? `1px solid ${C.bds}` : 'none', background: i % 2 === 1 ? 'rgba(255,255,255,0.015)' : 'transparent' }}>
+                    <tr key={i} style={{ borderBottom: i < PERMISSIONS.length - 1 ? `1px solid ${C.bds}` : 'none', background: i % 2 === 1 ? 'hsl(var(--terex-accent) / 0.015)' : 'transparent' }}>
                       <td style={{ padding: '11px 14px', fontSize: 12.5, color: C.t1 }}>{p.label}</td>
                       {[p.owner, p.admin, p.financier, p.comptable, p.operateur].map((v, j) => (
                         <td key={j} style={{ padding: '11px 10px', textAlign: 'center' }}>

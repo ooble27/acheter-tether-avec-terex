@@ -18,9 +18,9 @@ interface UserGuideProps {
 }
 
 const SURFACE = 'hsl(var(--terex-darker))';
-const PAGE = '#141414';
-const BORDER = 'rgba(255,255,255,0.07)';
-const TILE = 'rgba(255,255,255,0.06)';
+const PAGE = 'hsl(var(--terex-dark))';
+const BORDER = 'hsl(var(--terex-accent) / 0.07)';
+const TILE = 'hsl(var(--terex-accent) / 0.06)';
 
 const StepNumber = ({ n }: { n: number | string }) => (
   <div
@@ -178,7 +178,7 @@ const OptionListMock = ({
           style={{
             background: PAGE,
             border: o.active
-              ? '1px solid rgba(255,255,255,0.25)'
+              ? '1px solid hsl(var(--terex-accent) / 0.25)'
               : `1px solid ${BORDER}`,
           }}
         >

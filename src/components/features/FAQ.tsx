@@ -6,9 +6,9 @@ interface FAQProps {
 }
 
 const CARD = 'hsl(var(--terex-darker))';
-const BORDER = 'rgba(255,255,255,0.07)';
+const BORDER = 'hsl(var(--terex-accent) / 0.07)';
 const ACCENT = '#ffffff';
-const ICON_BG = 'rgba(255,255,255,0.06)';
+const ICON_BG = 'hsl(var(--terex-accent) / 0.06)';
 
 const faqItems = [
   {
@@ -117,7 +117,7 @@ export function FAQ({ onNavigate }: FAQProps) {
               {supportItems.map(({ Icon, label, value }) => (
                 <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <Icon size={16} color="rgba(255,255,255,0.75)" strokeWidth={1.8} />
+                    <Icon size={16} color="hsl(var(--terex-accent) / 0.75)" strokeWidth={1.8} />
                   </div>
                   <div>
                     <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', margin: '0 0 1px', fontWeight: 500 }}>{label}</p>
@@ -127,7 +127,7 @@ export function FAQ({ onNavigate }: FAQProps) {
               ))}
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', paddingTop: '4px' }}>
                 <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Clock size={16} color="rgba(255,255,255,0.75)" strokeWidth={1.8} />
+                  <Clock size={16} color="hsl(var(--terex-accent) / 0.75)" strokeWidth={1.8} />
                 </div>
                 <div>
                   <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', margin: '0 0 1px', fontWeight: 500 }}>Disponibilité</p>
@@ -146,11 +146,11 @@ export function FAQ({ onNavigate }: FAQProps) {
                   key={id}
                   onClick={() => onNavigate?.(id)}
                   style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px', borderRadius: '12px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', width: '100%' }}
-                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.04)')}
+                  onMouseEnter={e => (e.currentTarget.style.background = 'hsl(var(--terex-accent) / 0.04)')}
                   onMouseLeave={e => (e.currentTarget.style.background = 'none')}
                 >
                   <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <Icon size={16} color="rgba(255,255,255,0.75)" strokeWidth={1.8} />
+                    <Icon size={16} color="hsl(var(--terex-accent) / 0.75)" strokeWidth={1.8} />
                   </div>
                   <span style={{ color: '#d1d5db', fontSize: '13px', fontWeight: 500 }}>{label}</span>
                 </button>

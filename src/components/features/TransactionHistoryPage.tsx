@@ -6,8 +6,8 @@ import { RefreshCw, Download, Coins, HandCoins, Clock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const CARD = 'hsl(var(--terex-darker))';
-const BORDER = 'rgba(255,255,255,0.07)';
-const ICON_BG = 'rgba(255,255,255,0.06)';
+const BORDER = 'hsl(var(--terex-accent) / 0.07)';
+const ICON_BG = 'hsl(var(--terex-accent) / 0.06)';
 
 export function TransactionHistoryPage() {
   const { transactions, loading, refetch } = useTransactions();
@@ -72,7 +72,7 @@ export function TransactionHistoryPage() {
         {stats.map(({ label, value, Icon }) => (
           <div key={label} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '16px 18px', display: 'flex', alignItems: 'center', gap: '14px' }}>
             <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <Icon size={18} color="rgba(255,255,255,0.75)" strokeWidth={1.8} />
+              <Icon size={18} color="hsl(var(--terex-accent) / 0.75)" strokeWidth={1.8} />
             </div>
             <div>
               <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', fontWeight: 500, margin: '0 0 3px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</p>

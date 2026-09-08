@@ -16,8 +16,8 @@ export const ARTICLE_COVERS: Record<string, CoverConfig> = {
   "blockchain-simple": { icon: Boxes, tag: "Blockchain", motif: "stack" },
 };
 
-const STROKE = "rgba(255,255,255,0.09)";
-const STROKE_SOFT = "rgba(255,255,255,0.05)";
+const STROKE = "hsl(var(--terex-accent) / 0.09)";
+const STROKE_SOFT = "hsl(var(--terex-accent) / 0.05)";
 
 function Motif({ motif, uid }: { motif: CoverConfig["motif"]; uid: string }) {
   // Each motif is drawn on a 400x300 viewBox, centered, low-opacity — a quiet
@@ -32,7 +32,7 @@ function Motif({ motif, uid }: { motif: CoverConfig["motif"]; uid: string }) {
     >
       <defs>
         <pattern id={`dots-${uid}`} width="22" height="22" patternUnits="userSpaceOnUse">
-          <circle cx="1.2" cy="1.2" r="1.2" fill="rgba(255,255,255,0.045)" />
+          <circle cx="1.2" cy="1.2" r="1.2" fill="hsl(var(--terex-accent) / 0.045)" />
         </pattern>
         <radialGradient id={`vig-${uid}`} cx="50%" cy="42%" r="75%">
           <stop offset="55%" stopColor="rgba(0,0,0,0)" />
@@ -132,7 +132,7 @@ export function ArticleCover({ slug, size = "sm", className }: ArticleCoverProps
       <Motif motif={cfg.motif} uid={uid} />
 
       {/* top highlight line */}
-      <div style={{ position: "absolute", top: 0, left: "12%", right: "12%", height: 1, background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent)" }} />
+      <div style={{ position: "absolute", top: 0, left: "12%", right: "12%", height: 1, background: "linear-gradient(90deg, transparent, hsl(var(--terex-accent) / 0.14), transparent)" }} />
 
       {/* icon tile */}
       <div
@@ -142,9 +142,9 @@ export function ArticleCover({ slug, size = "sm", className }: ArticleCoverProps
           width: tile,
           height: tile,
           borderRadius: radius,
-          background: "rgba(255,255,255,0.06)",
-          border: "1px solid rgba(255,255,255,0.12)",
-          boxShadow: "0 8px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)",
+          background: "hsl(var(--terex-accent) / 0.06)",
+          border: "1px solid hsl(var(--terex-accent) / 0.12)",
+          boxShadow: "0 8px 30px rgba(0,0,0,0.35), inset 0 1px 0 hsl(var(--terex-accent) / 0.06)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -168,8 +168,8 @@ export function ArticleCover({ slug, size = "sm", className }: ArticleCoverProps
           padding: "5px 11px",
           borderRadius: 999,
           background: "rgba(20,20,20,0.55)",
-          border: "1px solid rgba(255,255,255,0.1)",
-          color: "rgba(255,255,255,0.75)",
+          border: "1px solid hsl(var(--terex-accent) / 0.1)",
+          color: "hsl(var(--terex-accent) / 0.75)",
           backdropFilter: "blur(6px)",
         }}
       >

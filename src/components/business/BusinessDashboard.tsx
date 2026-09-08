@@ -84,7 +84,7 @@ function InitialAvatar({ name, size = 28 }: { name: string; size?: number }) {
   return (
     <div style={{
       width: size, height: size, borderRadius: 7,
-      background: 'rgba(255, 255, 255,0.22)', color: C.teal,
+      background: 'hsl(var(--terex-accent) / 0.22)', color: C.teal,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       fontSize: size * 0.38, fontWeight: 600, flexShrink: 0, fontFamily: FONT,
     }}>
@@ -109,17 +109,17 @@ function NavItem({
       style={{
         width: '100%', display: 'flex', alignItems: 'center', gap: 10,
         padding: '5px 6px', borderRadius: 10, border: 'none', cursor: 'pointer',
-        background: isActive ? 'rgba(255,255,255,0.07)' : 'transparent',
+        background: isActive ? 'hsl(var(--terex-accent) / 0.07)' : 'transparent',
         fontFamily: FONT, textAlign: 'left',
         transition: 'background 0.12s',
       }}
-      onMouseEnter={e => { if (!isActive) (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.04)'; }}
+      onMouseEnter={e => { if (!isActive) (e.currentTarget as HTMLButtonElement).style.background = 'hsl(var(--terex-accent) / 0.04)'; }}
       onMouseLeave={e => { if (!isActive) (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}
     >
       <div style={{
         width: 30, height: 30, borderRadius: 8, flexShrink: 0,
-        background: isActive ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.08)',
-        border: `1px solid ${isActive ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.10)'}`,
+        background: isActive ? 'hsl(var(--terex-accent) / 0.14)' : 'hsl(var(--terex-accent) / 0.08)',
+        border: `1px solid ${isActive ? 'hsl(var(--terex-accent) / 0.18)' : 'hsl(var(--terex-accent) / 0.10)'}`,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         transition: 'all 0.12s',
       }}>
@@ -213,7 +213,7 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
           left: 20,
           zIndex: 60,
           width: 36, height: 36, borderRadius: 10,
-          background: navOpen ? 'rgba(255,255,255,0.08)' : C.l2,
+          background: navOpen ? 'hsl(var(--terex-accent) / 0.08)' : C.l2,
           border: `1px solid ${C.bds}`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           color: C.t2, cursor: 'pointer',
@@ -248,9 +248,9 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
             maxHeight: 'calc(100vh - 90px)',
             zIndex: 55,
             background: '#1c1c1e',
-            border: `1px solid rgba(255,255,255,0.10)`,
+            border: `1px solid hsl(var(--terex-accent) / 0.10)`,
             borderRadius: 18,
-            boxShadow: '0 20px 60px rgba(0,0,0,0.60), 0 0 0 1px rgba(255,255,255,0.04) inset',
+            boxShadow: '0 20px 60px rgba(0,0,0,0.60), 0 0 0 1px hsl(var(--terex-accent) / 0.04) inset',
             display: 'flex', flexDirection: 'column',
             overflow: 'hidden',
             animation: 'navPanelIn 0.18s cubic-bezier(0.16,1,0.3,1)',
@@ -259,7 +259,7 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
           }}>
 
             {/* Recherche */}
-            <div style={{ padding: '12px 10px 10px', borderBottom: `1px solid rgba(255,255,255,0.07)` }}>
+            <div style={{ padding: '12px 10px 10px', borderBottom: `1px solid hsl(var(--terex-accent) / 0.07)` }}>
               <div style={{ position: 'relative' }}>
                 <Search style={{
                   position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)',
@@ -271,15 +271,15 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
                   onChange={e => setSearchQuery(e.target.value)}
                   placeholder="Rechercher…"
                   style={{
-                    width: '100%', background: 'rgba(255,255,255,0.06)',
-                    border: `1px solid rgba(255,255,255,0.09)`,
+                    width: '100%', background: 'hsl(var(--terex-accent) / 0.06)',
+                    border: `1px solid hsl(var(--terex-accent) / 0.09)`,
                     borderRadius: 9, paddingLeft: 30, paddingRight: 10,
                     paddingTop: 7, paddingBottom: 7,
                     color: C.t1, fontSize: 12, outline: 'none', fontFamily: FONT,
                     boxSizing: 'border-box', transition: 'border-color 0.15s',
                   }}
-                  onFocus={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.25)')}
-                  onBlur={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.09)')}
+                  onFocus={e => (e.currentTarget.style.borderColor = 'hsl(var(--terex-accent) / 0.25)')}
+                  onBlur={e => (e.currentTarget.style.borderColor = 'hsl(var(--terex-accent) / 0.09)')}
                 />
               </div>
             </div>
@@ -299,7 +299,7 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
                 NAV_SECTIONS.map((section, sIdx) => (
                   <div key={section.label} style={{ marginTop: sIdx === 0 ? 0 : 14 }}>
                     <p style={{
-                      color: 'rgba(255,255,255,0.22)', fontSize: 9.5, fontWeight: 700,
+                      color: 'hsl(var(--terex-accent) / 0.22)', fontSize: 9.5, fontWeight: 700,
                       letterSpacing: '0.1em', textTransform: 'uppercase',
                       margin: '0 0 4px', paddingLeft: 8,
                     }}>
@@ -316,7 +316,7 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
             </nav>
 
             {/* Footer */}
-            <div style={{ borderTop: `1px solid rgba(255,255,255,0.07)`, padding: '10px 8px 10px' }}>
+            <div style={{ borderTop: `1px solid hsl(var(--terex-accent) / 0.07)`, padding: '10px 8px 10px' }}>
               <button
                 onClick={() => navigate('/dashboard')}
                 style={{
@@ -325,7 +325,7 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
                   fontSize: 11.5, color: C.t3, background: 'transparent',
                   fontFamily: FONT, marginBottom: 8, textAlign: 'left', transition: 'all 0.1s',
                 }}
-                onMouseEnter={e => { e.currentTarget.style.color = C.t2; e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
+                onMouseEnter={e => { e.currentTarget.style.color = C.t2; e.currentTarget.style.background = 'hsl(var(--terex-accent) / 0.04)'; }}
                 onMouseLeave={e => { e.currentTarget.style.color = C.t3; e.currentTarget.style.background = 'transparent'; }}
               >
                 <ArrowLeft style={{ width: 12, height: 12 }} />
@@ -335,8 +335,8 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
               <div style={{
                 display: 'flex', alignItems: 'center', gap: 9,
                 padding: '9px 10px', borderRadius: 11,
-                background: 'rgba(255,255,255,0.04)',
-                border: `1px solid rgba(255,255,255,0.07)`,
+                background: 'hsl(var(--terex-accent) / 0.04)',
+                border: `1px solid hsl(var(--terex-accent) / 0.07)`,
               }}>
                 <InitialAvatar name={user?.name || 'U'} size={30} />
                 <div style={{ minWidth: 0, flex: 1 }}>
@@ -351,13 +351,13 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
                   onClick={handleLogout}
                   title="Déconnexion"
                   style={{
-                    background: 'rgba(255,255,255,0.05)', border: `1px solid rgba(255,255,255,0.09)`,
+                    background: 'hsl(var(--terex-accent) / 0.05)', border: `1px solid hsl(var(--terex-accent) / 0.09)`,
                     borderRadius: 7, cursor: 'pointer', color: C.t3, padding: '5px 6px',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     transition: 'all 0.12s', flexShrink: 0,
                   }}
                   onMouseEnter={e => { e.currentTarget.style.color = '#ef4444'; e.currentTarget.style.borderColor = 'rgba(239,68,68,0.3)'; e.currentTarget.style.background = 'rgba(239,68,68,0.08)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.color = C.t3; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.09)'; e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.color = C.t3; e.currentTarget.style.borderColor = 'hsl(var(--terex-accent) / 0.09)'; e.currentTarget.style.background = 'hsl(var(--terex-accent) / 0.05)'; }}
                 >
                   <LogOut style={{ width: 13, height: 13 }} />
                 </button>

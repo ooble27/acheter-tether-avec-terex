@@ -1,6 +1,6 @@
 const BG = 'hsl(var(--terex-dark))';
 const CARD = 'hsl(var(--terex-darker))';
-const BORDER = 'rgba(255,255,255,0.08)';
+const BORDER = 'hsl(var(--terex-accent) / 0.08)';
 const ACCENT = '#2dd4a7';
 
 /**
@@ -44,7 +44,7 @@ export function MaintenancePage() {
           <div style={{ borderTop: `1px solid ${BORDER}`, paddingTop: 22 }}>
             <p style={{ fontSize: 12.5, color: 'hsl(var(--muted-foreground))', margin: '0 0 12px' }}>Une question ? Écrivez-nous :</p>
             <a href="mailto:terangaexchange@gmail.com"
-              style={{ display: 'inline-block', background: '#fff', color: '#141414', textDecoration: 'none', fontSize: 14, fontWeight: 700, padding: '12px 24px', borderRadius: 12 }}>
+              style={{ display: 'inline-block', background: '#fff', color: 'hsl(var(--terex-accent-fg))', textDecoration: 'none', fontSize: 14, fontWeight: 700, padding: '12px 24px', borderRadius: 12 }}>
               terangaexchange@gmail.com
             </a>
           </div>

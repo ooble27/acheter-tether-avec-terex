@@ -4,7 +4,7 @@ import { Check, ChevronLeft, ChevronRight, Plus, X, Upload, Pencil } from 'lucid
 const C = {
   bg: 'hsl(var(--terex-dark))', l1: 'hsl(var(--terex-darker))', l2: 'hsl(var(--terex-gray))', l3: 'hsl(var(--terex-gray))',
   bd: 'hsl(var(--terex-gray))', bds: 'hsl(var(--terex-gray))',
-  teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.10)', tealB: 'rgba(255, 255, 255,0.25)',
+  teal: '#ffffff', tealH: '#2d7870', tealT: 'hsl(var(--terex-accent) / 0.10)', tealB: 'hsl(var(--terex-accent) / 0.25)',
   t1: '#f0f0f0', t2: 'hsl(var(--muted-foreground))', t3: '#686868',
   red: '#ef4444',
 };
@@ -67,7 +67,7 @@ function GhostBtn({ children, onClick, style }: { children: React.ReactNode; onC
   const [hov, setHov] = useState(false);
   return (
     <button onClick={onClick}
-      style={{ background: hov ? C.l3 : 'rgba(255,255,255,0.05)', color: C.t2, border: `1px solid ${C.bds}`, borderRadius: 9, padding: '9px 18px', fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: FONT, transition: 'all 0.12s', ...style }}
+      style={{ background: hov ? C.l3 : 'hsl(var(--terex-accent) / 0.05)', color: C.t2, border: `1px solid ${C.bds}`, borderRadius: 9, padding: '9px 18px', fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: FONT, transition: 'all 0.12s', ...style }}
       onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
       {children}
     </button>
@@ -76,7 +76,7 @@ function GhostBtn({ children, onClick, style }: { children: React.ReactNode; onC
 
 function Avatar({ name, size = 28 }: { name: string; size?: number }) {
   return (
-    <div style={{ width: size, height: size, borderRadius: '50%', background: 'rgba(255,255,255,0.08)', border: `1px solid rgba(255,255,255,0.10)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: size * 0.38, fontWeight: 600, color: C.t2, flexShrink: 0 }}>
+    <div style={{ width: size, height: size, borderRadius: '50%', background: 'hsl(var(--terex-accent) / 0.08)', border: `1px solid hsl(var(--terex-accent) / 0.10)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: size * 0.38, fontWeight: 600, color: C.t2, flexShrink: 0 }}>
       {name.charAt(0).toUpperCase()}
     </div>
   );
@@ -88,7 +88,7 @@ function ModalWrap({ onClose, children }: { onClose: () => void; children: React
       style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(5px)' }}
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}
     >
-      <div style={{ background: '#1c1c1e', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 16, padding: 24, width: 400, maxWidth: 'calc(100vw - 32px)', boxShadow: '0 24px 64px rgba(0,0,0,0.7)', fontFamily: FONT }}>
+      <div style={{ background: '#1c1c1e', border: '1px solid hsl(var(--terex-accent) / 0.12)', borderRadius: 16, padding: 24, width: 400, maxWidth: 'calc(100vw - 32px)', boxShadow: '0 24px 64px rgba(0,0,0,0.7)', fontFamily: FONT }}>
         {children}
       </div>
     </div>
@@ -257,7 +257,7 @@ function MiniCalendar({ scheduledDates, selectedDate, onSelectDate }: { schedule
                 fontSize: 12, fontFamily: FONT, cursor: past ? 'not-allowed' : 'pointer',
                 position: 'relative', transition: 'all 0.1s', userSelect: 'none', opacity: past ? 0.38 : 1,
               }}
-              onMouseEnter={e => { if (!past && !sel) e.currentTarget.style.background = tod ? C.tealT : 'rgba(255,255,255,0.06)'; }}
+              onMouseEnter={e => { if (!past && !sel) e.currentTarget.style.background = tod ? C.tealT : 'hsl(var(--terex-accent) / 0.06)'; }}
               onMouseLeave={e => { if (!past && !sel) e.currentTarget.style.background = tod ? C.tealT : 'transparent'; }}
             >
               {day}
@@ -392,7 +392,7 @@ export function BusinessBatch({ user }: { user: { email: string; name: string; i
 
             {batchSent ? (
               <div style={{ textAlign: 'center', padding: '32px 0' }}>
-                <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: `1px solid rgba(255,255,255,0.10)`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'hsl(var(--terex-accent) / 0.06)', border: `1px solid hsl(var(--terex-accent) / 0.10)`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
                   <Check size={20} color={C.t1} strokeWidth={2.5} />
                 </div>
                 <div style={{ fontSize: 15, fontWeight: 700, color: C.t1, marginBottom: 6 }}>Lot soumis pour approbation</div>
@@ -539,7 +539,7 @@ export function BusinessBatch({ user }: { user: { email: string; name: string; i
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {scheduledPayments.sort((a, b) => a.date.getTime() - b.date.getTime()).map(p => (
                   <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 12px', background: C.l2, borderRadius: 9, border: `1px solid ${C.bds}` }}>
-                    <div style={{ flexShrink: 0, background: 'rgba(255,255,255,0.06)', border: `1px solid rgba(255,255,255,0.08)`, borderRadius: 6, padding: '3px 8px', fontSize: 11, color: C.t2, fontFamily: MONO }}>
+                    <div style={{ flexShrink: 0, background: 'hsl(var(--terex-accent) / 0.06)', border: `1px solid hsl(var(--terex-accent) / 0.08)`, borderRadius: 6, padding: '3px 8px', fontSize: 11, color: C.t2, fontFamily: MONO }}>
                       {fmtDate(p.date)}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>

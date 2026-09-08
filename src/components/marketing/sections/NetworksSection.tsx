@@ -41,7 +41,7 @@ export function NetworksSection() {
         <AnimatedSection className="text-center mb-16">
           <span
             className="block text-xs font-medium uppercase tracking-widest mb-4"
-            style={{ color: 'rgba(255,255,255,0.45)' }}
+            style={{ color: 'hsl(var(--terex-accent) / 0.45)' }}
           >
             Réseaux
           </span>
@@ -58,7 +58,7 @@ export function NetworksSection() {
           <AnimatedSection className="flex justify-center lg:justify-start" direction="left">
             <div
               className="flex flex-col items-center text-center rounded-2xl p-10 w-full max-w-md"
-              style={{ backgroundColor: 'hsl(var(--terex-darker))', border: '1px solid rgba(255,255,255,0.07)' }}
+              style={{ backgroundColor: 'hsl(var(--terex-darker))', border: '1px solid hsl(var(--terex-accent) / 0.07)' }}
             >
               <img
                 src={usdtLogo}
@@ -67,7 +67,7 @@ export function NetworksSection() {
               />
               <p
                 className="text-base sm:text-lg leading-relaxed"
-                style={{ color: 'rgba(255,255,255,0.55)' }}
+                style={{ color: 'hsl(var(--terex-accent) / 0.55)' }}
               >
                 <span className="font-semibold text-white">USDT</span> est une cryptomonnaie
                 stable adossée au dollar américain.{' '}
@@ -82,17 +82,17 @@ export function NetworksSection() {
               <AnimatedItem key={index} index={index} baseDelay={200}>
                 <div
                   className="flex items-center gap-4 p-5 rounded-2xl transition-colors duration-300"
-                  style={{ backgroundColor: 'hsl(var(--terex-darker))', border: '1px solid rgba(255,255,255,0.07)' }}
+                  style={{ backgroundColor: 'hsl(var(--terex-darker))', border: '1px solid hsl(var(--terex-accent) / 0.07)' }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)';
+                    e.currentTarget.style.borderColor = 'hsl(var(--terex-accent) / 0.15)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)';
+                    e.currentTarget.style.borderColor = 'hsl(var(--terex-accent) / 0.07)';
                   }}
                 >
                   <div
                     className="flex items-center justify-center w-12 h-12 rounded-xl shrink-0"
-                    style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}
+                    style={{ backgroundColor: 'hsl(var(--terex-accent) / 0.06)' }}
                   >
                     <img
                       src={network.logo}
@@ -104,7 +104,7 @@ export function NetworksSection() {
                     <span className="text-white text-sm sm:text-base font-medium">
                       {network.name}
                     </span>
-                    <span className="text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                    <span className="text-xs" style={{ color: 'hsl(var(--terex-accent) / 0.45)' }}>
                       {network.sub}
                     </span>
                   </div>

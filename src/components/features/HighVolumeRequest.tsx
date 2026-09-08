@@ -12,11 +12,11 @@ interface HighVolumeRequestProps {
 
 const BG = 'hsl(var(--terex-dark))';
 const CARD = 'hsl(var(--terex-darker))';
-const BORDER = 'rgba(255,255,255,0.07)';
+const BORDER = 'hsl(var(--terex-accent) / 0.07)';
 const MIN_AMOUNT = 2000001;
 
 const inputStyle: React.CSSProperties = {
-  width: '100%', background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`,
+  width: '100%', background: 'hsl(var(--terex-accent) / 0.04)', border: `1px solid ${BORDER}`,
   borderRadius: '12px', padding: '12px 14px', color: 'hsl(var(--foreground))', fontSize: '15px',
   outline: 'none', boxSizing: 'border-box',
 };
@@ -67,7 +67,7 @@ export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequest
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: 'calc(env(safe-area-inset-top, 0px) + 14px) 0 18px' }}>
           <button onClick={onBack}
-            style={{ width: '38px', height: '38px', borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
+            style={{ width: '38px', height: '38px', borderRadius: '50%', background: 'hsl(var(--terex-accent) / 0.06)', border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
             <ArrowLeft size={17} color="hsl(var(--foreground))" />
           </button>
           <div>
@@ -78,8 +78,8 @@ export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequest
 
         {/* Hero */}
         <div style={{ ...boxStyle, display: 'flex', alignItems: 'center', gap: '16px', padding: '22px', marginBottom: '16px' }}>
-          <div style={{ width: '52px', height: '52px', borderRadius: '15px', background: 'rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <Handshake size={24} color="rgba(255,255,255,0.85)" strokeWidth={1.8} />
+          <div style={{ width: '52px', height: '52px', borderRadius: '15px', background: 'hsl(var(--terex-accent) / 0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <Handshake size={24} color="hsl(var(--terex-accent) / 0.85)" strokeWidth={1.8} />
           </div>
           <div>
             <p style={{ color: 'hsl(var(--foreground))', fontSize: '16px', fontWeight: 600, margin: '0 0 3px' }}>Service OTC dédié</p>
@@ -120,7 +120,7 @@ export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequest
             </div>
 
             {/* Ce qui va se passer */}
-            <div style={{ ...boxStyle, background: 'rgba(255,255,255,0.03)' }}>
+            <div style={{ ...boxStyle, background: 'hsl(var(--terex-accent) / 0.03)' }}>
               <p style={{ color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600, margin: '0 0 14px' }}>Ce qui va se passer ensuite</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {[
@@ -130,8 +130,8 @@ export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequest
                   { Icon: ShieldCheck, text: 'Processus sécurisé avec vérifications renforcées' },
                 ].map(({ Icon, text }, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{ width: '32px', height: '32px', borderRadius: '9px', background: 'rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <Icon size={15} color="rgba(255,255,255,0.7)" />
+                    <div style={{ width: '32px', height: '32px', borderRadius: '9px', background: 'hsl(var(--terex-accent) / 0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <Icon size={15} color="hsl(var(--terex-accent) / 0.7)" />
                     </div>
                     <span style={{ color: '#d1d5db', fontSize: '13px' }}>{text}</span>
                   </div>
@@ -144,8 +144,8 @@ export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequest
               <p style={{ color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600, margin: '0 0 14px' }}>Besoin d'aide immédiate ?</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 <a href="mailto:terangaexchange@gmail.com" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none', minWidth: 0 }}>
-                  <div style={{ width: '38px', height: '38px', borderRadius: '11px', background: 'rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <Mail size={16} color="rgba(255,255,255,0.7)" />
+                  <div style={{ width: '38px', height: '38px', borderRadius: '11px', background: 'hsl(var(--terex-accent) / 0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <Mail size={16} color="hsl(var(--terex-accent) / 0.7)" />
                   </div>
                   <div style={{ minWidth: 0 }}>
                     <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', margin: '0 0 1px' }}>Email</p>
@@ -153,8 +153,8 @@ export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequest
                   </div>
                 </a>
                 <a href="https://wa.me/+14182619091" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none', minWidth: 0 }}>
-                  <div style={{ width: '38px', height: '38px', borderRadius: '11px', background: 'rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <MessageCircle size={16} color="rgba(255,255,255,0.7)" />
+                  <div style={{ width: '38px', height: '38px', borderRadius: '11px', background: 'hsl(var(--terex-accent) / 0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <MessageCircle size={16} color="hsl(var(--terex-accent) / 0.7)" />
                   </div>
                   <div style={{ minWidth: 0 }}>
                     <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '11px', margin: '0 0 1px' }}>WhatsApp</p>
@@ -170,8 +170,8 @@ export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequest
             <button type="submit" disabled={loading || !canSubmit}
               style={{
                 padding: '12px 28px', borderRadius: '12px', border: 'none',
-                background: (loading || !canSubmit) ? 'rgba(255,255,255,0.08)' : '#ffffff',
-                color: (loading || !canSubmit) ? 'hsl(var(--muted-foreground))' : '#141414',
+                background: (loading || !canSubmit) ? 'hsl(var(--terex-accent) / 0.08)' : 'hsl(var(--terex-accent))',
+                color: (loading || !canSubmit) ? 'hsl(var(--muted-foreground))' : 'hsl(var(--terex-accent-fg))',
                 fontSize: '14px', fontWeight: 700, cursor: (loading || !canSubmit) ? 'not-allowed' : 'pointer',
               }}>
               {loading ? 'Envoi en cours…' : 'Envoyer ma demande'}
