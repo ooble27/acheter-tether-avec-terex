@@ -350,32 +350,37 @@ export function QuizPlayer({
             {currentQ.question}
           </h2>
 
-          {/* Answers */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {currentQ.answers.map(a => {
+          {/* Answers — lettered options (A, B, C, D) with a clear selected state */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {currentQ.answers.map((a, ai) => {
               const picked = answers[currentQ.id] === a.id;
+              const letter = String.fromCharCode(65 + ai);
               return (
                 <button key={a.id}
                   onClick={() => setAnswers({ ...answers, [currentQ.id]: a.id })}
                   style={{
-                    display: 'flex', alignItems: 'center', gap: 12,
-                    padding: '14px 16px', borderRadius: 10,
-                    background: picked ? C.ov5 : C.bg,
-                    border: `1px solid ${picked ? C.accentBd : C.bds}`,
+                    display: 'flex', alignItems: 'center', gap: 14,
+                    padding: '15px 16px', borderRadius: 14,
+                    background: picked ? C.accentSoft : C.bg,
+                    border: `1.5px solid ${picked ? C.accent : C.bds}`,
                     cursor: 'pointer', textAlign: 'left', fontFamily: FONT,
-                    transition: 'all 0.15s', color: C.t1,
+                    transition: 'all 0.15s', color: C.t1, width: '100%',
+                    boxShadow: picked ? `0 0 0 3px ${C.accentSoft}` : 'none',
                   }}
-                  onMouseEnter={e => { if (!picked) e.currentTarget.style.borderColor = C.bd; }}
+                  onMouseEnter={e => { if (!picked) e.currentTarget.style.borderColor = C.bdh; }}
                   onMouseLeave={e => { if (!picked) e.currentTarget.style.borderColor = C.bds; }}>
                   <span style={{
-                    width: 22, height: 22, borderRadius: '50%', flexShrink: 0,
-                    background: picked ? C.accent : 'transparent',
-                    border: `1.5px solid ${picked ? C.accent : C.bd}`,
+                    width: 30, height: 30, borderRadius: 9, flexShrink: 0,
+                    background: picked ? C.accent : C.l2,
+                    border: `1px solid ${picked ? C.accent : C.bd}`,
+                    color: picked ? C.accentFg : C.t2,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 13, fontWeight: 500, fontFamily: FONT,
+                    transition: 'all 0.15s',
                   }}>
-                    {picked ? <Circle size={8} fill="#111" color="#111" /> : null}
+                    {picked ? <CheckCircle2 size={16} /> : letter}
                   </span>
-                  <span style={{ fontSize: 14, fontWeight: 300 }}>
+                  <span style={{ fontSize: 14.5, fontWeight: picked ? 400 : 300, lineHeight: 1.4, flex: 1 }}>
                     {a.answer}
                   </span>
                 </button>
