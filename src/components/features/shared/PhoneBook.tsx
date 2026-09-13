@@ -75,7 +75,7 @@ export function PhoneBook({
                 </div>
               )}
               <div style={{
-                color: selected?.label ? 'hsl(var(--terex-accent) / 0.65)' : '#fff',
+                color: selected?.label ? 'hsl(var(--terex-accent) / 0.65)' : 'hsl(var(--foreground))',
                 fontSize: '13px',
                 fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
               }}>
@@ -108,7 +108,7 @@ export function PhoneBook({
               background: 'hsl(var(--card))',
               border: `1px solid ${CARD_BORDER}`,
               borderRadius: '12px', overflow: 'hidden',
-              boxShadow: '0 -8px 24px hsl(var(--terex-accent) / 0.25)',
+              boxShadow: '0 -8px 24px rgba(0, 0, 0, 0.35)',
               maxHeight: '260px', overflowY: 'auto',
             }}>
               {phones.map(ph => {

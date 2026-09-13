@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  ChevronDown, ArrowRight, User, LogOut,
+  ChevronDown, ArrowRight, User, LogOut, Menu, X,
   Coins, HandCoins, Handshake, Building2, Boxes,
   Newspaper, BookOpen, HelpCircle, Shield, Info, Briefcase, LifeBuoy, Phone,
 } from 'lucide-react';
@@ -63,6 +63,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [open, setOpen] = useState<string | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const closeTimer = useRef<any>(null);
 
   useEffect(() => {
@@ -71,8 +72,15 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const go = (href: string) => { setOpen(null); navigate(href); };
+  const go = (href: string) => { setOpen(null); setMobileMenuOpen(false); navigate(href); };
   const primary = () => (user ? onShowDashboard?.() : navigate('/auth'));
+
+  const MOBILE_NAV: { label: string; href: string }[] = [
+    { label: 'Accueil', href: '/' },
+    { label: 'Réseaux', href: '/blockchain' },
+    { label: 'FAQ', href: '/faq' },
+    { label: 'Contact', href: '/contact' },
+  ];
   const handleLogout = async () => { try { await onLogout(); } catch { window.location.reload(); } };
 
   const enter = (label: string) => { clearTimeout(closeTimer.current); setOpen(label); };
@@ -170,10 +178,12 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                     <LogOut size={15} /> Déconnexion
                   </button>
                 )}
-                <button onClick={() => onShowDashboard?.()}
-                  style={{ background: '#fff', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 11, height: 40, padding: '0 18px', fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
-                  <User size={15} /> Tableau de bord
-                </button>
+                {!isCompact && (
+                  <button onClick={() => onShowDashboard?.()}
+                    style={{ background: '#fff', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 11, height: 40, padding: '0 18px', fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
+                    <User size={15} /> Tableau de bord
+                  </button>
+                )}
               </>
             ) : (
               <>
@@ -183,12 +193,67 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                     Connexion
                   </button>
                 )}
-                {primaryBtn}
+                {!isCompact && primaryBtn}
               </>
+            )}
+
+            {/* Hamburger button — mobile/tablet only */}
+            {isCompact && (
+              <button
+                onClick={() => setMobileMenuOpen(v => !v)}
+                aria-label={mobileMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 6, color: 'hsl(var(--foreground))' }}
+              >
+                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
             )}
           </div>
         </div>
       </div>
+
+      {/* Mobile slide-down menu */}
+      {isCompact && mobileMenuOpen && (
+        <div style={{
+          background: BG, borderTop: `1px solid ${BORDER}`,
+          padding: '12px 0 20px',
+        }}>
+          <nav style={{ display: 'flex', flexDirection: 'column' }}>
+            {MOBILE_NAV.map(item => (
+              <button
+                key={item.href}
+                onClick={() => go(item.href)}
+                style={{
+                  display: 'block', width: '100%', textAlign: 'left',
+                  padding: '14px clamp(16px, 4vw, 32px)',
+                  background: 'none', border: 'none', cursor: 'pointer',
+                  color: 'hsl(var(--foreground))', fontSize: 16, fontWeight: 500,
+                }}
+              >
+                {item.label}
+              </button>
+            ))}
+          </nav>
+          <div style={{ padding: '12px clamp(16px, 4vw, 32px) 0', display: 'flex', gap: 10 }}>
+            {user ? (
+              <button onClick={() => { setMobileMenuOpen(false); onShowDashboard?.(); }}
+                style={{ background: '#fff', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 11, height: 42, padding: '0 20px', fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                <User size={15} /> Tableau de bord
+              </button>
+            ) : (
+              <>
+                <button onClick={() => go('/auth')}
+                  style={{ background: 'hsl(var(--terex-gray))', color: 'hsl(var(--foreground))', border: `1px solid ${BORDER}`, borderRadius: 11, height: 42, padding: '0 18px', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+                  Connexion
+                </button>
+                <button onClick={() => go('/auth')}
+                  style={{ background: '#fff', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 11, height: 42, padding: '0 20px', fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  Commencer <ArrowRight size={15} />
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </header>
   );
 }
