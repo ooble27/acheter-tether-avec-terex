@@ -231,7 +231,7 @@ export default function MobileMoneyCryptoArticle() {
         la finance mondiale. Simple comme un paiement Mobile Money, puissant comme la blockchain.
       </p>
 
-      <div className="bg-[#1e1e1e] border border-white/[0.07] rounded-lg p-6 my-8">
+      <div className="bg-[hsl(var(--terex-darker))] border border-white/[0.07] rounded-lg p-6 my-8">
         <p className="text-white font-medium mb-2">
           📱 Commencez dès maintenant
         </p>

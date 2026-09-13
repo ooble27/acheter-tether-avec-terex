@@ -158,17 +158,17 @@ const GuidePage = () => {
             <div className="animate-fade-in">
               <div
                 className="rounded-2xl p-5"
-                style={{ background: '#1e1e1e', border: '1px solid rgba(255,255,255,0.07)' }}
+                style={{ background: 'hsl(var(--terex-darker))', border: '1px solid hsl(var(--terex-accent) / 0.07)' }}
               >
                 {/* Rate card */}
                 <div
                   className="rounded-xl p-4 flex items-center justify-between mb-3"
-                  style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.07)' }}
+                  style={{ background: 'hsl(var(--terex-dark))', border: '1px solid hsl(var(--terex-accent) / 0.07)' }}
                 >
                   <div className="flex items-center gap-3">
                     <div
                       className="w-10 h-10 rounded-xl flex items-center justify-center text-white"
-                      style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.07)' }}
+                      style={{ background: 'hsl(var(--terex-accent) / 0.06)', border: '1px solid hsl(var(--terex-accent) / 0.07)' }}
                     >
                       <ArrowRightLeft className="w-5 h-5" />
                     </div>
@@ -179,7 +179,7 @@ const GuidePage = () => {
                   </div>
                   <span
                     className="text-[10px] px-2 py-1 rounded-full text-white/60"
-                    style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.07)' }}
+                    style={{ background: 'hsl(var(--terex-accent) / 0.06)', border: '1px solid hsl(var(--terex-accent) / 0.07)' }}
                   >
                     Live
                   </span>
@@ -194,11 +194,11 @@ const GuidePage = () => {
                     <div
                       key={a.label}
                       className="rounded-xl p-3 flex flex-col items-center gap-2"
-                      style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.07)' }}
+                      style={{ background: 'hsl(var(--terex-dark))', border: '1px solid hsl(var(--terex-accent) / 0.07)' }}
                     >
                       <div
                         className="w-9 h-9 rounded-xl flex items-center justify-center text-white"
-                        style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.07)' }}
+                        style={{ background: 'hsl(var(--terex-accent) / 0.06)', border: '1px solid hsl(var(--terex-accent) / 0.07)' }}
                       >
                         <a.icon className="w-4 h-4" />
                       </div>
@@ -214,7 +214,7 @@ const GuidePage = () => {
 
       {/* Separator */}
       <div className="max-w-5xl mx-auto px-4">
-        <div className="border-t" style={{ borderColor: 'rgba(255,255,255,0.07)' }} />
+        <div className="border-t" style={{ borderColor: 'hsl(var(--terex-accent) / 0.07)' }} />
       </div>
 
       {/* Video Guides Grid */}
@@ -236,13 +236,13 @@ const GuidePage = () => {
                 key={index}
                 onClick={() => setSelectedGuide(guide)}
                 className="group relative p-6 rounded-2xl transition-all text-left hover:-translate-y-0.5"
-                style={{ background: '#1e1e1e', border: '1px solid rgba(255,255,255,0.07)' }}
+                style={{ background: 'hsl(var(--terex-darker))', border: '1px solid hsl(var(--terex-accent) / 0.07)' }}
               >
                 {/* Header */}
                 <div className="flex items-start justify-between mb-4">
                   <div
                     className="w-11 h-11 rounded-xl flex items-center justify-center text-white"
-                    style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.07)' }}
+                    style={{ background: 'hsl(var(--terex-accent) / 0.06)', border: '1px solid hsl(var(--terex-accent) / 0.07)' }}
                   >
                     {guide.icon}
                   </div>
@@ -253,7 +253,7 @@ const GuidePage = () => {
                     </span>
                     <span
                       className="text-[10px] font-medium px-2 py-0.5 rounded-full text-white/60"
-                      style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.07)' }}
+                      style={{ background: 'hsl(var(--terex-accent) / 0.06)', border: '1px solid hsl(var(--terex-accent) / 0.07)' }}
                     >
                       {guide.difficulty}
                     </span>
@@ -270,7 +270,7 @@ const GuidePage = () => {
                     <div key={si} className="flex items-center gap-2.5">
                       <span
                         className="w-5 h-5 rounded-md flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0"
-                        style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.07)' }}
+                        style={{ background: 'hsl(var(--terex-accent) / 0.06)', border: '1px solid hsl(var(--terex-accent) / 0.07)' }}
                       >
                         {si + 1}
                       </span>
@@ -292,7 +292,7 @@ const GuidePage = () => {
 
       {/* Separator */}
       <div className="max-w-5xl mx-auto px-4">
-        <div className="border-t" style={{ borderColor: 'rgba(255,255,255,0.07)' }} />
+        <div className="border-t" style={{ borderColor: 'hsl(var(--terex-accent) / 0.07)' }} />
       </div>
 
       {/* CTA */}

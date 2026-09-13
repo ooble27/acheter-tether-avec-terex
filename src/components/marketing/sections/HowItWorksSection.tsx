@@ -93,7 +93,7 @@ export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionPr
           <Button
             onClick={onBlockchainInfoClick}
             className="rounded-full px-8 py-5 text-sm hover:opacity-90"
-            style={{ backgroundColor: '#ffffff', color: 'hsl(var(--terex-accent-fg))', fontWeight: 700 }}
+            style={{ backgroundColor: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', fontWeight: 700 }}
           >
             En savoir plus sur la blockchain
           </Button>

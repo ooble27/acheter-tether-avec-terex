@@ -18,8 +18,8 @@ const C = {
   // Fond aligné sur le design système normal (hsl(var(--terex-dark))), en gardant la hiérarchie d'élévation.
   bg: 'hsl(var(--terex-dark))', l1: 'hsl(var(--terex-darker))', l2: 'hsl(var(--terex-darker))', l3: 'hsl(var(--terex-gray))',
   bds: 'hsl(var(--terex-gray))', bd: 'hsl(var(--terex-gray))',
-  teal: '#ffffff', tealH: '#2d7870', tealT: 'hsl(var(--terex-accent) / 0.08)', tealB: 'hsl(var(--terex-accent) / 0.22)',
-  t1: '#f0f0f0', t2: 'hsl(var(--muted-foreground))', t3: 'hsl(var(--muted-foreground))',
+  teal: 'hsl(var(--terex-accent))', tealH: 'hsl(var(--terex-accent) / 0.85)', tealT: 'hsl(var(--terex-accent) / 0.08)', tealB: 'hsl(var(--terex-accent) / 0.22)',
+  t1: 'hsl(var(--foreground))', t2: 'hsl(var(--muted-foreground))', t3: 'hsl(var(--muted-foreground))',
 };
 const FONT = "'Inter', sans-serif";
 const MONO = '"JetBrains Mono", Consolas, monospace';
@@ -163,7 +163,7 @@ function PrimaryBtn({ children, onClick, large }: { children: React.ReactNode; o
     <button onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{
       height: large ? 50 : 40, paddingLeft: large ? 28 : 20, paddingRight: large ? 28 : 20,
       background: hov ? C.tealH : C.teal, border: 'none', borderRadius: 12,
-      color: '#000', fontSize: large ? 15 : 13, fontWeight: 700,
+      color: 'hsl(var(--terex-accent-fg))', fontSize: large ? 15 : 13, fontWeight: 700,
       cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8,
       fontFamily: FONT, transition: 'background 0.15s', whiteSpace: 'nowrap',
       letterSpacing: '-0.01em',
@@ -539,7 +539,7 @@ export function BusinessLanding() {
                 </button>
               ))}
             </div>
-            <pre style={{ margin: 0, padding: '22px 26px', fontFamily: MONO, fontSize: 12.5, lineHeight: 1.75, color: '#d1d5db', overflowX: 'auto', whiteSpace: 'pre' }}>{CODE_EXAMPLES[codeLang]}</pre>
+            <pre style={{ margin: 0, padding: '22px 26px', fontFamily: MONO, fontSize: 12.5, lineHeight: 1.75, color: 'hsl(var(--terex-accent) / 0.7)', overflowX: 'auto', whiteSpace: 'pre' }}>{CODE_EXAMPLES[codeLang]}</pre>
             <button onClick={copyCode} style={{ width: '100%', padding: '13px', background: C.l2, border: 'none', borderTop: `1px solid ${C.bds}`, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, color: C.t2, fontSize: 13, fontFamily: FONT, transition: 'color 0.15s' }}
               onMouseEnter={e => (e.currentTarget.style.color = C.t1)} onMouseLeave={e => (e.currentTarget.style.color = C.t2)}>
               {codeCopied ? <Check style={{ width: 14, height: 14 }} /> : <Copy style={{ width: 14, height: 14 }} />} Copier le code

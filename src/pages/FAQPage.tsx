@@ -8,13 +8,13 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTerexRates } from '@/hooks/useTerexRates';
 
-const BG = '#1a1a1a';
-const CARD = '#1e1e1e';
-const CARD2 = '#1e1e1e';
-const BORDER = 'rgba(255,255,255,0.07)';
-const ICON_BG = 'rgba(255,255,255,0.06)';
-const MUTED = 'rgba(255,255,255,0.55)';
-const MUTED2 = 'rgba(255,255,255,0.4)';
+const BG = 'hsl(var(--terex-dark))';
+const CARD = 'hsl(var(--terex-darker))';
+const CARD2 = 'hsl(var(--terex-darker))';
+const BORDER = 'hsl(var(--terex-accent) / 0.07)';
+const ICON_BG = 'hsl(var(--terex-accent) / 0.06)';
+const MUTED = 'hsl(var(--terex-accent) / 0.55)';
+const MUTED2 = 'hsl(var(--terex-accent) / 0.4)';
 
 const FAQPage = () => {
   const navigate = useNavigate();
@@ -113,21 +113,21 @@ const FAQPage = () => {
   const activeMeta = faqCategories.find(c => c.id === activeCategory);
 
   return (
-    <div style={{ background: BG, minHeight: '100vh', color: '#fff', position: 'relative', overflowX: 'hidden' }}>
+    <div style={{ background: BG, minHeight: '100vh', color: 'hsl(var(--foreground))', position: 'relative', overflowX: 'hidden' }}>
       <style>{`
         @keyframes tx-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
         .tx-fade { animation: tx-up 0.7s cubic-bezier(0.22,1,0.36,1) both; }
         .tx-fade-2 { animation: tx-up 0.8s cubic-bezier(0.22,1,0.36,1) 0.1s both; }
         .tx-tile { transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease; }
-        .tx-tile:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.16) !important; }
-        .tx-input:focus { border-color: rgba(255,255,255,0.22) !important; background: rgba(255,255,255,0.06) !important; }
-        .tx-input::placeholder { color: rgba(255,255,255,0.3); }
+        .tx-tile:hover { transform: translateY(-2px); border-color: hsl(var(--terex-accent) / 0.16) !important; }
+        .tx-input:focus { border-color: hsl(var(--terex-accent) / 0.22) !important; background: hsl(var(--terex-accent) / 0.06) !important; }
+        .tx-input::placeholder { color: hsl(var(--terex-accent) / 0.3); }
         .tx-cta { transition: transform 0.15s ease; }
         .tx-cta:hover { transform: translateY(-1px); }
         .tx-nav-item { transition: color 0.18s ease, background 0.18s ease; }
-        .tx-nav-item:hover { background: rgba(255,255,255,0.03); }
+        .tx-nav-item:hover { background: hsl(var(--terex-accent) / 0.03); }
         .tx-acc { transition: border-color 0.25s ease, background 0.25s ease; }
-        .tx-acc:hover { border-color: rgba(255,255,255,0.13) !important; }
+        .tx-acc:hover { border-color: hsl(var(--terex-accent) / 0.13) !important; }
         @keyframes tx-pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.82); } }
         .tx-live-dot { display: none !important; }
         @keyframes tx-typing { 0%,60%,100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-4px); opacity: 1; } }
@@ -149,8 +149,8 @@ const FAQPage = () => {
         }
       `}</style>
 
-      <div className="tx-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 560px)', width: 1, background: 'rgba(255,255,255,0.05)', pointerEvents: 'none', zIndex: 0 }} />
-      <div className="tx-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 560px)', width: 1, background: 'rgba(255,255,255,0.05)', pointerEvents: 'none', zIndex: 0 }} />
+      <div className="tx-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 560px)', width: 1, background: 'hsl(var(--terex-accent) / 0.05)', pointerEvents: 'none', zIndex: 0 }} />
+      <div className="tx-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 560px)', width: 1, background: 'hsl(var(--terex-accent) / 0.05)', pointerEvents: 'none', zIndex: 0 }} />
 
       <HeaderSection
         user={user ? { email: user.email || '', name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur' } : null}
@@ -171,13 +171,13 @@ const FAQPage = () => {
               {totalQuestions} questions classées par thème pour acheter, vendre et transférer vos USDT en toute confiance.
             </p>
             <div style={{ position: 'relative', maxWidth: 440 }}>
-              <Search size={17} style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.35)' }} />
+              <Search size={17} style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: 'hsl(var(--terex-accent) / 0.35)' }} />
               <input
                 className="tx-input"
                 placeholder="Rechercher une question..."
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: `1px solid rgba(255,255,255,0.08)`, borderRadius: 12, color: '#fff', fontSize: 14.5, padding: '0 14px 0 44px', height: 52, outline: 'none', boxSizing: 'border-box' }}
+                style={{ width: '100%', background: 'hsl(var(--terex-accent) / 0.04)', border: `1px solid hsl(var(--terex-accent) / 0.08)`, borderRadius: 12, color: 'hsl(var(--foreground))', fontSize: 14.5, padding: '0 14px 0 44px', height: 52, outline: 'none', boxSizing: 'border-box' }}
               />
             </div>
           </div>
@@ -188,13 +188,13 @@ const FAQPage = () => {
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '4px 6px 16px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <div style={{ width: 34, height: 34, borderRadius: 11, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Sparkles size={16} color="#fff" />
+                    <Sparkles size={16} color="hsl(var(--foreground))" />
                   </div>
                   <div>
                     <div style={{ fontSize: 13, fontWeight: 600 }}>Assistance Terex</div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                       <span style={{ position: 'relative', width: 6, height: 6 }}>
-                        <span className="tx-live-dot" style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: '#fff' }} />
+                        <span className="tx-live-dot" style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'hsl(var(--terex-accent))' }} />
                       </span>
                       
                     </div>
@@ -210,16 +210,16 @@ const FAQPage = () => {
 
               {/* Chat thread mockup */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                <div style={{ alignSelf: 'flex-end', maxWidth: '82%', background: '#fff', color: '#141414', borderRadius: '14px 14px 4px 14px', padding: '10px 14px', fontSize: 13, fontWeight: 500, lineHeight: 1.5 }}>
+                <div style={{ alignSelf: 'flex-end', maxWidth: '82%', background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', borderRadius: '14px 14px 4px 14px', padding: '10px 14px', fontSize: 13, fontWeight: 500, lineHeight: 1.5 }}>
                   Combien de temps prend un achat d'USDT ?
                 </div>
-                <div style={{ alignSelf: 'flex-start', maxWidth: '88%', background: CARD2, border: `1px solid ${BORDER}`, borderRadius: '14px 14px 14px 4px', padding: '11px 14px', fontSize: 13, color: 'rgba(255,255,255,0.85)', lineHeight: 1.55 }}>
-                  En moyenne <strong style={{ color: '#fff' }}>moins de 5 minutes</strong>. Vos USDT arrivent directement sur votre wallet, sans frais cachés.
+                <div style={{ alignSelf: 'flex-start', maxWidth: '88%', background: CARD2, border: `1px solid ${BORDER}`, borderRadius: '14px 14px 14px 4px', padding: '11px 14px', fontSize: 13, color: 'hsl(var(--terex-accent) / 0.85)', lineHeight: 1.55 }}>
+                  En moyenne <strong style={{ color: 'hsl(var(--foreground))' }}>moins de 5 minutes</strong>. Vos USDT arrivent directement sur votre wallet, sans frais cachés.
                 </div>
                 <div style={{ alignSelf: 'flex-start', background: CARD2, border: `1px solid ${BORDER}`, borderRadius: '14px 14px 14px 4px', padding: '13px 16px', display: 'inline-flex', gap: 5 }}>
-                  <span className="tx-dot1" style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(255,255,255,0.6)' }} />
-                  <span className="tx-dot2" style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(255,255,255,0.6)' }} />
-                  <span className="tx-dot3" style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(255,255,255,0.6)' }} />
+                  <span className="tx-dot1" style={{ width: 6, height: 6, borderRadius: '50%', background: 'hsl(var(--terex-accent) / 0.6)' }} />
+                  <span className="tx-dot2" style={{ width: 6, height: 6, borderRadius: '50%', background: 'hsl(var(--terex-accent) / 0.6)' }} />
+                  <span className="tx-dot3" style={{ width: 6, height: 6, borderRadius: '50%', background: 'hsl(var(--terex-accent) / 0.6)' }} />
                 </div>
               </div>
             </div>
@@ -232,13 +232,13 @@ const FAQPage = () => {
         {search ? (
           searchResults.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '72px 0' }}>
-              <Search size={28} color="rgba(255,255,255,0.2)" style={{ marginBottom: 12 }} />
+              <Search size={28} color="hsl(var(--terex-accent) / 0.2)" style={{ marginBottom: 12 }} />
               <p style={{ fontSize: 15, fontWeight: 600, margin: '0 0 4px' }}>Aucun résultat</p>
               <p style={{ fontSize: 13.5, color: MUTED, margin: 0 }}>Essayez d'autres mots-clés</p>
             </div>
           ) : (
             <div style={{ maxWidth: 760, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 30 }}>
-              <p style={{ fontSize: 13, color: MUTED, margin: 0 }}>Résultats pour « <span style={{ color: '#fff', fontWeight: 600 }}>{searchTerm}</span> »</p>
+              <p style={{ fontSize: 13, color: MUTED, margin: 0 }}>Résultats pour « <span style={{ color: 'hsl(var(--foreground))', fontWeight: 600 }}>{searchTerm}</span> »</p>
               {searchResults.map(section => (
                 <div key={section.id}>
                   <p style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED2, margin: '0 0 14px' }}>{section.title}</p>
@@ -262,14 +262,14 @@ const FAQPage = () => {
                       className="tx-nav-item"
                       style={{
                         display: 'inline-flex', alignItems: 'center', gap: 11, flexShrink: 0,
-                        background: active ? 'rgba(255,255,255,0.06)' : 'transparent',
-                        color: active ? '#fff' : 'rgba(255,255,255,0.6)',
+                        background: active ? 'hsl(var(--terex-accent) / 0.06)' : 'transparent',
+                        color: active ? '#fff' : 'hsl(var(--terex-accent) / 0.6)',
                         border: 'none', borderRadius: 12, padding: '11px 12px', cursor: 'pointer',
                         fontSize: 13.5, fontWeight: active ? 600 : 500, textAlign: 'left', width: '100%',
                         position: 'relative',
                       }}>
                       <span style={{ width: 30, height: 30, borderRadius: 9, background: active ? '#fff' : ICON_BG, color: active ? '#141414' : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'all 0.18s ease' }}>
-                        <Icon size={15} strokeWidth={1.9} color={active ? '#141414' : 'rgba(255,255,255,0.85)'} />
+                        <Icon size={15} strokeWidth={1.9} color={active ? '#141414' : 'hsl(var(--terex-accent) / 0.85)'} />
                       </span>
                       <span style={{ flex: 1, whiteSpace: 'nowrap' }}>{cat.title}</span>
                       <span style={{ fontSize: 11, fontWeight: 700, color: MUTED2 }}>{count}</span>
@@ -282,7 +282,7 @@ const FAQPage = () => {
               <div style={{ marginTop: 22, background: CARD, border: `1px solid ${BORDER}`, borderRadius: 14, padding: '14px 16px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 8 }}>
                   <span style={{ position: 'relative', width: 7, height: 7 }}>
-                    <span className="tx-live-dot" style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: '#fff' }} />
+                    <span className="tx-live-dot" style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'hsl(var(--terex-accent))' }} />
                   </span>
                   <span style={{ fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.07em', color: MUTED2 }}>Taux en direct</span>
                 </div>
@@ -293,7 +293,7 @@ const FAQPage = () => {
                       <span style={{ color: MUTED2, fontSize: 12, fontWeight: 600 }}>CFA / USDT</span>
                     </>
                   ) : (
-                    <span style={{ display: 'inline-block', width: 90, height: 22, borderRadius: 7, background: 'rgba(255,255,255,0.06)' }} />
+                    <span style={{ display: 'inline-block', width: 90, height: 22, borderRadius: 7, background: 'hsl(var(--terex-accent) / 0.06)' }} />
                   )}
                 </div>
               </div>
@@ -310,19 +310,19 @@ const FAQPage = () => {
               {activeSection && <Accordion section={activeSection.id} faqs={activeSection.faqs} openKey={openKey} setOpenKey={setOpenKey} />}
 
               {/* Still need help? — crafted contact prompt */}
-              <div className="tx-tile" style={{ marginTop: 28, background: 'linear-gradient(135deg, #1e1e1e 0%, #1a1a1a 100%)', border: `1px solid ${BORDER}`, borderRadius: 20, padding: '26px 26px', display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap', position: 'relative', overflow: 'hidden' }}>
+              <div className="tx-tile" style={{ marginTop: 28, background: 'linear-gradient(135deg, hsl(var(--terex-darker)) 0%, hsl(var(--terex-dark)) 100%)', border: `1px solid ${BORDER}`, borderRadius: 20, padding: '26px 26px', display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap', position: 'relative', overflow: 'hidden' }}>
                 {/* Mock chat bubble cluster */}
                 <div style={{ position: 'relative', flexShrink: 0 }}>
-                  <div style={{ width: 56, height: 56, borderRadius: 18, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 6px 20px rgba(0,0,0,0.35)' }}>
-                    <MessageCircle size={24} color="#141414" />
+                  <div style={{ width: 56, height: 56, borderRadius: 18, background: 'hsl(var(--terex-accent))', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 6px 20px rgba(0,0,0,0.35)' }}>
+                    <MessageCircle size={24} color="hsl(var(--terex-accent-fg))" />
                   </div>
-                  <span style={{ position: 'absolute', top: -3, right: -3, width: 16, height: 16, borderRadius: '50%', background: '#fff', border: `3px solid ${CARD}`, }} />
+                  <span style={{ position: 'absolute', top: -3, right: -3, width: 16, height: 16, borderRadius: '50%', background: 'hsl(var(--terex-accent))', border: `3px solid ${CARD}`, }} />
                 </div>
                 <div style={{ flex: 1, minWidth: 200, position: 'relative' }}>
                   <h3 style={{ fontSize: 18, fontWeight: 700, letterSpacing: '-0.02em', margin: '0 0 6px' }}>Toujours bloqué ?</h3>
                   <p style={{ fontSize: 14, color: MUTED, margin: 0, lineHeight: 1.55 }}>Notre équipe répond en direct en moins de 5 minutes, 24h/24 et 7j/7.</p>
                 </div>
-                <button onClick={() => navigate('/support')} className="tx-cta" style={{ position: 'relative', background: '#fff', color: '#141414', border: 'none', borderRadius: 12, height: 48, padding: '0 22px', fontSize: 14.5, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+                <button onClick={() => navigate('/support')} className="tx-cta" style={{ position: 'relative', background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 12, height: 48, padding: '0 22px', fontSize: 14.5, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
                   <Send size={15} /> Contacter le support
                 </button>
               </div>
@@ -348,15 +348,15 @@ function Accordion({ section, faqs, openKey, setOpenKey }: {
         const key = `${section}-${i}`;
         const open = openKey === key;
         return (
-          <div key={key} className="tx-acc" style={{ background: open ? CARD2 : CARD, border: `1px solid ${open ? 'rgba(255,255,255,0.16)' : BORDER}`, borderRadius: 16, overflow: 'hidden' }}>
+          <div key={key} className="tx-acc" style={{ background: open ? CARD2 : CARD, border: `1px solid ${open ? 'hsl(var(--terex-accent) / 0.16)' : BORDER}`, borderRadius: 16, overflow: 'hidden' }}>
             <button onClick={() => setOpenKey(open ? null : key)}
               style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '18px 20px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
                 <span style={{ fontSize: 12, fontWeight: 700, color: MUTED2, fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>{String(i + 1).padStart(2, '0')}</span>
-                <span style={{ fontSize: 14.5, fontWeight: 600, color: open ? '#fff' : 'rgba(255,255,255,0.85)' }}>{faq.question}</span>
+                <span style={{ fontSize: 14.5, fontWeight: 600, color: open ? '#fff' : 'hsl(var(--terex-accent) / 0.85)' }}>{faq.question}</span>
               </span>
               <span style={{ width: 28, height: 28, borderRadius: 9, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <ChevronDown size={16} color="rgba(255,255,255,0.6)" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.28s cubic-bezier(0.22,1,0.36,1)' }} />
+                <ChevronDown size={16} color="hsl(var(--terex-accent) / 0.6)" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.28s cubic-bezier(0.22,1,0.36,1)' }} />
               </span>
             </button>
             <div style={{ display: 'grid', gridTemplateRows: open ? '1fr' : '0fr', transition: 'grid-template-rows 0.3s cubic-bezier(0.22,1,0.36,1)' }}>

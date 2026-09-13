@@ -213,7 +213,7 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
           <div className="tx-two" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
             {PAYMENTS.map(({ name, logo }) => (
               <div key={name} style={{ border: `1px solid ${BORDER}`, borderRadius: 18, padding: '22px 24px', display: 'flex', alignItems: 'center', gap: 16 }}>
-                <div style={{ width: 52, height: 52, borderRadius: 14, background: '#fff', border: '1px solid hsl(var(--terex-accent) / 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <div style={{ width: 52, height: 52, borderRadius: 14, background: 'hsl(var(--terex-darker))', border: '1px solid hsl(var(--terex-accent) / 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <img src={logo} alt={name} style={{ width: 38, height: 38, objectFit: 'contain' }} />
                 </div>
                 <div>

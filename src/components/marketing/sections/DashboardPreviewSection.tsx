@@ -51,7 +51,7 @@ export function DashboardPreviewSection() {
                   className="flex items-center gap-1.5 px-5 py-2 rounded-xl text-xs font-medium transition-all duration-300"
                   style={
                     activeView === 'desktop'
-                      ? { backgroundColor: '#ffffff', color: 'hsl(var(--terex-accent-fg))', fontWeight: 700 }
+                      ? { backgroundColor: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', fontWeight: 700 }
                       : { color: 'hsl(var(--terex-accent) / 0.55)' }
                   }
                 >
@@ -63,7 +63,7 @@ export function DashboardPreviewSection() {
                   className="flex items-center gap-1.5 px-5 py-2 rounded-xl text-xs font-medium transition-all duration-300"
                   style={
                     activeView === 'mobile'
-                      ? { backgroundColor: '#ffffff', color: 'hsl(var(--terex-accent-fg))', fontWeight: 700 }
+                      ? { backgroundColor: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', fontWeight: 700 }
                       : { color: 'hsl(var(--terex-accent) / 0.55)' }
                   }
                 >

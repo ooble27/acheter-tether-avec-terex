@@ -8,12 +8,12 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { JobApplicationForm } from '@/components/features/JobApplicationForm';
 
-const BG = '#1a1a1a';
-const CARD = '#1e1e1e';
-const BORDER = 'rgba(255,255,255,0.07)';
-const ICON_BG = 'rgba(255,255,255,0.06)';
-const MUTED = 'rgba(255,255,255,0.55)';
-const MUTED2 = 'rgba(255,255,255,0.4)';
+const BG = 'hsl(var(--terex-dark))';
+const CARD = 'hsl(var(--terex-darker))';
+const BORDER = 'hsl(var(--terex-accent) / 0.07)';
+const ICON_BG = 'hsl(var(--terex-accent) / 0.06)';
+const MUTED = 'hsl(var(--terex-accent) / 0.55)';
+const MUTED2 = 'hsl(var(--terex-accent) / 0.4)';
 
 const JobApplicationPage = () => {
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ const JobApplicationPage = () => {
   };
 
   return (
-    <div style={{ background: BG, minHeight: '100vh', color: '#fff', overflowX: 'hidden' }}>
+    <div style={{ background: BG, minHeight: '100vh', color: 'hsl(var(--foreground))', overflowX: 'hidden' }}>
       <style>{`
         @media (max-width: 640px) {
           .ja-wrap { padding-left: 16px !important; padding-right: 16px !important; }
@@ -66,11 +66,11 @@ const JobApplicationPage = () => {
             </div>
             <h1 style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.02em', margin: '0 0 10px' }}>Candidature envoyée !</h1>
             <p style={{ fontSize: 15, color: MUTED, lineHeight: 1.6, margin: '0 0 28px', maxWidth: 420, marginLeft: 'auto', marginRight: 'auto' }}>
-              Merci pour votre intérêt. Notre équipe examine votre candidature pour le poste de <strong style={{ color: '#fff', fontWeight: 600 }}>{position}</strong> et vous recontactera par email.
+              Merci pour votre intérêt. Notre équipe examine votre candidature pour le poste de <strong style={{ color: 'hsl(var(--foreground))', fontWeight: 600 }}>{position}</strong> et vous recontactera par email.
             </p>
             <button
               onClick={() => navigate('/careers')}
-              style={{ background: '#fff', color: '#141414', border: 'none', borderRadius: 12, height: 48, padding: '0 26px', fontSize: 15, fontWeight: 700, cursor: 'pointer' }}
+              style={{ background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 12, height: 48, padding: '0 26px', fontSize: 15, fontWeight: 700, cursor: 'pointer' }}
             >
               Voir les autres offres
             </button>
@@ -80,7 +80,7 @@ const JobApplicationPage = () => {
             {/* En-tête du poste */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 8 }}>
               <div style={{ width: 46, height: 46, borderRadius: 14, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <Briefcase size={22} color="#fff" strokeWidth={1.8} />
+                <Briefcase size={22} color="hsl(var(--foreground))" strokeWidth={1.8} />
               </div>
               <div style={{ minWidth: 0 }}>
                 <p style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED2, margin: '0 0 4px' }}>Candidature</p>

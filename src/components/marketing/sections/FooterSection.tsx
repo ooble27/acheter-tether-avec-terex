@@ -67,7 +67,7 @@ export function FooterSection() {
               <img
                 src="/terex-logo.png"
                 alt="Terex Logo"
-                className="w-12 h-12 object-contain"
+                className="w-12 h-12 object-contain terex-logo-img"
               />
               <span className="text-xl font-bold tracking-tight" style={{ color: 'hsl(var(--foreground))', letterSpacing: '-0.03em' }}>Terex</span>
             </div>
