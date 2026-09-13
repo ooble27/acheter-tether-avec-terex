@@ -29,8 +29,8 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
           <div className="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 mb-7"
             style={{ background: 'hsl(var(--terex-accent) / 0.04)', border: '1px solid hsl(var(--terex-accent) / 0.08)' }}>
             <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full rounded-full opacity-60 animate-ping" style={{ background: '#fff' }} />
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ background: '#fff' }} />
+              <span className="absolute inline-flex h-full w-full rounded-full opacity-60 animate-ping" style={{ background: 'hsl(var(--terex-accent))' }} />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ background: 'hsl(var(--terex-accent))' }} />
             </span>
             <span className="text-xs font-medium" style={{ color: 'hsl(var(--terex-accent) / 0.7)' }}>Teranga Exchange</span>
           </div>
@@ -38,8 +38,8 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
 
         {/* Titre */}
         <AnimatedSection delay={120}>
-          <h1 className="font-bold tracking-[-0.025em] text-white mx-auto"
-            style={{ fontSize: 'clamp(2.4rem, 6vw, 4.25rem)', lineHeight: 1.05, maxWidth: '16ch' }}>
+          <h1 className="font-bold tracking-[-0.025em] mx-auto"
+            style={{ fontSize: 'clamp(2.4rem, 6vw, 4.25rem)', lineHeight: 1.05, maxWidth: '16ch', color: 'hsl(var(--foreground))' }}>
             Le moyen le plus simple d'échanger des{' '}
             <span className="inline-flex items-center gap-2 align-middle">USDT
               <img src={TETHER} alt="USDT" style={{ width: '0.82em', height: '0.82em', display: 'inline-block', opacity: 0.92 }} />

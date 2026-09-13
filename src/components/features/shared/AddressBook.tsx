@@ -70,7 +70,7 @@ export function AddressBook({
             display: 'flex', alignItems: 'center', gap: '10px',
             padding: '12px 8px 12px 14px', borderRadius: '14px',
             border: `1px solid ${CARD_BORDER}`,
-            background: 'hsl(var(--terex-accent) / 0.03)',
+            background: 'hsl(var(--terex-gray))',
           }}>
             <img src={logo} alt="" style={{ width: '30px', height: '30px', borderRadius: '50%', flexShrink: 0 }} />
             <div style={{ minWidth: 0, flex: 1 }}>
@@ -114,7 +114,7 @@ export function AddressBook({
               right: 0,
               minWidth: '260px', maxWidth: 'calc(100vw - 40px)',
               zIndex: 30,
-              background: 'hsl(var(--card))',
+              background: 'hsl(var(--terex-gray))',
               border: `1px solid ${CARD_BORDER}`,
               borderRadius: '12px', overflow: 'hidden',
               boxShadow: '0 -8px 24px rgba(0, 0, 0, 0.35)',
@@ -204,7 +204,7 @@ export function AddressBook({
             </button>
           )}
 
-          <div style={{ overflow: 'hidden', borderRadius: '14px', border: `1px solid ${CARD_BORDER}`, background: 'hsl(var(--terex-accent) / 0.03)' }}>
+          <div style={{ overflow: 'hidden', borderRadius: '14px', border: `1px solid ${CARD_BORDER}`, background: 'hsl(var(--terex-gray))' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', borderBottom: `1px solid ${CARD_BORDER}`, padding: '10px 16px' }}>
               <img src={logo} alt="" style={{ width: '22px', height: '22px', borderRadius: '50%' }} />
               <span style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'hsl(var(--terex-accent) / 0.55)' }}>{network}</span>
@@ -231,7 +231,7 @@ export function AddressBook({
           </label>
 
           {saveToBook && (
-            <div style={{ overflow: 'hidden', borderRadius: '14px', border: `1px solid ${CARD_BORDER}`, background: 'hsl(var(--terex-accent) / 0.03)' }}>
+            <div style={{ overflow: 'hidden', borderRadius: '14px', border: `1px solid ${CARD_BORDER}`, background: 'hsl(var(--terex-gray))' }}>
               <input
                 type="text"
                 placeholder="Nom (optionnel) — ex : Trust Wallet"

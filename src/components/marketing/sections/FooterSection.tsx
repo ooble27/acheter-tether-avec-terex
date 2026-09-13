@@ -87,7 +87,7 @@ export function FooterSection() {
                   aria-label={social.label}
                   className="w-9 h-9 rounded-lg flex items-center justify-center transition-colors"
                   style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}`, color: ICON_MUTED }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = '#fff')}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = 'hsl(var(--foreground))')}
                   onMouseLeave={(e) => (e.currentTarget.style.color = ICON_MUTED)}
                 >
                   <social.icon className="w-4 h-4" />
@@ -108,7 +108,7 @@ export function FooterSection() {
                       onClick={() => navigate(link.href)}
                       className="text-sm transition-colors"
                       style={{ color: MUTED }}
-                      onMouseEnter={(e) => (e.currentTarget.style.color = '#fff')}
+                      onMouseEnter={(e) => (e.currentTarget.style.color = 'hsl(var(--foreground))')}
                       onMouseLeave={(e) => (e.currentTarget.style.color = MUTED)}
                     >
                       {link.label}
@@ -132,7 +132,7 @@ export function FooterSection() {
               onClick={() => navigate('/privacy')}
               className="text-xs transition-colors"
               style={{ color: MUTED_SOFT }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#fff')}
+              onMouseEnter={(e) => (e.currentTarget.style.color = 'hsl(var(--foreground))')}
               onMouseLeave={(e) => (e.currentTarget.style.color = MUTED_SOFT)}
             >
               Confidentialité
@@ -141,7 +141,7 @@ export function FooterSection() {
               onClick={() => navigate('/terms')}
               className="text-xs transition-colors"
               style={{ color: MUTED_SOFT }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#fff')}
+              onMouseEnter={(e) => (e.currentTarget.style.color = 'hsl(var(--foreground))')}
               onMouseLeave={(e) => (e.currentTarget.style.color = MUTED_SOFT)}
             >
               Conditions
