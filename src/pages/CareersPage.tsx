@@ -7,13 +7,13 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
-const BG = '#1a1a1a';
-const CARD = '#1e1e1e';
-const CARD2 = '#1e1e1e';
-const BORDER = 'rgba(255,255,255,0.07)';
-const ICON_BG = 'rgba(255,255,255,0.06)';
-const MUTED = 'rgba(255,255,255,0.55)';
-const MUTED2 = 'rgba(255,255,255,0.4)';
+const BG = 'hsl(var(--terex-dark))';
+const CARD = 'hsl(var(--terex-darker))';
+const CARD2 = 'hsl(var(--terex-darker))';
+const BORDER = 'hsl(var(--terex-accent) / 0.07)';
+const ICON_BG = 'hsl(var(--terex-accent) / 0.06)';
+const MUTED = 'hsl(var(--terex-accent) / 0.55)';
+const MUTED2 = 'hsl(var(--terex-accent) / 0.4)';
 
 // Mock culture feed (sensation "vie d'équipe")
 const CULTURE = [
@@ -91,7 +91,7 @@ const CareersPage = () => {
   };
 
   return (
-    <div style={{ background: BG, minHeight: '100vh', color: '#fff', position: 'relative', overflowX: 'hidden' }}>
+    <div style={{ background: BG, minHeight: '100vh', color: 'hsl(var(--foreground))', position: 'relative', overflowX: 'hidden' }}>
       <style>{`
         @keyframes cr-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
         .cr-fade { animation: cr-up 0.7s cubic-bezier(0.22,1,0.36,1) both; }
@@ -99,9 +99,9 @@ const CareersPage = () => {
         .cr-cta { transition: transform 0.15s ease; }
         .cr-cta:hover { transform: translateY(-1px); }
         .cr-tile { transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease; }
-        .cr-tile:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.16) !important; }
+        .cr-tile:hover { transform: translateY(-3px); border-color: hsl(var(--terex-accent) / 0.16) !important; }
         .cr-row { transition: border-color 0.2s ease, background 0.2s ease; }
-        .cr-row:hover { border-color: rgba(255,255,255,0.16) !important; }
+        .cr-row:hover { border-color: hsl(var(--terex-accent) / 0.16) !important; }
         .cr-row:hover .cr-arrow { color: #fff !important; transform: translateX(2px); }
         @keyframes cr-pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.82); } }
         .cr-live-dot { animation: cr-pulse 1.6s ease-in-out infinite; }
@@ -129,8 +129,8 @@ const CareersPage = () => {
       <HeaderSection user={user ? { email: user.email || '', name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur' } : null} onShowDashboard={() => navigate('/')} onLogout={handleLogout} />
       <div style={{ height: 64 }} />
 
-      <div className="cr-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 560px)', width: 1, background: 'rgba(255,255,255,0.05)', pointerEvents: 'none', zIndex: 0 }} />
-      <div className="cr-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 560px)', width: 1, background: 'rgba(255,255,255,0.05)', pointerEvents: 'none', zIndex: 0 }} />
+      <div className="cr-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 560px)', width: 1, background: 'hsl(var(--terex-accent) / 0.05)', pointerEvents: 'none', zIndex: 0 }} />
+      <div className="cr-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 560px)', width: 1, background: 'hsl(var(--terex-accent) / 0.05)', pointerEvents: 'none', zIndex: 0 }} />
 
       {/* HERO — editorial split + culture panel */}
       <header className="cr-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '84px 32px 64px', position: 'relative', zIndex: 1 }}>
@@ -144,7 +144,7 @@ const CareersPage = () => {
               Nous redéfinissons les services financiers en Afrique. Rejoignez une équipe distribuée, ambitieuse et qui bouge vite.
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: 28, flexWrap: 'wrap' }}>
-              <button onClick={() => document.getElementById('positions')?.scrollIntoView({ behavior: 'smooth' })} className="cr-cta" style={{ background: '#fff', color: '#141414', border: 'none', borderRadius: 12, height: 50, padding: '0 26px', fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+              <button onClick={() => document.getElementById('positions')?.scrollIntoView({ behavior: 'smooth' })} className="cr-cta" style={{ background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 12, height: 50, padding: '0 26px', fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
                 Voir les {POSITIONS.length} postes <ArrowRight size={16} />
               </button>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 7 }}>
@@ -160,9 +160,9 @@ const CareersPage = () => {
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '4px 8px 16px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <span style={{ position: 'relative', width: 8, height: 8 }}>
-                    <span className="cr-live-dot" style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: '#fff' }} />
+                    <span className="cr-live-dot" style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'hsl(var(--terex-accent))' }} />
                   </span>
-                  <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>Vie d'équipe</span>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: 'hsl(var(--terex-accent) / 0.7)' }}>Vie d'équipe</span>
                 </div>
                 <span style={{ fontSize: 11, color: MUTED2 }}>Aujourd'hui</span>
               </div>
@@ -170,7 +170,7 @@ const CareersPage = () => {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
                 {CULTURE.map((c, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '11px 12px', borderRadius: 14, background: CARD2, border: `1px solid ${BORDER}` }}>
-                    <div style={{ width: 36, height: 36, borderRadius: 11, background: ICON_BG, border: `1px solid rgba(255,255,255,0.08)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 12, fontWeight: 700 }}>{c.initials}</div>
+                    <div style={{ width: 36, height: 36, borderRadius: 11, background: ICON_BG, border: `1px solid hsl(var(--terex-accent) / 0.08)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 12, fontWeight: 700 }}>{c.initials}</div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontSize: 12.5, lineHeight: 1.4 }}><strong style={{ fontWeight: 600 }}>{c.who}</strong> <span style={{ color: MUTED }}>{c.text}</span></div>
                       <div style={{ fontSize: 10.5, color: MUTED2, display: 'flex', alignItems: 'center', gap: 4, marginTop: 2 }}><Clock size={10} /> {c.t}</div>
@@ -179,7 +179,7 @@ const CareersPage = () => {
                 ))}
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 14, padding: '12px 14px', borderRadius: 14, background: '#fff', color: '#141414' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 14, padding: '12px 14px', borderRadius: 14, background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
                   <Heart size={16} fill="#141414" />
                   <span style={{ fontSize: 12.5, fontWeight: 600 }}>Satisfaction équipe</span>
@@ -197,10 +197,10 @@ const CareersPage = () => {
           <SectionHead eyebrow="Pourquoi nous" title="Une culture qui vous fait grandir" sub="Un cadre pensé pour la liberté, l'apprentissage et l'impact réel." />
           <div className="cr-bento" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gridAutoRows: '1fr', gap: 14 }}>
             {/* Featured tile */}
-            <div className="cr-bento-feat cr-tile" style={{ gridColumn: '1 / 2', gridRow: '1 / 3', border: `1px solid ${BORDER}`, borderRadius: 22, padding: '30px 28px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative', overflow: 'hidden', background: 'linear-gradient(160deg, #1e1e1e 0%, #1a1a1a 100%)' }}>
+            <div className="cr-bento-feat cr-tile" style={{ gridColumn: '1 / 2', gridRow: '1 / 3', border: `1px solid ${BORDER}`, borderRadius: 22, padding: '30px 28px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative', overflow: 'hidden', background: 'linear-gradient(160deg, hsl(var(--terex-darker)) 0%, hsl(var(--terex-dark)) 100%)' }}>
               <div>
                 <div style={{ width: 46, height: 46, borderRadius: 14, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
-                  <Globe size={22} color="#fff" strokeWidth={1.8} />
+                  <Globe size={22} color="hsl(var(--foreground))" strokeWidth={1.8} />
                 </div>
                 <h3 style={{ fontSize: 21, fontWeight: 700, letterSpacing: '-0.02em', margin: '0 0 10px' }}>Travaillez d'où vous voulez</h3>
                 <p style={{ fontSize: 14, color: MUTED, lineHeight: 1.7, margin: 0 }}>
@@ -210,9 +210,9 @@ const CareersPage = () => {
               {/* mini avatar cluster */}
               <div style={{ display: 'flex', alignItems: 'center', marginTop: 28 }}>
                 {['ML', 'SN', 'AO', 'FB'].map((ini, i) => (
-                  <div key={ini} style={{ width: 38, height: 38, borderRadius: '50%', background: CARD2, border: `2px solid #1a1a1a`, marginLeft: i === 0 ? 0 : -10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700 }}>{ini}</div>
+                  <div key={ini} style={{ width: 38, height: 38, borderRadius: '50%', background: CARD2, border: `2px solid hsl(var(--terex-dark))`, marginLeft: i === 0 ? 0 : -10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700 }}>{ini}</div>
                 ))}
-                <div style={{ width: 38, height: 38, borderRadius: '50%', background: '#fff', color: '#141414', border: `2px solid #1a1a1a`, marginLeft: -10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800 }}>+8</div>
+                <div style={{ width: 38, height: 38, borderRadius: '50%', background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', border: `2px solid hsl(var(--terex-dark))`, marginLeft: -10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800 }}>+8</div>
                 <span style={{ marginLeft: 14, fontSize: 12.5, color: MUTED }}>déjà à bord</span>
               </div>
             </div>
@@ -221,10 +221,10 @@ const CareersPage = () => {
             <div className="cr-tile" style={{ gridColumn: '2 / 4', border: `1px solid ${BORDER}`, borderRadius: 20, padding: '24px 26px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20 }}>
               <div>
                 <h3 style={{ fontSize: 16.5, fontWeight: 600, margin: '0 0 6px' }}>Salaire compétitif</h3>
-                <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, margin: 0, maxWidth: 320 }}>Rémunération en crypto ou en fiat, selon votre convenance — versée à temps, chaque mois.</p>
+                <p style={{ fontSize: 13.5, color: 'hsl(var(--terex-accent) / 0.5)', lineHeight: 1.6, margin: 0, maxWidth: 320 }}>Rémunération en crypto ou en fiat, selon votre convenance — versée à temps, chaque mois.</p>
               </div>
               <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-                <div style={{ width: 44, height: 44, borderRadius: 13, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Wallet size={20} color="rgba(255,255,255,0.9)" strokeWidth={1.8} /></div>
+                <div style={{ width: 44, height: 44, borderRadius: 13, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Wallet size={20} color="hsl(var(--terex-accent) / 0.9)" strokeWidth={1.8} /></div>
               </div>
             </div>
 
@@ -235,10 +235,10 @@ const CareersPage = () => {
             ].map(({ Icon, title, desc }) => (
               <div key={title} className="cr-tile" style={{ border: `1px solid ${BORDER}`, borderRadius: 18, padding: '24px 22px' }}>
                 <div style={{ width: 40, height: 40, borderRadius: 12, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
-                  <Icon size={19} color="rgba(255,255,255,0.9)" strokeWidth={1.8} />
+                  <Icon size={19} color="hsl(var(--terex-accent) / 0.9)" strokeWidth={1.8} />
                 </div>
                 <h3 style={{ fontSize: 15.5, fontWeight: 600, margin: '0 0 6px' }}>{title}</h3>
-                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, margin: 0 }}>{desc}</p>
+                <p style={{ fontSize: 13, color: 'hsl(var(--terex-accent) / 0.5)', lineHeight: 1.6, margin: 0 }}>{desc}</p>
               </div>
             ))}
           </div>
@@ -263,7 +263,7 @@ const CareersPage = () => {
                       <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16, color: MUTED, fontSize: 13 }}>
                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><MapPin size={13} /> {pos.location}</span>
                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Clock size={13} /> {pos.type}</span>
-                        <span style={{ fontSize: 10.5, fontWeight: 600, padding: '3px 10px', background: ICON_BG, color: 'rgba(255,255,255,0.7)', borderRadius: 999, letterSpacing: '0.02em' }}>{dept}</span>
+                        <span style={{ fontSize: 10.5, fontWeight: 600, padding: '3px 10px', background: ICON_BG, color: 'hsl(var(--terex-accent) / 0.7)', borderRadius: 999, letterSpacing: '0.02em' }}>{dept}</span>
                       </div>
                     </div>
                     <span className="cr-arrow" style={{ flexShrink: 0, color: MUTED2, display: 'inline-flex', transition: 'transform 0.2s ease, color 0.2s ease' }}>
@@ -280,8 +280,8 @@ const CareersPage = () => {
                             <p style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 14px', color: MUTED2 }}>Responsabilités</p>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                               {pos.responsibilities.map((r, ri) => (
-                                <div key={ri} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 13.5, color: 'rgba(255,255,255,0.7)' }}>
-                                  <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.5)', flexShrink: 0, marginTop: 7 }} />
+                                <div key={ri} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 13.5, color: 'hsl(var(--terex-accent) / 0.7)' }}>
+                                  <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'hsl(var(--terex-accent) / 0.5)', flexShrink: 0, marginTop: 7 }} />
                                   {r}
                                 </div>
                               ))}
@@ -291,15 +291,15 @@ const CareersPage = () => {
                             <p style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 14px', color: MUTED2 }}>Prérequis</p>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                               {pos.requirements.map((r, ri) => (
-                                <div key={ri} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 13.5, color: 'rgba(255,255,255,0.7)' }}>
-                                  <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.35)', flexShrink: 0, marginTop: 7 }} />
+                                <div key={ri} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 13.5, color: 'hsl(var(--terex-accent) / 0.7)' }}>
+                                  <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'hsl(var(--terex-accent) / 0.35)', flexShrink: 0, marginTop: 7 }} />
                                   {r}
                                 </div>
                               ))}
                             </div>
                           </div>
                         </div>
-                        <button onClick={() => handleApply(pos.title)} className="cr-cta" style={{ alignSelf: 'flex-start', background: '#fff', color: '#141414', border: 'none', borderRadius: 12, height: 46, padding: '0 22px', fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                        <button onClick={() => handleApply(pos.title)} className="cr-cta" style={{ alignSelf: 'flex-start', background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 12, height: 46, padding: '0 22px', fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
                           <Send size={14} /> Postuler maintenant
                         </button>
                       </div>
@@ -321,10 +321,10 @@ const CareersPage = () => {
           <h2 style={{ fontSize: 'clamp(2rem,4vw,2.6rem)', fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 14px' }}>Pas de poste idéal ?</h2>
           <p style={{ fontSize: 16, color: MUTED, margin: '0 0 30px' }}>Envoyez-nous une candidature spontanée. Nous cherchons toujours des talents exceptionnels.</p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button onClick={() => handleApply('Candidature spontanée')} className="cr-cta" style={{ background: '#fff', color: '#141414', border: 'none', borderRadius: 12, height: 52, padding: '0 32px', fontSize: 16, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+            <button onClick={() => handleApply('Candidature spontanée')} className="cr-cta" style={{ background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 12, height: 52, padding: '0 32px', fontSize: 16, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
               Candidature spontanée <ArrowRight size={17} />
             </button>
-            <button onClick={() => navigate('/contact')} style={{ background: '#2d2d2d', color: '#fff', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, height: 52, padding: '0 28px', fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>
+            <button onClick={() => navigate('/contact')} style={{ background: 'hsl(var(--terex-gray))', color: 'hsl(var(--foreground))', border: '1px solid hsl(var(--terex-accent) / 0.08)', borderRadius: 12, height: 52, padding: '0 28px', fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>
               Nous contacter
             </button>
           </div>
@@ -341,7 +341,7 @@ function SectionHead({ eyebrow, title, sub }: { eyebrow: string; title: string; 
     <div style={{ marginBottom: 36 }}>
       <p style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED2, margin: '0 0 10px' }}>{eyebrow}</p>
       <h2 style={{ fontSize: 'clamp(1.9rem,4vw,2.6rem)', fontWeight: 800, letterSpacing: '-0.03em', margin: 0, lineHeight: 1.1 }}>{title}</h2>
-      {sub && <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.5)', margin: '12px 0 0', maxWidth: 520, lineHeight: 1.6 }}>{sub}</p>}
+      {sub && <p style={{ fontSize: 15, color: 'hsl(var(--terex-accent) / 0.5)', margin: '12px 0 0', maxWidth: 520, lineHeight: 1.6 }}>{sub}</p>}
     </div>
   );
 }

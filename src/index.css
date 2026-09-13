@@ -199,6 +199,8 @@ html, body {
 /* Dégradés blancs vers/depuis → tokens (rares, gardés lisibles). */
 .light .from-white { --tw-gradient-from: hsl(var(--card)) var(--tw-gradient-from-position) !important; }
 .light .to-white { --tw-gradient-to: hsl(var(--card)) var(--tw-gradient-to-position) !important; }
+/* Logo : conçu pour fond sombre → on le passe en noir sur fond clair. */
+.light .terex-logo-img { filter: brightness(0); }
 
 /* Fondu doux au changement de section du tableau de bord — évite l'impression
    de « flash » quand une page apparaît d'un coup. Opacité seule : aucun

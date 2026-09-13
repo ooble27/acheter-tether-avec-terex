@@ -36,7 +36,7 @@ export default function AcheterUSDTArticle() {
         Le montant en USDT que vous recevrez s'affiche automatiquement selon le taux de change actuel.
       </p>
 
-      <div className="bg-[#1e1e1e] border border-white/[0.07] rounded-lg p-6 my-8">
+      <div className="bg-[hsl(var(--terex-darker))] border border-white/[0.07] rounded-lg p-6 my-8">
         <h3 className="text-white mb-3">💰 Exemple de calcul</h3>
         <p className="text-gray-300 mb-2">
           Vous voulez acheter pour 100 000 FCFA d'USDT.
@@ -94,7 +94,7 @@ export default function AcheterUSDTArticle() {
         <li>Les USDT arrivent dans votre wallet en quelques minutes</li>
       </ol>
 
-      <div className="bg-[#1e1e1e] border border-white/[0.07] rounded-lg p-6 my-8">
+      <div className="bg-[hsl(var(--terex-darker))] border border-white/[0.07] rounded-lg p-6 my-8">
         <h3 className="text-white mb-3">⚡ Astuce Rapide</h3>
         <p className="text-gray-300 mb-0">
           Vous n'avez pas encore de wallet USDT ? Pas de problème ! Terex peut créer une adresse wallet pour vous 
@@ -129,7 +129,7 @@ export default function AcheterUSDTArticle() {
         Oui, tant que vous n'avez pas effectué le paiement. Une fois le paiement reçu, la transaction ne peut plus être annulée.
       </p>
 
-      <div className="bg-[#1e1e1e] border border-white/[0.07] rounded-lg p-6 my-8">
+      <div className="bg-[hsl(var(--terex-darker))] border border-white/[0.07] rounded-lg p-6 my-8">
         <h3 className="text-white mb-3">🚀 Prêt à commencer ?</h3>
         <p className="text-gray-300 mb-4">
           Créez votre compte Terex maintenant et achetez vos premiers USDT en moins de 15 minutes.

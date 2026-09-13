@@ -9,19 +9,19 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useContactMessages } from '@/hooks/useContactMessages';
 import { useTerexRates } from '@/hooks/useTerexRates';
 
-const BG = '#1a1a1a';
-const CARD = '#1e1e1e';
-const BORDER = 'rgba(255,255,255,0.07)';
-const ICON_BG = 'rgba(255,255,255,0.06)';
-const MUTED = 'rgba(255,255,255,0.55)';
-const MUTED2 = 'rgba(255,255,255,0.4)';
+const BG = 'hsl(var(--terex-dark))';
+const CARD = 'hsl(var(--terex-darker))';
+const BORDER = 'hsl(var(--terex-accent) / 0.07)';
+const ICON_BG = 'hsl(var(--terex-accent) / 0.06)';
+const MUTED = 'hsl(var(--terex-accent) / 0.55)';
+const MUTED2 = 'hsl(var(--terex-accent) / 0.4)';
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
-  background: 'rgba(255,255,255,0.04)',
-  border: `1px solid rgba(255,255,255,0.08)`,
+  background: 'hsl(var(--terex-accent) / 0.04)',
+  border: `1px solid hsl(var(--terex-accent) / 0.08)`,
   borderRadius: 12,
-  color: '#fff',
+  color: 'hsl(var(--foreground))',
   fontSize: 14,
   padding: '0 14px',
   height: 46,
@@ -33,7 +33,7 @@ const labelStyle: React.CSSProperties = {
   display: 'block',
   fontSize: 12,
   fontWeight: 600,
-  color: 'rgba(255,255,255,0.7)',
+  color: 'hsl(var(--terex-accent) / 0.7)',
   marginBottom: 7,
 };
 
@@ -108,15 +108,15 @@ const ContactPage = () => {
   ];
 
   return (
-    <div style={{ background: BG, minHeight: '100vh', color: '#fff', position: 'relative', overflowX: 'hidden' }}>
+    <div style={{ background: BG, minHeight: '100vh', color: 'hsl(var(--foreground))', position: 'relative', overflowX: 'hidden' }}>
       <style>{`
         @keyframes tx-up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
         .tx-fade { animation: tx-up 0.8s cubic-bezier(0.22,1,0.36,1) both; }
         .tx-fade-2 { animation: tx-up 0.8s cubic-bezier(0.22,1,0.36,1) 0.12s both; }
         .tx-tile { transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease; }
-        .tx-tile:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.16) !important; }
-        .tx-input:focus { border-color: rgba(255,255,255,0.22) !important; background: rgba(255,255,255,0.06) !important; }
-        .tx-input::placeholder { color: rgba(255,255,255,0.3); }
+        .tx-tile:hover { transform: translateY(-3px); border-color: hsl(var(--terex-accent) / 0.16) !important; }
+        .tx-input:focus { border-color: hsl(var(--terex-accent) / 0.22) !important; background: hsl(var(--terex-accent) / 0.06) !important; }
+        .tx-input::placeholder { color: hsl(var(--terex-accent) / 0.3); }
         .tx-cta { transition: transform 0.15s ease; }
         .tx-cta:hover { transform: translateY(-1px); }
         @keyframes tx-pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.85); } }
@@ -133,8 +133,8 @@ const ContactPage = () => {
         }
       `}</style>
 
-      <div className="tx-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 560px)', width: 1, background: 'rgba(255,255,255,0.05)', pointerEvents: 'none', zIndex: 0 }} />
-      <div className="tx-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 560px)', width: 1, background: 'rgba(255,255,255,0.05)', pointerEvents: 'none', zIndex: 0 }} />
+      <div className="tx-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 560px)', width: 1, background: 'hsl(var(--terex-accent) / 0.05)', pointerEvents: 'none', zIndex: 0 }} />
+      <div className="tx-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 560px)', width: 1, background: 'hsl(var(--terex-accent) / 0.05)', pointerEvents: 'none', zIndex: 0 }} />
 
       <HeaderSection
         user={user ? {
@@ -199,7 +199,7 @@ const ContactPage = () => {
                 <textarea className="tx-input" style={{ ...inputStyle, height: 'auto', minHeight: 130, padding: '12px 14px', resize: 'vertical', lineHeight: 1.55 }} placeholder="Décrivez votre demande..." value={formData.message} onChange={e => handleInputChange('message', e.target.value)} required />
               </div>
 
-              <button type="submit" disabled={loading} className="tx-cta" style={{ width: '100%', background: '#fff', color: '#141414', border: 'none', borderRadius: 12, height: 50, fontSize: 15, fontWeight: 700, cursor: loading ? 'default' : 'pointer', opacity: loading ? 0.7 : 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+              <button type="submit" disabled={loading} className="tx-cta" style={{ width: '100%', background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 12, height: 50, fontSize: 15, fontWeight: 700, cursor: loading ? 'default' : 'pointer', opacity: loading ? 0.7 : 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
                 {loading ? 'Envoi en cours...' : 'Envoyer le message'}
                 <Send size={16} />
               </button>
@@ -217,17 +217,17 @@ const ContactPage = () => {
               <div style={{ padding: '10px 12px 14px' }}>
                 {channels.map(({ Icon, label, value, href, external }) => (
                   <a key={label} href={href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                    style={{ display: 'flex', alignItems: 'center', gap: 14, borderRadius: 14, padding: '13px 12px', textDecoration: 'none', color: '#fff', transition: 'background 0.18s ease' }}
-                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
+                    style={{ display: 'flex', alignItems: 'center', gap: 14, borderRadius: 14, padding: '13px 12px', textDecoration: 'none', color: 'hsl(var(--foreground))', transition: 'background 0.18s ease' }}
+                    onMouseEnter={e => { e.currentTarget.style.background = 'hsl(var(--terex-accent) / 0.04)'; }}
                     onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}>
-                    <div style={{ width: 42, height: 42, borderRadius: 12, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.9)', flexShrink: 0 }}>
+                    <div style={{ width: 42, height: 42, borderRadius: 12, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'hsl(var(--terex-accent) / 0.9)', flexShrink: 0 }}>
                       <Icon />
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <p style={{ fontSize: 14, fontWeight: 600, margin: '0 0 2px' }}>{label}</p>
                       <p style={{ fontSize: 12.5, color: MUTED, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{value}</p>
                     </div>
-                    <ArrowUpRight size={16} color="rgba(255,255,255,0.25)" style={{ flexShrink: 0 }} />
+                    <ArrowUpRight size={16} color="hsl(var(--terex-accent) / 0.25)" style={{ flexShrink: 0 }} />
                   </a>
                 ))}
               </div>
@@ -245,12 +245,12 @@ const ContactPage = () => {
                         <span style={{ color: MUTED2, fontSize: 13, fontWeight: 600 }}>CFA</span>
                       </>
                     ) : (
-                      <span style={{ display: 'inline-block', width: 110, height: 28, borderRadius: 8, background: 'rgba(255,255,255,0.06)' }} />
+                      <span style={{ display: 'inline-block', width: 110, height: 28, borderRadius: 8, background: 'hsl(var(--terex-accent) / 0.06)' }} />
                     )}
                   </div>
                 </div>
                 <span style={{ position: 'relative', width: 9, height: 9 }}>
-                  <span className="tx-live-dot" style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: '#fff', boxShadow: '0 0 0 4px rgba(255,255,255,0.08)' }} />
+                  <span className="tx-live-dot" style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'hsl(var(--terex-accent))', boxShadow: '0 0 0 4px hsl(var(--terex-accent) / 0.08)' }} />
                 </span>
               </div>
             </div>
@@ -265,9 +265,9 @@ const ContactPage = () => {
                 {trust.map(({ Icon, t }) => (
                   <div key={t} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <div style={{ width: 30, height: 30, borderRadius: 9, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <Icon size={15} color="rgba(255,255,255,0.85)" strokeWidth={1.8} />
+                      <Icon size={15} color="hsl(var(--terex-accent) / 0.85)" strokeWidth={1.8} />
                     </div>
-                    <span style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.8)' }}>{t}</span>
+                    <span style={{ fontSize: 13.5, color: 'hsl(var(--terex-accent) / 0.8)' }}>{t}</span>
                   </div>
                 ))}
               </div>

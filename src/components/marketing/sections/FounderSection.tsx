@@ -137,7 +137,7 @@ export function FounderSection() {
                         color: "hsl(var(--terex-accent) / 0.6)",
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.color = "#fff";
+                        e.currentTarget.style.color = "hsl(var(--foreground))";
                         e.currentTarget.style.borderColor = "hsl(var(--terex-accent) / 0.16)";
                       }}
                       onMouseLeave={(e) => {

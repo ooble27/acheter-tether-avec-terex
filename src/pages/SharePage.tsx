@@ -20,13 +20,13 @@ import {
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const BG = '#1a1a1a';
-const CARD = '#1e1e1e';
-const CARD2 = '#1e1e1e';
-const BORDER = 'rgba(255,255,255,0.07)';
-const ICON_BG = 'rgba(255,255,255,0.06)';
-const MUTED = 'rgba(255,255,255,0.55)';
-const MUTED2 = 'rgba(255,255,255,0.4)';
+const BG = 'hsl(var(--terex-dark))';
+const CARD = 'hsl(var(--terex-darker))';
+const CARD2 = 'hsl(var(--terex-darker))';
+const BORDER = 'hsl(var(--terex-accent) / 0.07)';
+const ICON_BG = 'hsl(var(--terex-accent) / 0.06)';
+const MUTED = 'hsl(var(--terex-accent) / 0.55)';
+const MUTED2 = 'hsl(var(--terex-accent) / 0.4)';
 const TETHER = 'https://coin-images.coingecko.com/coins/images/325/large/Tether.png';
 
 const SOCIALS: { id: string; label: string; sub: string; Icon: typeof MessageCircle }[] = [
@@ -106,13 +106,13 @@ export default function SharePage() {
   };
 
   return (
-    <div style={{ background: BG, minHeight: '100vh', color: '#fff', position: 'relative', overflowX: 'hidden' }}>
+    <div style={{ background: BG, minHeight: '100vh', color: 'hsl(var(--foreground))', position: 'relative', overflowX: 'hidden' }}>
       <style>{`
         @keyframes sp-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
         .sp-fade { animation: sp-up 0.7s cubic-bezier(0.22,1,0.36,1) both; }
         .sp-fade-2 { animation: sp-up 0.7s cubic-bezier(0.22,1,0.36,1) 0.12s both; }
         .sp-tile { transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease; }
-        .sp-tile:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.16) !important; }
+        .sp-tile:hover { transform: translateY(-2px); border-color: hsl(var(--terex-accent) / 0.16) !important; }
         .sp-cta { transition: transform 0.15s ease, opacity 0.2s ease; }
         .sp-cta:hover { transform: translateY(-1px); }
         @keyframes sp-pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } }
@@ -131,15 +131,15 @@ export default function SharePage() {
       `}</style>
 
       {/* Guides verticaux */}
-      <div className="sp-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 560px)', width: 1, background: 'rgba(255,255,255,0.05)', pointerEvents: 'none', zIndex: 0 }} />
-      <div className="sp-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 560px)', width: 1, background: 'rgba(255,255,255,0.05)', pointerEvents: 'none', zIndex: 0 }} />
+      <div className="sp-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 560px)', width: 1, background: 'hsl(var(--terex-accent) / 0.05)', pointerEvents: 'none', zIndex: 0 }} />
+      <div className="sp-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 560px)', width: 1, background: 'hsl(var(--terex-accent) / 0.05)', pointerEvents: 'none', zIndex: 0 }} />
 
       <div className="sp-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '32px 32px 96px', position: 'relative', zIndex: 1 }}>
         {/* Back */}
         <button
           onClick={() => navigate('/dashboard')}
           className="sp-cta"
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#2d2d2d', color: '#fff', border: `1px solid rgba(255,255,255,0.08)`, borderRadius: 12, height: 40, padding: '0 16px', fontSize: 14, fontWeight: 600, cursor: 'pointer', marginBottom: 48 }}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'hsl(var(--terex-gray))', color: 'hsl(var(--foreground))', border: `1px solid hsl(var(--terex-accent) / 0.08)`, borderRadius: 12, height: 40, padding: '0 16px', fontSize: 14, fontWeight: 600, cursor: 'pointer', marginBottom: 48 }}
         >
           <ArrowLeft size={16} /> Retour
         </button>
@@ -158,14 +158,14 @@ export default function SharePage() {
               <button
                 onClick={() => handleShare()}
                 className="sp-cta"
-                style={{ flex: 1, background: '#fff', color: '#141414', border: 'none', borderRadius: 12, height: 50, fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+                style={{ flex: 1, background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 12, height: 50, fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
               >
                 <Share2 size={17} /> Partager
               </button>
               <button
                 onClick={handleCopyLink}
                 className="sp-cta"
-                style={{ flex: 1, background: '#2d2d2d', color: '#fff', border: `1px solid rgba(255,255,255,0.08)`, borderRadius: 12, height: 50, fontSize: 15, fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+                style={{ flex: 1, background: 'hsl(var(--terex-gray))', color: 'hsl(var(--foreground))', border: `1px solid hsl(var(--terex-accent) / 0.08)`, borderRadius: 12, height: 50, fontSize: 15, fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
               >
                 {copied ? <Check size={17} /> : <Link2 size={17} />} Copier le lien
               </button>
@@ -178,12 +178,12 @@ export default function SharePage() {
               {/* Aperçu enrichi (style social card) */}
               <div style={{ borderRadius: 16, overflow: 'hidden', border: `1px solid ${BORDER}` }}>
                 {/* Bandeau visuel */}
-                <div style={{ position: 'relative', height: 150, background: '#1e1e1e', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                <div style={{ position: 'relative', height: 150, background: 'hsl(var(--terex-darker))', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
                   <div style={{ position: 'absolute', top: 14, left: 14, display: 'flex', alignItems: 'center', gap: 7 }}>
                     <span style={{ position: 'relative', width: 7, height: 7 }}>
-                      <span className="sp-live-dot" style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'rgba(255,255,255,0.55)' }} />
+                      <span className="sp-live-dot" style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'hsl(var(--terex-accent) / 0.55)' }} />
                     </span>
-                    <span style={{ fontSize: 10.5, fontWeight: 600, color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Taux en direct</span>
+                    <span style={{ fontSize: 10.5, fontWeight: 600, color: 'hsl(var(--terex-accent) / 0.6)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Taux en direct</span>
                   </div>
                   <img src={TETHER} alt="USDT" style={{ width: 64, height: 64, opacity: 0.95 }} />
                 </div>
@@ -203,10 +203,10 @@ export default function SharePage() {
                         : <div style={{ width: 90, height: 20, borderRadius: 6, background: ICON_BG, marginTop: 2 }} />}
                     </div>
                     <div style={{ display: 'flex', gap: 8 }}>
-                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: '#fff', color: '#141414', borderRadius: 10, padding: '7px 11px', fontSize: 11.5, fontWeight: 700 }}>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', borderRadius: 10, padding: '7px 11px', fontSize: 11.5, fontWeight: 700 }}>
                         <ArrowDownLeft size={12} /> Acheter
                       </span>
-                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: ICON_BG, color: '#fff', borderRadius: 10, padding: '7px 11px', fontSize: 11.5, fontWeight: 600 }}>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: ICON_BG, color: 'hsl(var(--foreground))', borderRadius: 10, padding: '7px 11px', fontSize: 11.5, fontWeight: 600 }}>
                         <ArrowUpRight size={12} /> Vendre
                       </span>
                     </div>
@@ -215,7 +215,7 @@ export default function SharePage() {
               </div>
             </div>
             {/* Étiquette "aperçu partagé" */}
-            <div style={{ position: 'absolute', top: -12, right: 22, background: '#fff', color: '#141414', fontSize: 11, fontWeight: 700, borderRadius: 999, padding: '5px 12px', boxShadow: '0 8px 20px -6px rgba(0,0,0,0.6)' }}>Aperçu partagé</div>
+            <div style={{ position: 'absolute', top: -12, right: 22, background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', fontSize: 11, fontWeight: 700, borderRadius: 999, padding: '5px 12px', boxShadow: '0 8px 20px -6px rgba(0,0,0,0.6)' }}>Aperçu partagé</div>
           </div>
         </div>
 
@@ -233,9 +233,9 @@ export default function SharePage() {
               >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
                   <div style={{ width: 40, height: 40, borderRadius: 12, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Icon size={19} color="rgba(255,255,255,0.85)" strokeWidth={1.8} />
+                    <Icon size={19} color="hsl(var(--terex-accent) / 0.85)" strokeWidth={1.8} />
                   </div>
-                  <ArrowUpRight size={15} color="rgba(255,255,255,0.2)" />
+                  <ArrowUpRight size={15} color="hsl(var(--terex-accent) / 0.2)" />
                 </div>
                 <p style={{ fontSize: 14.5, fontWeight: 600, margin: '0 0 2px' }}>{label}</p>
                 <p style={{ fontSize: 12, color: MUTED2, margin: 0 }}>{sub}</p>
@@ -248,7 +248,7 @@ export default function SharePage() {
         <div style={{ marginTop: 72, display: 'grid', gridTemplateColumns: '1fr', gap: 28 }}>
           <div style={{ border: `1px solid ${BORDER}`, background: CARD, borderRadius: 20, padding: '26px 28px', position: 'relative' }}>
             <p style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.12em', color: MUTED2, margin: '0 0 14px' }}>Message suggéré</p>
-            <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.85)', lineHeight: 1.6, margin: '0 0 10px', fontWeight: 500 }}>{shareMessage}</p>
+            <p style={{ fontSize: 17, color: 'hsl(var(--terex-accent) / 0.85)', lineHeight: 1.6, margin: '0 0 10px', fontWeight: 500 }}>{shareMessage}</p>
             <p style={{ fontSize: 14, color: MUTED2, margin: 0, fontFamily: 'ui-monospace, Menlo, monospace' }}>{appUrl}</p>
           </div>
         </div>
@@ -267,18 +267,18 @@ export default function SharePage() {
               </div>
               <div style={{ display: 'flex', gap: 4, marginTop: 22 }}>
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} size={16} fill="rgba(255,255,255,0.85)" color="rgba(255,255,255,0.85)" />
+                  <Star key={i} size={16} fill="hsl(var(--terex-accent) / 0.85)" color="hsl(var(--terex-accent) / 0.85)" />
                 ))}
               </div>
             </div>
             {WHY.map(({ Icon, title, desc }, idx) => (
               <div key={title} className="sp-tile" style={{ gridColumn: idx === 2 ? '2 / 4' : 'auto', border: `1px solid ${BORDER}`, background: CARD, borderRadius: 20, padding: '24px 24px', display: 'flex', alignItems: 'flex-start', gap: 16 }}>
                 <div style={{ width: 44, height: 44, borderRadius: 13, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Icon size={21} color="rgba(255,255,255,0.9)" strokeWidth={1.8} />
+                  <Icon size={21} color="hsl(var(--terex-accent) / 0.9)" strokeWidth={1.8} />
                 </div>
                 <div>
                   <h3 style={{ fontSize: 16, fontWeight: 600, margin: '0 0 6px' }}>{title}</h3>
-                  <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, margin: 0 }}>{desc}</p>
+                  <p style={{ fontSize: 13.5, color: 'hsl(var(--terex-accent) / 0.5)', lineHeight: 1.6, margin: 0 }}>{desc}</p>
                 </div>
               </div>
             ))}

@@ -8,12 +8,12 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTerexRates } from '@/hooks/useTerexRates';
 
-const BG = '#1a1a1a';
-const CARD = '#1e1e1e';
-const BORDER = 'rgba(255,255,255,0.07)';
-const ICON_BG = 'rgba(255,255,255,0.06)';
-const MUTED = 'rgba(255,255,255,0.55)';
-const MUTED2 = 'rgba(255,255,255,0.4)';
+const BG = 'hsl(var(--terex-dark))';
+const CARD = 'hsl(var(--terex-darker))';
+const BORDER = 'hsl(var(--terex-accent) / 0.07)';
+const ICON_BG = 'hsl(var(--terex-accent) / 0.06)';
+const MUTED = 'hsl(var(--terex-accent) / 0.55)';
+const MUTED2 = 'hsl(var(--terex-accent) / 0.4)';
 const TETHER = 'https://coin-images.coingecko.com/coins/images/325/large/Tether.png';
 const WHATSAPP = 'https://wa.me/+14182619091';
 
@@ -66,7 +66,7 @@ const OTCPage = () => {
   );
 
   return (
-    <div style={{ background: BG, minHeight: '100vh', color: '#fff', position: 'relative', overflowX: 'hidden' }}>
+    <div style={{ background: BG, minHeight: '100vh', color: 'hsl(var(--foreground))', position: 'relative', overflowX: 'hidden' }}>
       <style>{`
         @keyframes otc-up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
         .otc-fade { animation: otc-up 0.8s cubic-bezier(0.22,1,0.36,1) both; }
@@ -90,16 +90,16 @@ const OTCPage = () => {
       <HeaderSection user={user ? { email: user.email || '', name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur' } : null} onShowDashboard={() => navigate('/')} onLogout={handleLogout} />
       <div style={{ height: 64 }} />
 
-      <div className="otc-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 560px)', width: 1, background: 'rgba(255,255,255,0.05)', pointerEvents: 'none', zIndex: 0 }} />
-      <div className="otc-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 560px)', width: 1, background: 'rgba(255,255,255,0.05)', pointerEvents: 'none', zIndex: 0 }} />
+      <div className="otc-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 560px)', width: 1, background: 'hsl(var(--terex-accent) / 0.05)', pointerEvents: 'none', zIndex: 0 }} />
+      <div className="otc-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 560px)', width: 1, background: 'hsl(var(--terex-accent) / 0.05)', pointerEvents: 'none', zIndex: 0 }} />
 
       {/* HERO — éditorial + terminal de devis */}
       <header className="otc-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '78px 32px 72px', position: 'relative', zIndex: 1 }}>
         <div className="otc-hero" style={{ display: 'grid', gridTemplateColumns: '1fr 460px', gap: 56, alignItems: 'center' }}>
           <div className="otc-fade">
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, borderRadius: 999, padding: '6px 12px', background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`, marginBottom: 22 }}>
-              <Handshake size={14} color="rgba(255,255,255,0.7)" />
-              <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.7)' }}>Terex OTC Desk</span>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, borderRadius: 999, padding: '6px 12px', background: 'hsl(var(--terex-accent) / 0.04)', border: `1px solid ${BORDER}`, marginBottom: 22 }}>
+              <Handshake size={14} color="hsl(var(--terex-accent) / 0.7)" />
+              <span style={{ fontSize: 12, fontWeight: 500, color: 'hsl(var(--terex-accent) / 0.7)' }}>Terex OTC Desk</span>
             </div>
             <h1 className="otc-hero-title" style={{ fontSize: 56, fontWeight: 800, lineHeight: 1.03, letterSpacing: '-0.04em', margin: '0 0 22px' }}>
               Le desk pour vos<br />gros volumes.
@@ -110,7 +110,7 @@ const OTCPage = () => {
             <div style={{ display: 'flex', gap: 22, flexWrap: 'wrap' }}>
               {[{ Icon: Lock, t: 'Confidentiel' }, { Icon: ShieldCheck, t: 'Sécurisé & KYC' }, { Icon: Headphones, t: 'Interlocuteur dédié' }].map(({ Icon, t }) => (
                 <div key={t} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <Icon size={15} color="rgba(255,255,255,0.5)" />
+                  <Icon size={15} color="hsl(var(--terex-accent) / 0.5)" />
                   <span style={{ fontSize: 13, color: MUTED, fontWeight: 500 }}>{t}</span>
                 </div>
               ))}
@@ -144,7 +144,7 @@ const OTCPage = () => {
             {/* Flèche */}
             <div style={{ display: 'flex', justifyContent: 'center', margin: '-9px 0' }}>
               <div style={{ width: 34, height: 34, borderRadius: 10, background: '#242424', border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', zIndex: 1 }}>
-                <ArrowDown size={16} color="rgba(255,255,255,0.7)" />
+                <ArrowDown size={16} color="hsl(var(--terex-accent) / 0.7)" />
               </div>
             </div>
 
@@ -159,8 +159,8 @@ const OTCPage = () => {
 
             {/* Palier de volume appliqué */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 2px 4px' }}>
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.8)' }}>
-                <span style={{ padding: '3px 9px', borderRadius: 999, background: 'rgba(255,255,255,0.06)', border: `1px solid ${BORDER}`, fontSize: 11 }}>{tier.name}</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12, fontWeight: 600, color: 'hsl(var(--terex-accent) / 0.8)' }}>
+                <span style={{ padding: '3px 9px', borderRadius: 999, background: 'hsl(var(--terex-accent) / 0.06)', border: `1px solid ${BORDER}`, fontSize: 11 }}>{tier.name}</span>
                 marge {marginDisplay}%
               </span>
               <span style={{ fontSize: 12, color: MUTED2 }}>
@@ -169,7 +169,7 @@ const OTCPage = () => {
             </div>
 
             <button onClick={() => window.open(`${WHATSAPP}?text=${quoteMsg}`, '_blank')} className="otc-cta"
-              style={{ width: '100%', marginTop: 10, background: '#fff', color: '#141414', border: 'none', borderRadius: 14, height: 50, fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+              style={{ width: '100%', marginTop: 10, background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 14, height: 50, fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
               Demander ce devis <ArrowRight size={16} />
             </button>
             <p style={{ fontSize: 11.5, color: MUTED2, textAlign: 'center', margin: '10px 0 0' }}>Taux ferme confirmé par notre desk sous quelques minutes.</p>
@@ -190,17 +190,17 @@ const OTCPage = () => {
             {OTC_TIERS.map((t, i) => {
               const active = tier.name === t.name;
               return (
-                <div key={t.name} style={{ padding: '28px 26px', borderRight: i < OTC_TIERS.length - 1 ? `1px solid ${BORDER}` : 'none', background: active ? 'rgba(255,255,255,0.04)' : 'transparent', transition: 'background 0.2s ease' }}>
+                <div key={t.name} style={{ padding: '28px 26px', borderRight: i < OTC_TIERS.length - 1 ? `1px solid ${BORDER}` : 'none', background: active ? 'hsl(var(--terex-accent) / 0.04)' : 'transparent', transition: 'background 0.2s ease' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 12.5, fontWeight: 700, color: '#fff' }}>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 12.5, fontWeight: 700, color: 'hsl(var(--foreground))' }}>
                       {t.name}
-                      {active && <span style={{ fontSize: 9.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#141414', background: '#fff', borderRadius: 999, padding: '2px 7px' }}>Votre palier</span>}
+                      {active && <span style={{ fontSize: 9.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'hsl(var(--terex-accent-fg))', background: 'hsl(var(--terex-accent))', borderRadius: 999, padding: '2px 7px' }}>Votre palier</span>}
                     </span>
                     <span style={{ fontSize: 11, color: MUTED2, fontFamily: 'monospace' }}>{t.label} USDT</span>
                   </div>
                   {/* barre : marge plus faible = barre plus longue */}
-                  <div style={{ height: 8, borderRadius: 999, background: 'rgba(255,255,255,0.06)', overflow: 'hidden', marginBottom: 14 }}>
-                    <div className="otc-barfill" style={{ ['--w' as any]: t.adv, height: '100%', borderRadius: 999, background: active ? '#fff' : 'rgba(255,255,255,0.5)' }} />
+                  <div style={{ height: 8, borderRadius: 999, background: 'hsl(var(--terex-accent) / 0.06)', overflow: 'hidden', marginBottom: 14 }}>
+                    <div className="otc-barfill" style={{ ['--w' as any]: t.adv, height: '100%', borderRadius: 999, background: active ? '#fff' : 'hsl(var(--terex-accent) / 0.5)' }} />
                   </div>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
                     <span style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.02em' }}>{t.margin.toLocaleString('fr-FR')}%</span>
@@ -211,7 +211,7 @@ const OTCPage = () => {
             })}
           </div>
           <p style={{ fontSize: 12, color: MUTED2, margin: '14px 4px 0', display: 'flex', alignItems: 'center', gap: 7 }}>
-            <TrendingUp size={13} color="rgba(255,255,255,0.5)" /> Le palier s'applique automatiquement selon le volume saisi ci-dessus. Taux exact confirmé sur devis.
+            <TrendingUp size={13} color="hsl(var(--terex-accent) / 0.5)" /> Le palier s'applique automatiquement selon le volume saisi ci-dessus. Taux exact confirmé sur devis.
           </p>
         </div>
       </section>
@@ -250,10 +250,10 @@ const OTCPage = () => {
           <h2 style={{ fontSize: 'clamp(2rem,4vw,2.6rem)', fontWeight: 800, letterSpacing: '-0.035em', margin: '0 0 14px' }}>Parlez à notre desk OTC.</h2>
           <p style={{ fontSize: 16, color: MUTED, margin: '0 auto 30px', maxWidth: 520 }}>Réponse rapide, devis ferme et accompagnement de bout en bout, en toute confidentialité.</p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button onClick={() => window.open(WHATSAPP, '_blank')} className="otc-cta" style={{ background: '#fff', color: '#141414', border: 'none', borderRadius: 12, height: 52, padding: '0 30px', fontSize: 16, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+            <button onClick={() => window.open(WHATSAPP, '_blank')} className="otc-cta" style={{ background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 12, height: 52, padding: '0 30px', fontSize: 16, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
               <MessageCircle size={17} /> Contacter le desk
             </button>
-            <button onClick={() => navigate('/contact')} style={{ background: '#2d2d2d', color: '#fff', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, height: 52, padding: '0 26px', fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>
+            <button onClick={() => navigate('/contact')} style={{ background: 'hsl(var(--terex-gray))', color: 'hsl(var(--foreground))', border: '1px solid hsl(var(--terex-accent) / 0.08)', borderRadius: 12, height: 52, padding: '0 26px', fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>
               Nous écrire
             </button>
           </div>
@@ -270,7 +270,7 @@ function Unit({ unit }: { unit: string }) {
     <div style={{ display: 'flex', alignItems: 'center', gap: 7, background: '#242424', border: `1px solid ${BORDER}`, borderRadius: 999, padding: '6px 12px 6px 8px', flexShrink: 0 }}>
       {unit === 'USDT'
         ? <img src={TETHER} alt="USDT" style={{ width: 20, height: 20 }} />
-        : <span style={{ width: 20, height: 20, borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700 }}>F</span>}
+        : <span style={{ width: 20, height: 20, borderRadius: '50%', background: 'hsl(var(--terex-accent) / 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700 }}>F</span>}
       <span style={{ fontSize: 13, fontWeight: 700 }}>{unit}</span>
     </div>
   );

@@ -41,7 +41,7 @@ export function CTASection({ user, onGetStarted }: CTASectionProps) {
               onClick={onGetStarted}
               size="lg"
               className="h-12 px-8 rounded-xl text-base hover:opacity-90 transition-opacity"
-              style={{ backgroundColor: '#ffffff', color: 'hsl(var(--terex-accent-fg))', fontWeight: 700 }}
+              style={{ backgroundColor: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', fontWeight: 700 }}
             >
               {user ? 'Accéder au tableau de bord' : 'Créer mon compte gratuitement'}
               <ArrowRight className="ml-2 w-5 h-5" />

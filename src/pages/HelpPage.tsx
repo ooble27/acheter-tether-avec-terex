@@ -9,13 +9,13 @@ import { useToast } from '@/hooks/use-toast';
 import { useTerexRates } from '@/hooks/useTerexRates';
 import { getSupportFlowById, getQuestionById } from '@/data/supportFlows';
 
-const BG = '#1a1a1a';
-const CARD = '#1e1e1e';
-const CARD2 = '#1e1e1e';
-const BORDER = 'rgba(255,255,255,0.07)';
-const ICON_BG = 'rgba(255,255,255,0.06)';
-const MUTED = 'rgba(255,255,255,0.55)';
-const MUTED2 = 'rgba(255,255,255,0.4)';
+const BG = 'hsl(var(--terex-dark))';
+const CARD = 'hsl(var(--terex-darker))';
+const CARD2 = 'hsl(var(--terex-darker))';
+const BORDER = 'hsl(var(--terex-accent) / 0.07)';
+const ICON_BG = 'hsl(var(--terex-accent) / 0.06)';
+const MUTED = 'hsl(var(--terex-accent) / 0.55)';
+const MUTED2 = 'hsl(var(--terex-accent) / 0.4)';
 
 const iconMap = { Coins, HandCoins, Send, User };
 
@@ -33,15 +33,15 @@ const sharedStyles = `
   .tx-fade { animation: tx-up 0.8s cubic-bezier(0.22,1,0.36,1) both; }
   .tx-fade-2 { animation: tx-up 0.8s cubic-bezier(0.22,1,0.36,1) 0.12s both; }
   .tx-tile { transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease; }
-  .tx-tile:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.16) !important; }
-  .tx-input:focus { border-color: rgba(255,255,255,0.22) !important; background: rgba(255,255,255,0.06) !important; }
-  .tx-input::placeholder { color: rgba(255,255,255,0.3); }
+  .tx-tile:hover { transform: translateY(-3px); border-color: hsl(var(--terex-accent) / 0.16) !important; }
+  .tx-input:focus { border-color: hsl(var(--terex-accent) / 0.22) !important; background: hsl(var(--terex-accent) / 0.06) !important; }
+  .tx-input::placeholder { color: hsl(var(--terex-accent) / 0.3); }
   .tx-cta { transition: transform 0.15s ease; }
   .tx-cta:hover { transform: translateY(-1px); }
   .tx-ans { transition: border-color 0.18s ease, background 0.18s ease; }
-  .tx-ans:hover { border-color: rgba(255,255,255,0.18) !important; background: rgba(255,255,255,0.04) !important; }
+  .tx-ans:hover { border-color: hsl(var(--terex-accent) / 0.18) !important; background: hsl(var(--terex-accent) / 0.04) !important; }
   .tx-chip { transition: border-color 0.2s ease, background 0.2s ease; }
-  .tx-chip:hover { border-color: rgba(255,255,255,0.22) !important; background: rgba(255,255,255,0.05) !important; }
+  .tx-chip:hover { border-color: hsl(var(--terex-accent) / 0.22) !important; background: hsl(var(--terex-accent) / 0.05) !important; }
   @keyframes tx-pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.85); } }
   .tx-live-dot { display: none !important; }
   @keyframes tx-typing { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-4px); opacity: 1; } }
@@ -60,8 +60,8 @@ const sharedStyles = `
 
 const VLines = () => (
   <>
-    <div className="tx-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 560px)', width: 1, background: 'rgba(255,255,255,0.05)', pointerEvents: 'none', zIndex: 0 }} />
-    <div className="tx-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 560px)', width: 1, background: 'rgba(255,255,255,0.05)', pointerEvents: 'none', zIndex: 0 }} />
+    <div className="tx-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 560px)', width: 1, background: 'hsl(var(--terex-accent) / 0.05)', pointerEvents: 'none', zIndex: 0 }} />
+    <div className="tx-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 560px)', width: 1, background: 'hsl(var(--terex-accent) / 0.05)', pointerEvents: 'none', zIndex: 0 }} />
   </>
 );
 
@@ -141,7 +141,7 @@ const HelpPage = () => {
   // ---- Main help center view ----
   if (!selectedFlowId) {
     return (
-      <div style={{ background: BG, minHeight: '100vh', color: '#fff', position: 'relative', overflowX: 'hidden' }}>
+      <div style={{ background: BG, minHeight: '100vh', color: 'hsl(var(--foreground))', position: 'relative', overflowX: 'hidden' }}>
         <style>{sharedStyles}</style>
         <VLines />
         {header}
@@ -151,8 +151,8 @@ const HelpPage = () => {
         <header className="tx-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '72px 32px 0', position: 'relative', zIndex: 1 }}>
           <div className="tx-fade" style={{ maxWidth: 720, margin: '0 auto', textAlign: 'center' }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 14px 6px 10px', borderRadius: 999, background: ICON_BG, border: `1px solid ${BORDER}`, marginBottom: 22 }}>
-              <LifeBuoy size={14} color="rgba(255,255,255,0.8)" />
-              <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.75)', letterSpacing: '0.01em' }}>Centre d'aide Terex</span>
+              <LifeBuoy size={14} color="hsl(var(--terex-accent) / 0.8)" />
+              <span style={{ fontSize: 12, fontWeight: 600, color: 'hsl(var(--terex-accent) / 0.75)', letterSpacing: '0.01em' }}>Centre d'aide Terex</span>
             </div>
             <h1 style={{ fontSize: 'clamp(2.1rem,5vw,3.1rem)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.04, margin: '0 0 16px' }}>
               Comment pouvons-nous<br />vous aider ?
@@ -164,22 +164,22 @@ const HelpPage = () => {
             {/* Barre de recherche — mockup premium */}
             <div className="tx-fade-2" style={{ position: 'relative', maxWidth: 600, margin: '0 auto' }}>
               <div style={{ position: 'relative' }}>
-                <Search size={18} style={{ position: 'absolute', left: 20, top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.4)', pointerEvents: 'none' }} />
+                <Search size={18} style={{ position: 'absolute', left: 20, top: '50%', transform: 'translateY(-50%)', color: 'hsl(var(--terex-accent) / 0.4)', pointerEvents: 'none' }} />
                 <input
                   className="tx-input"
                   placeholder="Rechercher un guide, une question…"
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  style={{ width: '100%', background: CARD, border: `1px solid rgba(255,255,255,0.1)`, borderRadius: 16, color: '#fff', fontSize: 15, padding: '0 64px 0 50px', height: 60, outline: 'none', boxSizing: 'border-box' }}
+                  style={{ width: '100%', background: CARD, border: `1px solid hsl(var(--terex-accent) / 0.1)`, borderRadius: 16, color: 'hsl(var(--foreground))', fontSize: 15, padding: '0 64px 0 50px', height: 60, outline: 'none', boxSizing: 'border-box' }}
                 />
-                <kbd style={{ position: 'absolute', right: 16, top: '50%', transform: 'translateY(-50%)', display: 'inline-flex', alignItems: 'center', gap: 4, padding: '5px 9px', borderRadius: 8, background: 'rgba(255,255,255,0.06)', border: `1px solid ${BORDER}`, fontSize: 11, fontWeight: 600, color: MUTED2 }}>
+                <kbd style={{ position: 'absolute', right: 16, top: '50%', transform: 'translateY(-50%)', display: 'inline-flex', alignItems: 'center', gap: 4, padding: '5px 9px', borderRadius: 8, background: 'hsl(var(--terex-accent) / 0.06)', border: `1px solid ${BORDER}`, fontSize: 11, fontWeight: 600, color: MUTED2 }}>
                   <Sparkles size={11} /> AI
                 </kbd>
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', marginTop: 16 }}>
                 <span style={{ fontSize: 12, color: MUTED2, alignSelf: 'center' }}>Populaire :</span>
                 {popularQueries.map(q => (
-                  <button key={q} onClick={() => setSearchQuery(q)} className="tx-chip" style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: 999, padding: '6px 13px', fontSize: 12.5, color: 'rgba(255,255,255,0.7)', cursor: 'pointer' }}>
+                  <button key={q} onClick={() => setSearchQuery(q)} className="tx-chip" style={{ background: 'hsl(var(--terex-accent) / 0.03)', border: `1px solid ${BORDER}`, borderRadius: 999, padding: '6px 13px', fontSize: 12.5, color: 'hsl(var(--terex-accent) / 0.7)', cursor: 'pointer' }}>
                     {q}
                   </button>
                 ))}
@@ -196,27 +196,27 @@ const HelpPage = () => {
             <div className="tx-chat tx-fade" style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 22, padding: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
               {/* En-tête conversation */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '18px 20px', borderBottom: `1px solid ${BORDER}` }}>
-                <div style={{ width: 42, height: 42, borderRadius: 13, background: '#1e1e1e', border: `1px solid rgba(255,255,255,0.1)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, flexShrink: 0 }}>TX</div>
+                <div style={{ width: 42, height: 42, borderRadius: 13, background: 'hsl(var(--terex-darker))', border: `1px solid hsl(var(--terex-accent) / 0.1)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, flexShrink: 0 }}>TX</div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <p style={{ fontSize: 14.5, fontWeight: 700, margin: 0 }}>Support Terex</p>
                   <p style={{ fontSize: 12, color: MUTED2, margin: 0 }}>Répond en moins de 5 minutes</p>
                 </div>
-                <MessageCircle size={18} color="rgba(255,255,255,0.3)" />
+                <MessageCircle size={18} color="hsl(var(--terex-accent) / 0.3)" />
               </div>
 
               {/* Bulles */}
               <div style={{ flex: 1, padding: '22px 20px', display: 'flex', flexDirection: 'column', gap: 12, justifyContent: 'flex-end', minHeight: 240 }}>
-                <div className="tx-b1" style={{ alignSelf: 'flex-start', maxWidth: '82%', background: '#1e1e1e', border: `1px solid ${BORDER}`, borderRadius: '16px 16px 16px 4px', padding: '11px 15px' }}>
-                  <p style={{ fontSize: 13.5, lineHeight: 1.5, margin: 0, color: 'rgba(255,255,255,0.92)' }}>Bonjour 👋 Comment puis-je vous aider aujourd'hui ?</p>
+                <div className="tx-b1" style={{ alignSelf: 'flex-start', maxWidth: '82%', background: 'hsl(var(--terex-darker))', border: `1px solid ${BORDER}`, borderRadius: '16px 16px 16px 4px', padding: '11px 15px' }}>
+                  <p style={{ fontSize: 13.5, lineHeight: 1.5, margin: 0, color: 'hsl(var(--terex-accent) / 0.92)' }}>Bonjour 👋 Comment puis-je vous aider aujourd'hui ?</p>
                 </div>
-                <div className="tx-b2" style={{ alignSelf: 'flex-end', maxWidth: '82%', background: '#fff', borderRadius: '16px 16px 4px 16px', padding: '11px 15px' }}>
-                  <p style={{ fontSize: 13.5, lineHeight: 1.5, margin: 0, color: '#141414', fontWeight: 500 }}>Combien de temps pour recevoir mes CFA ?</p>
+                <div className="tx-b2" style={{ alignSelf: 'flex-end', maxWidth: '82%', background: 'hsl(var(--terex-accent))', borderRadius: '16px 16px 4px 16px', padding: '11px 15px' }}>
+                  <p style={{ fontSize: 13.5, lineHeight: 1.5, margin: 0, color: 'hsl(var(--terex-accent-fg))', fontWeight: 500 }}>Combien de temps pour recevoir mes CFA ?</p>
                 </div>
-                <div className="tx-b3" style={{ alignSelf: 'flex-start', background: '#1e1e1e', border: `1px solid ${BORDER}`, borderRadius: '16px 16px 16px 4px', padding: '13px 16px' }}>
+                <div className="tx-b3" style={{ alignSelf: 'flex-start', background: 'hsl(var(--terex-darker))', border: `1px solid ${BORDER}`, borderRadius: '16px 16px 16px 4px', padding: '13px 16px' }}>
                   <div style={{ display: 'flex', gap: 4, alignItems: 'center', height: 8 }}>
-                    <span className="tx-dot1" style={{ width: 7, height: 7, borderRadius: '50%', background: 'rgba(255,255,255,0.6)' }} />
-                    <span className="tx-dot2" style={{ width: 7, height: 7, borderRadius: '50%', background: 'rgba(255,255,255,0.6)' }} />
-                    <span className="tx-dot3" style={{ width: 7, height: 7, borderRadius: '50%', background: 'rgba(255,255,255,0.6)' }} />
+                    <span className="tx-dot1" style={{ width: 7, height: 7, borderRadius: '50%', background: 'hsl(var(--terex-accent) / 0.6)' }} />
+                    <span className="tx-dot2" style={{ width: 7, height: 7, borderRadius: '50%', background: 'hsl(var(--terex-accent) / 0.6)' }} />
+                    <span className="tx-dot3" style={{ width: 7, height: 7, borderRadius: '50%', background: 'hsl(var(--terex-accent) / 0.6)' }} />
                   </div>
                 </div>
               </div>
@@ -225,13 +225,13 @@ const HelpPage = () => {
               <div style={{ padding: '0 20px 18px' }}>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7, marginBottom: 12 }}>
                   {['Délais', 'Frais', 'KYC'].map(c => (
-                    <span key={c} className="tx-chip" style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: 999, padding: '6px 12px', fontSize: 12, color: 'rgba(255,255,255,0.7)', cursor: 'default' }}>{c}</span>
+                    <span key={c} className="tx-chip" style={{ background: 'hsl(var(--terex-accent) / 0.03)', border: `1px solid ${BORDER}`, borderRadius: 999, padding: '6px 12px', fontSize: 12, color: 'hsl(var(--terex-accent) / 0.7)', cursor: 'default' }}>{c}</span>
                   ))}
                 </div>
-                <button onClick={() => window.open('https://wa.me/14182619091', '_blank')} className="tx-cta" style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`, borderRadius: 14, padding: '0 8px 0 16px', height: 48, cursor: 'pointer' }}>
+                <button onClick={() => window.open('https://wa.me/14182619091', '_blank')} className="tx-cta" style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, background: 'hsl(var(--terex-accent) / 0.04)', border: `1px solid ${BORDER}`, borderRadius: 14, padding: '0 8px 0 16px', height: 48, cursor: 'pointer' }}>
                   <span style={{ flex: 1, textAlign: 'left', fontSize: 13.5, color: MUTED2 }}>Écrire un message…</span>
-                  <span style={{ width: 34, height: 34, borderRadius: 10, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <Send size={15} color="#141414" />
+                  <span style={{ width: 34, height: 34, borderRadius: 10, background: 'hsl(var(--terex-accent))', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <Send size={15} color="hsl(var(--terex-accent-fg))" />
                   </span>
                 </button>
               </div>
@@ -246,7 +246,7 @@ const HelpPage = () => {
 
               {filteredCategories.length === 0 ? (
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', border: `1px solid ${BORDER}`, borderRadius: 18, padding: '48px 24px' }}>
-                  <Search size={28} color="rgba(255,255,255,0.2)" style={{ marginBottom: 12 }} />
+                  <Search size={28} color="hsl(var(--terex-accent) / 0.2)" style={{ marginBottom: 12 }} />
                   <p style={{ fontSize: 15, fontWeight: 600, margin: '0 0 4px' }}>Aucun résultat</p>
                   <p style={{ fontSize: 13.5, color: MUTED, margin: 0 }}>Essayez d'autres mots-clés</p>
                 </div>
@@ -259,12 +259,12 @@ const HelpPage = () => {
                       <button key={category.flowId} onClick={() => handleSelectFlow(category.flowId)}
                         className="tx-tile" style={{ gridColumn: feature ? '1 / -1' : 'auto', background: feature ? CARD : CARD2, border: `1px solid ${BORDER}`, borderRadius: 18, padding: feature ? '24px 24px' : '22px 20px', cursor: 'pointer', textAlign: 'left', display: 'flex', flexDirection: feature ? 'row' : 'column', alignItems: feature ? 'center' : 'stretch', gap: feature ? 18 : 0, position: 'relative' }}>
                         <div style={{ width: feature ? 52 : 44, height: feature ? 52 : 44, borderRadius: 13, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginBottom: feature ? 0 : 16 }}>
-                          <IconComponent size={feature ? 24 : 20} color="rgba(255,255,255,0.9)" strokeWidth={1.8} />
+                          <IconComponent size={feature ? 24 : 20} color="hsl(var(--terex-accent) / 0.9)" strokeWidth={1.8} />
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
                             <h3 style={{ fontSize: feature ? 17 : 15.5, fontWeight: 700, letterSpacing: '-0.01em', margin: '0 0 5px' }}>{category.title}</h3>
-                            {feature && <ArrowRight size={17} color="rgba(255,255,255,0.3)" style={{ flexShrink: 0 }} />}
+                            {feature && <ArrowRight size={17} color="hsl(var(--terex-accent) / 0.3)" style={{ flexShrink: 0 }} />}
                           </div>
                           <p style={{ fontSize: 13, color: MUTED, lineHeight: 1.55, margin: feature ? 0 : '0 0 12px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{category.description}</p>
                           {!feature && (
@@ -287,7 +287,7 @@ const HelpPage = () => {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, background: CARD, border: `1px solid ${BORDER}`, borderRadius: 18, padding: '20px 26px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
               <span style={{ position: 'relative', width: 9, height: 9, flexShrink: 0 }}>
-                <span className="tx-live-dot" style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: '#fff' }} />
+                <span className="tx-live-dot" style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'hsl(var(--terex-accent))' }} />
               </span>
               <div>
                 <p style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED2, margin: '0 0 5px' }}>Taux USDT / CFA · en direct</p>
@@ -298,12 +298,12 @@ const HelpPage = () => {
                       <span style={{ color: MUTED2, fontSize: 13, fontWeight: 600 }}>CFA</span>
                     </>
                   ) : (
-                    <span style={{ display: 'inline-block', width: 100, height: 26, borderRadius: 8, background: 'rgba(255,255,255,0.06)' }} />
+                    <span style={{ display: 'inline-block', width: 100, height: 26, borderRadius: 8, background: 'hsl(var(--terex-accent) / 0.06)' }} />
                   )}
                 </div>
               </div>
             </div>
-            <button onClick={() => navigate('/auth')} className="tx-cta" style={{ background: '#2d2d2d', color: '#fff', border: `1px solid rgba(255,255,255,0.08)`, borderRadius: 12, height: 44, padding: '0 18px', fontSize: 13.5, fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 7 }}>
+            <button onClick={() => navigate('/auth')} className="tx-cta" style={{ background: 'hsl(var(--terex-gray))', color: 'hsl(var(--foreground))', border: `1px solid hsl(var(--terex-accent) / 0.08)`, borderRadius: 12, height: 44, padding: '0 18px', fontSize: 13.5, fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 7 }}>
               Échanger maintenant <ArrowRight size={15} />
             </button>
           </div>
@@ -315,10 +315,10 @@ const HelpPage = () => {
             <h2 style={{ fontSize: 'clamp(1.4rem,3vw,1.8rem)', fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 8px' }}>Besoin d'aide supplémentaire ?</h2>
             <p style={{ fontSize: 15, color: MUTED, margin: '0 0 26px' }}>Notre équipe de support est disponible 24/7.</p>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-              <button onClick={() => navigate('/contact')} className="tx-cta" style={{ background: '#fff', color: '#141414', border: 'none', borderRadius: 12, height: 50, padding: '0 24px', fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+              <button onClick={() => navigate('/contact')} className="tx-cta" style={{ background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 12, height: 50, padding: '0 24px', fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
                 <Mail size={16} /> Nous contacter
               </button>
-              <button onClick={() => window.open('https://wa.me/14182619091', '_blank')} style={{ background: '#2d2d2d', color: '#fff', border: `1px solid rgba(255,255,255,0.08)`, borderRadius: 12, height: 50, padding: '0 24px', fontSize: 15, fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+              <button onClick={() => window.open('https://wa.me/14182619091', '_blank')} style={{ background: 'hsl(var(--terex-gray))', color: 'hsl(var(--foreground))', border: `1px solid hsl(var(--terex-accent) / 0.08)`, borderRadius: 12, height: 50, padding: '0 24px', fontSize: 15, fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
                 <Phone size={16} /> WhatsApp
               </button>
             </div>
@@ -332,7 +332,7 @@ const HelpPage = () => {
 
   // ---- Conversation view ----
   return (
-    <div style={{ background: BG, minHeight: '100vh', color: '#fff', position: 'relative', overflowX: 'hidden' }}>
+    <div style={{ background: BG, minHeight: '100vh', color: 'hsl(var(--foreground))', position: 'relative', overflowX: 'hidden' }}>
       <style>{sharedStyles}</style>
       <VLines />
       {header}
@@ -352,7 +352,7 @@ const HelpPage = () => {
               <div style={{ width: 46, height: 46, borderRadius: 13, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 {(() => {
                   const IconComponent = iconMap[selectedFlow.icon as keyof typeof iconMap] ?? Coins;
-                  return <IconComponent size={21} color="rgba(255,255,255,0.9)" strokeWidth={1.8} />;
+                  return <IconComponent size={21} color="hsl(var(--terex-accent) / 0.9)" strokeWidth={1.8} />;
                 })()}
               </div>
               <div>
@@ -370,8 +370,8 @@ const HelpPage = () => {
               <div key={index} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16, padding: '18px 20px' }}>
                 <p style={{ fontSize: 14, fontWeight: 600, margin: '0 0 10px' }}>{item.question}</p>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                  <CheckCircle size={16} color="rgba(255,255,255,0.7)" style={{ flexShrink: 0, marginTop: 2 }} />
-                  <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.7)', lineHeight: 1.6, margin: 0 }}>{item.answer}</p>
+                  <CheckCircle size={16} color="hsl(var(--terex-accent) / 0.7)" style={{ flexShrink: 0, marginTop: 2 }} />
+                  <p style={{ fontSize: 13.5, color: 'hsl(var(--terex-accent) / 0.7)', lineHeight: 1.6, margin: 0 }}>{item.answer}</p>
                 </div>
               </div>
             ))}
@@ -385,9 +385,9 @@ const HelpPage = () => {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {currentQuestion.answers.map((answer, index) => (
                 <button key={index} onClick={() => handleSelectAnswer(answer.text, answer.nextQuestionId, answer.solution)}
-                  className="tx-ans" style={{ width: '100%', textAlign: 'left', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14, background: 'rgba(255,255,255,0.02)', border: `1px solid ${BORDER}`, borderRadius: 12, padding: '14px 16px', color: 'rgba(255,255,255,0.85)', fontSize: 14, cursor: 'pointer' }}>
+                  className="tx-ans" style={{ width: '100%', textAlign: 'left', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14, background: 'hsl(var(--terex-accent) / 0.02)', border: `1px solid ${BORDER}`, borderRadius: 12, padding: '14px 16px', color: 'hsl(var(--terex-accent) / 0.85)', fontSize: 14, cursor: 'pointer' }}>
                   {answer.text}
-                  <ArrowRight size={15} color="rgba(255,255,255,0.3)" style={{ flexShrink: 0 }} />
+                  <ArrowRight size={15} color="hsl(var(--terex-accent) / 0.3)" style={{ flexShrink: 0 }} />
                 </button>
               ))}
             </div>
@@ -399,19 +399,19 @@ const HelpPage = () => {
           <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 18, padding: '24px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
               <div style={{ width: 40, height: 40, borderRadius: 12, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <CheckCircle size={20} color="rgba(255,255,255,0.9)" />
+                <CheckCircle size={20} color="hsl(var(--terex-accent) / 0.9)" />
               </div>
               <h3 style={{ fontSize: 17, fontWeight: 700, letterSpacing: '-0.01em', margin: 0 }}>Solution</h3>
             </div>
-            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.7, margin: '0 0 24px', whiteSpace: 'pre-line' }}>{solution}</p>
+            <p style={{ fontSize: 14, color: 'hsl(var(--terex-accent) / 0.7)', lineHeight: 1.7, margin: '0 0 24px', whiteSpace: 'pre-line' }}>{solution}</p>
 
             <div style={{ borderTop: `1px solid ${BORDER}`, paddingTop: 22 }}>
               <p style={{ fontSize: 13.5, color: MUTED, margin: '0 0 16px' }}>Cette solution a-t-elle résolu votre problème ?</p>
               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                <button onClick={handleReset} className="tx-cta" style={{ background: '#fff', color: '#141414', border: 'none', borderRadius: 12, height: 46, padding: '0 22px', fontSize: 14.5, fontWeight: 700, cursor: 'pointer' }}>
+                <button onClick={handleReset} className="tx-cta" style={{ background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 12, height: 46, padding: '0 22px', fontSize: 14.5, fontWeight: 700, cursor: 'pointer' }}>
                   Oui, merci !
                 </button>
-                <button onClick={() => window.open('https://wa.me/14182619091', '_blank')} style={{ background: '#2d2d2d', color: '#fff', border: `1px solid rgba(255,255,255,0.08)`, borderRadius: 12, height: 46, padding: '0 22px', fontSize: 14.5, fontWeight: 600, cursor: 'pointer' }}>
+                <button onClick={() => window.open('https://wa.me/14182619091', '_blank')} style={{ background: 'hsl(var(--terex-gray))', color: 'hsl(var(--foreground))', border: `1px solid hsl(var(--terex-accent) / 0.08)`, borderRadius: 12, height: 46, padding: '0 22px', fontSize: 14.5, fontWeight: 600, cursor: 'pointer' }}>
                   Non, contacter le support
                 </button>
               </div>

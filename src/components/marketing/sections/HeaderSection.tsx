@@ -124,7 +124,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
 
             {/* Logo */}
             <button onClick={() => go('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 7, flexShrink: 0 }}>
-              <img src="/terex-logo.png" alt="Terex" style={{ width: 40, height: 40, objectFit: 'contain' }} />
+              <img src="/terex-logo.png" alt="Terex" className="terex-logo-img" style={{ width: 40, height: 40, objectFit: 'contain' }} />
               <span style={{ color: 'hsl(var(--foreground))', fontSize: 20, fontWeight: 700, letterSpacing: '-0.03em' }}>Terex</span>
             </button>
 
@@ -285,25 +285,25 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
           {/* Bottom CTA buttons */}
           <div style={{ padding: '16px clamp(20px, 5vw, 32px) 32px', borderTop: `1px solid ${BORDER}` }}>
             {user ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <div style={{ display: 'flex', gap: 10 }}>
                 <button onClick={() => { setMobileMenuOpen(false); onShowDashboard?.(); }}
-                  style={{ width: '100%', background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 12, height: 48, fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-                  <User size={16} /> Tableau de bord
+                  style={{ flex: 1, background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 12, height: 42, fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                  <User size={15} /> Tableau de bord
                 </button>
                 <button onClick={() => { setMobileMenuOpen(false); handleLogout(); }}
-                  style={{ width: '100%', background: 'hsl(var(--terex-gray))', color: 'hsl(var(--foreground))', border: `1px solid ${BORDER}`, borderRadius: 12, height: 48, fontSize: 15, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-                  <LogOut size={16} /> Déconnexion
+                  style={{ flex: 1, background: 'hsl(var(--terex-gray))', color: 'hsl(var(--foreground))', border: `1px solid ${BORDER}`, borderRadius: 12, height: 42, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                  <LogOut size={15} /> Déconnexion
                 </button>
               </div>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <div style={{ display: 'flex', gap: 10 }}>
                 <button onClick={() => go('/auth')}
-                  style={{ width: '100%', background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 12, height: 48, fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-                  Commencer <ArrowRight size={16} />
+                  style={{ flex: 1, background: 'hsl(var(--terex-gray))', color: 'hsl(var(--foreground))', border: `1px solid ${BORDER}`, borderRadius: 12, height: 42, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  Connexion
                 </button>
                 <button onClick={() => go('/auth')}
-                  style={{ width: '100%', background: 'hsl(var(--terex-gray))', color: 'hsl(var(--foreground))', border: `1px solid ${BORDER}`, borderRadius: 12, height: 48, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>
-                  Connexion
+                  style={{ flex: 1, background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 12, height: 42, fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                  Commencer <ArrowRight size={15} />
                 </button>
               </div>
             )}
