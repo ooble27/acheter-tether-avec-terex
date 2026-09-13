@@ -283,27 +283,27 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
           </div>
 
           {/* Bottom CTA buttons */}
-          <div style={{ padding: '16px clamp(20px, 5vw, 32px) 32px', borderTop: `1px solid ${BORDER}` }}>
+          <div style={{ padding: '12px clamp(20px, 5vw, 32px) 24px', borderTop: `1px solid ${BORDER}` }}>
             {user ? (
-              <div style={{ display: 'flex', gap: 10 }}>
+              <div style={{ display: 'flex', gap: 8 }}>
                 <button onClick={() => { setMobileMenuOpen(false); onShowDashboard?.(); }}
-                  style={{ flex: 1, background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 12, height: 42, fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-                  <User size={15} /> Tableau de bord
+                  style={{ flex: 1, background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 10, height: 36, fontSize: 13, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5 }}>
+                  <User size={14} /> Tableau de bord
                 </button>
                 <button onClick={() => { setMobileMenuOpen(false); handleLogout(); }}
-                  style={{ flex: 1, background: 'hsl(var(--terex-gray))', color: 'hsl(var(--foreground))', border: `1px solid ${BORDER}`, borderRadius: 12, height: 42, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-                  <LogOut size={15} /> Déconnexion
+                  style={{ flex: 1, background: 'hsl(var(--terex-gray))', color: 'hsl(var(--foreground))', border: `1px solid ${BORDER}`, borderRadius: 10, height: 36, fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5 }}>
+                  <LogOut size={14} /> Déconnexion
                 </button>
               </div>
             ) : (
-              <div style={{ display: 'flex', gap: 10 }}>
+              <div style={{ display: 'flex', gap: 8 }}>
                 <button onClick={() => go('/auth')}
-                  style={{ flex: 1, background: 'hsl(var(--terex-gray))', color: 'hsl(var(--foreground))', border: `1px solid ${BORDER}`, borderRadius: 12, height: 42, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  style={{ flex: 1, background: 'hsl(var(--terex-gray))', color: 'hsl(var(--foreground))', border: `1px solid ${BORDER}`, borderRadius: 10, height: 36, fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   Connexion
                 </button>
                 <button onClick={() => go('/auth')}
-                  style={{ flex: 1, background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 12, height: 42, fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-                  Commencer <ArrowRight size={15} />
+                  style={{ flex: 1, background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 10, height: 36, fontSize: 13, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5 }}>
+                  Commencer <ArrowRight size={14} />
                 </button>
               </div>
             )}
