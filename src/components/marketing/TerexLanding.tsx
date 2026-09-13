@@ -125,7 +125,7 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
               Achat et vente de USDT en quelques minutes. Rapide, sécurisé et au meilleur taux CFA.
             </p>
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-              <button onClick={goPrimary} className="tx-cta" style={{ background: '#fff', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 12, height: 50, padding: '0 26px', fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+              <button onClick={goPrimary} className="tx-cta" style={{ background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 12, height: 50, padding: '0 26px', fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
                 {user ? 'Mon tableau de bord' : 'Commencer gratuitement'} <ArrowRight size={16} />
               </button>
               <button onClick={() => document.getElementById('how')?.scrollIntoView({ behavior: 'smooth' })}
@@ -213,7 +213,7 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
           <div className="tx-two" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
             {PAYMENTS.map(({ name, logo }) => (
               <div key={name} style={{ border: `1px solid ${BORDER}`, borderRadius: 18, padding: '22px 24px', display: 'flex', alignItems: 'center', gap: 16 }}>
-                <div style={{ width: 52, height: 52, borderRadius: 14, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <div style={{ width: 52, height: 52, borderRadius: 14, background: '#fff', border: '1px solid hsl(var(--terex-accent) / 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <img src={logo} alt={name} style={{ width: 38, height: 38, objectFit: 'contain' }} />
                 </div>
                 <div>
@@ -254,7 +254,7 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
               <p style={{ fontSize: 16, color: 'hsl(var(--terex-accent) / 0.55)', lineHeight: 1.65, margin: '0 0 26px', maxWidth: 440 }}>
                 Pour les montants élevés, bénéficiez d'un accompagnement personnalisé, de taux préférentiels et d'un règlement rapide et sécurisé.
               </p>
-              <button onClick={goAuth} className="tx-cta" style={{ background: '#fff', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 12, height: 48, padding: '0 24px', fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+              <button onClick={goAuth} className="tx-cta" style={{ background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 12, height: 48, padding: '0 24px', fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
                 Demander un devis OTC <ArrowRight size={16} />
               </button>
             </div>
@@ -320,7 +320,7 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
         <div className="tx-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '88px 32px', textAlign: 'center' }}>
           <h2 style={{ fontSize: 38, fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 14px' }}>Prêt à commencer ?</h2>
           <p style={{ fontSize: 16, color: 'hsl(var(--terex-accent) / 0.55)', margin: '0 0 28px' }}>Créez votre compte et échangez vos premiers USDT en quelques minutes.</p>
-          <button onClick={goPrimary} style={{ background: '#fff', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 12, height: 52, padding: '0 32px', fontSize: 16, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+          <button onClick={goPrimary} style={{ background: 'hsl(var(--terex-accent))', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: 12, height: 52, padding: '0 32px', fontSize: 16, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
             {user ? 'Mon tableau de bord' : 'Commencer gratuitement'} <ArrowRight size={17} />
           </button>
         </div>
