@@ -106,7 +106,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
       <header
         style={{
           position: isCompact ? 'absolute' : 'fixed',
-          top: 0, left: 0, right: 0, zIndex: 50,
+          top: 0, left: 0, right: 0, zIndex: 52,
           backgroundColor: BG, borderBottom: `1px solid ${BORDER}`,
         }}
       >
@@ -218,7 +218,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
       {/* Full-page mobile overlay menu */}
       {isCompact && mobileMenuOpen && (
         <div style={{
-          position: 'fixed', inset: 0, zIndex: 49,
+          position: 'fixed', inset: 0, zIndex: 51,
           background: BG,
           display: 'flex', flexDirection: 'column',
           overflowY: 'auto',
@@ -283,7 +283,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
           </div>
 
           {/* Bottom CTA buttons */}
-          <div style={{ padding: '12px clamp(20px, 5vw, 32px) 24px', borderTop: `1px solid ${BORDER}` }}>
+          <div style={{ padding: '12px clamp(20px, 5vw, 32px) 24px' }}>
             {user ? (
               <div style={{ display: 'flex', gap: 8 }}>
                 <button onClick={() => { setMobileMenuOpen(false); onShowDashboard?.(); }}
