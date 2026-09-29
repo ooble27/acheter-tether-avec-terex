@@ -55,12 +55,14 @@ export function OrdersTable({ orders, onStatusUpdate }: OrdersTableProps) {
     
     const statusStyles = {
       pending: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
+      sent: 'bg-blue-500/10 text-blue-400 border-blue-400/20',
       paid: 'bg-white/10 text-white border-white/20',
       failed: 'bg-red-500/10 text-red-500 border-red-500/20'
     };
 
     const statusLabels = {
       pending: 'En attente',
+      sent: 'Envoyé',
       paid: 'Payé',
       failed: 'Échec'
     };

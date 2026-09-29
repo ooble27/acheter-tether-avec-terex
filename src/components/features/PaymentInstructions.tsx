@@ -164,7 +164,15 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
           </div>
 
           <button
-            onClick={onPaymentConfirmed}
+            onClick={async () => {
+              if (orderId) {
+                await supabase
+                  .from('orders')
+                  .update({ payment_status: 'sent', updated_at: new Date().toISOString() })
+                  .eq('id', orderId);
+              }
+              onPaymentConfirmed();
+            }}
             style={{ width: '100%', background: '#fff', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: '14px', padding: '15px', fontSize: '15px', fontWeight: 700, cursor: 'pointer' }}
           >
             J'ai effectué le virement
@@ -234,7 +242,15 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
         </div>
 
         <button
-          onClick={onPaymentConfirmed}
+          onClick={async () => {
+            if (orderId) {
+              await supabase
+                .from('orders')
+                .update({ payment_status: 'sent', updated_at: new Date().toISOString() })
+                .eq('id', orderId);
+            }
+            onPaymentConfirmed();
+          }}
           style={{ width: '100%', background: '#fff', color: 'hsl(var(--terex-accent-fg))', border: 'none', borderRadius: '14px', padding: '15px', fontSize: '15px', fontWeight: 700, cursor: 'pointer' }}
         >
           J'ai payé

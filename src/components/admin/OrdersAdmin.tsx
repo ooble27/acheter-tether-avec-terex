@@ -51,6 +51,8 @@ export function OrdersAdmin() {
     switch (paymentStatus) {
       case 'pending':
         return <Badge variant="outline" className="text-yellow-500 border-yellow-500">En attente</Badge>;
+      case 'sent':
+        return <Badge variant="outline" className="text-blue-400 border-blue-400">Envoyé</Badge>;
       case 'paid':
         return <Badge variant="outline" className="text-white border-white/15">Payé</Badge>;
       case 'failed':
@@ -222,6 +224,8 @@ function OrdersList({ orders, onStatusUpdate, showActions }: OrdersListProps) {
     switch (paymentStatus) {
       case 'pending':
         return <Badge variant="outline" className="text-yellow-500 border-yellow-500 text-xs">En attente</Badge>;
+      case 'sent':
+        return <Badge variant="outline" className="text-blue-400 border-blue-400 text-xs">Envoyé</Badge>;
       case 'paid':
         return <Badge variant="outline" className="text-white border-white/15 text-xs">Payé</Badge>;
       case 'failed':
