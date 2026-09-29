@@ -9,49 +9,12 @@ const corsHeaders = {
 // Délai avant annulation automatique d'un ACHAT non payé (minutes)
 const STALE_MINUTES = 30;
 
-// Délai étendu pour les commandes dont le paiement est en cours sur NabooPay (minutes).
-// Wave direct > 200 000 FCFA peut prendre plus de 30 min pour confirmer.
-const STALE_MINUTES_WITH_PAYMENT = 120;
+// Délai étendu pour les paiements Wave direct (l'utilisateur a cliqué « J'ai payé »).
+// Le paiement peut prendre du temps à être vérifié manuellement par l'admin.
+const STALE_MINUTES_PAYMENT_SENT = 24 * 60; // 24 heures
 
 const CANCEL_REASON =
   "Paiement non reçu dans le délai imparti. Votre commande a été annulée automatiquement — aucun montant n'a été débité. Vous pouvez créer une nouvelle commande à tout moment.";
-
-// Statuts NabooPay considérés comme « paiement en cours » — ne pas annuler.
-const NABOOPAY_IN_PROGRESS_STATUSES = new Set([
-  'pending', 'processing', 'initiated', 'in_progress', 'waiting',
-]);
-
-// Statuts NabooPay qui confirment le paiement — mettre à jour l'ordre.
-const NABOOPAY_SUCCESS_STATUSES = new Set([
-  'completed', 'success', 'paid',
-]);
-
-async function checkNaboopayStatus(
-  naboopayOrderId: string,
-  apiKey: string,
-): Promise<{ status: string | null; raw: any }> {
-  try {
-    const res = await fetch(
-      `https://api.naboopay.com/api/v1/transaction/get-one-transaction?order_id=${naboopayOrderId}`,
-      {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-        },
-      },
-    );
-    if (!res.ok) {
-      console.error('NabooPay status check failed:', res.status, await res.text());
-      return { status: null, raw: null };
-    }
-    const data = await res.json();
-    return { status: data.transaction_status ?? null, raw: data };
-  } catch (e) {
-    console.error('NabooPay status check error:', e);
-    return { status: null, raw: null };
-  }
-}
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -64,13 +27,12 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     );
 
-    const naboopayApiKey = Deno.env.get('NABOOPAY_API_KEY') ?? '';
-
     const cutoff = new Date(Date.now() - STALE_MINUTES * 60 * 1000).toISOString();
-    const extendedCutoff = new Date(Date.now() - STALE_MINUTES_WITH_PAYMENT * 60 * 1000).toISOString();
+    const extendedCutoff = new Date(Date.now() - STALE_MINUTES_PAYMENT_SENT * 60 * 1000).toISOString();
 
     // ACHATS uniquement : toujours en attente, paiement jamais confirmé par
-    // le webhook Naboopay (payment_status reste 'pending'), créés il y a +30 min.
+    // le webhook Naboopay (payment_status reste 'pending' ou 'sent'),
+    // créés il y a +30 min.
     const { data: staleOrders, error: fetchError } = await supabase
       .from('orders')
       .select('*')
@@ -84,49 +46,16 @@ serve(async (req) => {
     const results: Array<{ id: string; cancelled: boolean; emailed: boolean; reason?: string }> = [];
 
     for (const order of staleOrders || []) {
-      // Si l'ordre a un payment_reference (transaction NabooPay créée),
-      // vérifier le statut réel chez NabooPay avant d'annuler.
-      if (order.payment_reference && naboopayApiKey) {
-        const { status: nbStatus } = await checkNaboopayStatus(order.payment_reference, naboopayApiKey);
-
-        if (nbStatus && NABOOPAY_SUCCESS_STATUSES.has(nbStatus)) {
-          // Le paiement a bien été reçu — mettre à jour l'ordre au lieu de l'annuler.
-          const { error: updateError } = await supabase
-            .from('orders')
-            .update({
-              payment_status: 'confirmed',
-              status: 'processing',
-              processed_at: new Date().toISOString(),
-              updated_at: new Date().toISOString(),
-            })
-            .eq('id', order.id)
-            .eq('status', 'pending');
-
-          if (!updateError) {
-            console.log(`Commande ${order.id} : paiement confirmé via NabooPay (${nbStatus}), non annulée.`);
-            // Déclencher l'envoi auto de USDT
-            try {
-              await supabase.functions.invoke('send-usdt', { body: { orderId: order.id } });
-            } catch (e) {
-              console.error('Auto-send USDT error pour', order.id, e);
-            }
-          }
-          results.push({ id: order.id, cancelled: false, emailed: false, reason: `naboopay_${nbStatus}` });
+      // Si l'utilisateur a confirmé avoir payé (paiement Wave direct),
+      // accorder un délai étendu de 24h pour que l'admin puisse vérifier.
+      if (order.payment_status === 'sent') {
+        const createdAt = new Date(order.created_at).getTime();
+        const extendedLimit = new Date(extendedCutoff).getTime();
+        if (createdAt > extendedLimit) {
+          console.log(`Commande ${order.id} : paiement envoyé (Wave direct), délai étendu.`);
+          results.push({ id: order.id, cancelled: false, emailed: false, reason: 'payment_sent_extended' });
           continue;
         }
-
-        if (nbStatus && NABOOPAY_IN_PROGRESS_STATUSES.has(nbStatus)) {
-          // Paiement toujours en cours — accorder le délai étendu.
-          const createdAt = new Date(order.created_at).getTime();
-          const extendedLimit = new Date(extendedCutoff).getTime();
-          if (createdAt > extendedLimit) {
-            console.log(`Commande ${order.id} : paiement en cours sur NabooPay (${nbStatus}), délai étendu.`);
-            results.push({ id: order.id, cancelled: false, emailed: false, reason: `naboopay_in_progress_${nbStatus}` });
-            continue;
-          }
-          // Si > délai étendu, on annule quand même (le paiement n'a pas abouti).
-        }
-        // Si NabooPay renvoie un statut d'échec ou inconnu, on continue l'annulation.
       }
 
       // Annuler la commande (garde une trace du motif dans notes)
